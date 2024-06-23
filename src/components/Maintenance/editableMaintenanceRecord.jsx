@@ -4,7 +4,7 @@ import { CiCircleMinus } from "react-icons/ci";
 
 export default function EditableMaintenaceRecord({onDelete}) {
     return(
-        <div className="w-full grid grid-cols-10 items-center rounded-lg border border-black my-1">
+        <div className="w-full grid grid-cols-10 items-center rounded-lg border border-dashed border-black my-1">
             <Button 
                 isIconOnly
                 className="col-span-1 ml-3"
