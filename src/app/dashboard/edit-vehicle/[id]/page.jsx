@@ -9,14 +9,6 @@ export default function Page({ params }) {
     const id = params.id;
     const vehicle = vehicles[id-1];
 
-    const defaultCr = () => {
-        if(vehicle.cr === "Pending") {
-            return ["1"];
-        } else {
-            return ["2"];
-        }
-    }
-
     return(
         <div className="w-[95%] p-6 bg-white rounded-lg">
             <div className="w-full">
