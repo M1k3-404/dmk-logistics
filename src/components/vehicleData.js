@@ -13,7 +13,7 @@ const vehicles = [
         totalCost: "1000000",
         sellingPrice: "1200000",
         months: "03",
-        cr: "Pending",
+        cr: "Ok",
         purchasedFrom: "Diluksh",
         coc: "120000",
         payments: [

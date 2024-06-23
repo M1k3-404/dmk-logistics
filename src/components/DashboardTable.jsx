@@ -200,7 +200,15 @@ export default function DashboardTable({tableHeaders, data, tab}) {
                 Edit Maintenace
               </Button>
             </div>
-            <Button className="bg-white text-black px-12 font-extralight rounded-md hover:bg-[#fafafa] mt-4" size="sm">Edit Record</Button>
+            <Button 
+              as={Link}
+              href={`/dashboard/edit-vehicle/${vehicle.id}`}
+              className="bg-white text-black px-12 font-extralight rounded-md hover:bg-[#fafafa] mt-4" 
+              size="sm"
+            >
+              Edit Record
+            </Button>
+
             <VehicleDeletionModal vehicle={vehicle} />
           </div>
         </div>
