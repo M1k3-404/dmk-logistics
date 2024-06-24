@@ -1,12 +1,12 @@
 import { Button, Input } from "@nextui-org/react";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogOverlay, AlertDialogTitle, AlertDialogTrigger } from "../ui/alert-dialog";
 
-export default function SalesModal({ vehicle }) {
+export default function SalesModal({ btnText, vehicle }) {
 
     return (
         <AlertDialog>
             <AlertDialogTrigger asChild>
-                <Button className="bg-[#0c0c0c] text-white px-12 font-extralight rounded-md" size="sm">Sell</Button>
+                <Button className="bg-[#0c0c0c] text-white px-12 font-extralight rounded-md" size="sm">{btnText}</Button>
             </AlertDialogTrigger>
             <AlertDialogContent>
                 <AlertDialogHeader>
@@ -22,6 +22,7 @@ export default function SalesModal({ vehicle }) {
                                 inputWrapper: "w-full focus:border-b border-black",
                                 input: "text-left text-sm text-[#0c0c0c]",
                             }}
+                            defaultValue={vehicle.buyer ? vehicle.buyer : ""}
                             className="mt-4"
                             size="sm"
                             variant="underlined"

@@ -2,12 +2,12 @@ import { Button, Input } from "@nextui-org/react";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "./ui/table";
 import { useCallback, useMemo, useState } from "react";
 import { GoChevronUp, GoChevronDown } from "react-icons/go";
-import SalesModel from "./Dashboard/salesModal";
 import VehicleDeletionModal from "./Dashboard/vehicleDeletionModal";
 import topContent from "./Dashboard/TableComponent/topContent";
 import bottomContent from "./Dashboard/TableComponent/bottomContent";
 import RestorationModal from "./Dashboard/restorationModal";
 import Link from "next/link";
+import SalesModal from "./Dashboard/salesModal";
 
 export default function DashboardTable({tableHeaders, data, tab}) {
   const [filterValue, setFilterValue] = useState("");
@@ -306,6 +306,7 @@ export default function DashboardTable({tableHeaders, data, tab}) {
 
         <div className="col-span-1 border-l border-black/25">
           <div className="h-full p-5 flex flex-col justify-end">
+                <SalesModal btnText={"Edit Record"} vehicle={vehicle} />
                 <RestorationModal vehicle={vehicle} />
           </div>
         </div>
@@ -351,7 +352,7 @@ export default function DashboardTable({tableHeaders, data, tab}) {
           <TableCell>{vehicle.totalCost}</TableCell>
           <TableCell>{vehicle.sellingPrice}</TableCell>
           <TableCell>            
-            <SalesModel vehicle={vehicle} />
+            <SalesModal btnText={"Sell"} vehicle={vehicle} />
           </TableCell>
         </TableRow>
         {
