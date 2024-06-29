@@ -17,7 +17,6 @@ const bottomContent = ({page, pages, setPage}) => useMemo(() => {
             size="sm"
             page={page}
             total={pages}
-            initialPage={1}
             onChange={setPage}
         />  
     )

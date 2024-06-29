@@ -1,5 +1,3 @@
-import { Time } from "@internationalized/date"
-
 const vehicles = [
     {
         id: 1,
@@ -9,10 +7,10 @@ const vehicles = [
         yom: "2020",
         document: "Diluksh",
         pCost: "1000000",
-        pRemaining: "800000",
-        totalCost: "1000000",
+        pRemaining: "800000", //calculate
+        totalCost: "1000000", 
         sellingPrice: "1200000",
-        months: "03",
+        months: "03", //discuss who's calculating
         cr: "Ok",
         purchasedFrom: "Diluksh",
         coc: "120000",
