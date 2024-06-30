@@ -7,17 +7,31 @@ import { IoIosAddCircle } from "react-icons/io";
 import Link from "next/link";
 import DashboardTable from "./dashboardTable";
 import { soldVehicleTableHeads, vehicleTableHeads } from "@/data/static-data";
-import { soldVehicles, vehicles } from "./vehicleData";
+import { getALLVehicles } from "@/actions/dashboard-actions";
 
 export default function Tabs() {
+    const [activeVehicles, setActiveVehicles] = useState([]);
+    const [soldVehicles, setSoldVehicles] = useState([]);
+
     const items = [
-        {title: "Active", content: <DashboardTable tableHeaders={vehicleTableHeads} data={vehicles} tab={"vehicles"} />},
+        {title: "Active", content: <DashboardTable tableHeaders={vehicleTableHeads} data={activeVehicles} tab={"vehicles"} />},
         {title: "Sold", content: <DashboardTable tableHeaders={soldVehicleTableHeads} data={soldVehicles} tab={"sold vehicles"} />},
     ]
 
     const firstBtnRef = useRef();
 
     const [selectedTab, setSelectedTab] = useState(0);
+
+    useEffect(() => {
+        getALLVehicles()
+            .then(({ activeVehicles, soldVehicles }) => {
+                setActiveVehicles(activeVehicles);
+                setSoldVehicles(soldVehicles);
+            })
+            .catch(error => {
+                console.error('Error fetching vehicles:', error);
+            });
+    }, []);
 
     useEffect(() => {
         firstBtnRef.current.focus();

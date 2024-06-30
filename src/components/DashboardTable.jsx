@@ -12,7 +12,6 @@ import SalesModal from "./Dashboard/salesModal";
 export default function DashboardTable({tableHeaders, data, tab}) {
   const [filterValue, setFilterValue] = useState("");
   const [page, setPage] = useState(1);
-  const [isRowOpen, setIsRowOpen] = useState(false);
   const [selectedRow, setSelectedRow] = useState(null);
 
   const hasSearchFilter = Boolean(filterValue);
@@ -30,6 +29,7 @@ export default function DashboardTable({tableHeaders, data, tab}) {
 
   // filter function
   const filteredItems = useMemo(() => {
+    console.log('data:', data);
     let filteredVehicles = [...data];
 
     if (hasSearchFilter) {
@@ -58,9 +58,8 @@ export default function DashboardTable({tableHeaders, data, tab}) {
 
   // Row Collapsible function
   const handleRowClick = useCallback((vehicle) => {
-    setIsRowOpen(!isRowOpen);
-    setSelectedRow(vehicle.id);
-  }, [isRowOpen, selectedRow]);
+    setSelectedRow((prevSelectedRow) => (prevSelectedRow === vehicle.id ? null : vehicle.id));
+  }, [selectedRow]);
 
   // vehicles: collapsed row component
   const renderCollapsedRow = useCallback((vehicle) => {
@@ -321,12 +320,12 @@ export default function DashboardTable({tableHeaders, data, tab}) {
         <TableRow key={vehicle.id}>
           <TableCell>
             {
-              isRowOpen && selectedRow === vehicle.id ? (
+              selectedRow === vehicle.id ? (
                 <Button
                   isIconOnly
                   radius="full"
                   className="bg-transparent hover:bg-[#ebebeb]" 
-                  onClick={() => handleRowClick(vehicle)}
+                  onClick={() => {handleRowClick(vehicle)}}
                 >
                   <GoChevronUp size={16} />
                 </Button>
@@ -335,7 +334,7 @@ export default function DashboardTable({tableHeaders, data, tab}) {
                   isIconOnly
                   radius="full"
                   className="bg-transparent hover:bg-[#ebebeb]"
-                  onClick={() => handleRowClick(vehicle)}
+                  onClick={() => {handleRowClick(vehicle)}}
                 >
                   <GoChevronDown size={16} />
                 </Button>
@@ -356,7 +355,7 @@ export default function DashboardTable({tableHeaders, data, tab}) {
           </TableCell>
         </TableRow>
         {
-          isRowOpen && selectedRow === vehicle.id && (
+          selectedRow === vehicle.id && (
             <TableRow>
               <TableCell colspan="11" className="rounded-b-lg bg-[#ebebeb]">
                 {renderCollapsedRow(vehicle)}
@@ -375,7 +374,7 @@ export default function DashboardTable({tableHeaders, data, tab}) {
         <TableRow key={vehicle.id}>
           <TableCell>
             {
-              isRowOpen && selectedRow === vehicle.id ? (
+              selectedRow === vehicle.id ? (
                 <Button
                   isIconOnly
                   radius="full"
@@ -407,7 +406,7 @@ export default function DashboardTable({tableHeaders, data, tab}) {
           <TableCell>{vehicle.buyer}</TableCell>
         </TableRow>
         {
-          isRowOpen && selectedRow === vehicle.id && (
+          selectedRow === vehicle.id && (
             <TableRow>
               <TableCell colspan="11" className="rounded-b-lg bg-[#ebebeb]">
                 {renderSoldCollapsedRow(vehicle)}

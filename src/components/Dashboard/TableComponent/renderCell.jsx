@@ -10,7 +10,7 @@ const renderCell = ({isRowOpen, selectedRow, handleRowClick, vehicle }) => {
             <TableRow key={vehicle.id}>
                 <TableCell>
                     {
-                        isRowOpen && selectedRow === vehicle.id ? (
+                        selectedRow === vehicle.id ? (
                             <Button
                                 isIconOnly
                                 radius="full"
@@ -45,7 +45,7 @@ const renderCell = ({isRowOpen, selectedRow, handleRowClick, vehicle }) => {
                 </TableCell>
             </TableRow>
             {
-            isRowOpen && selectedRow === vehicle.id && (
+            selectedRow === vehicle.id && (
                 <TableRow>
                     <TableCell colspan="11" className="rounded-b-lg bg-[#ebebeb]">
                         {renderCollapsedRow(vehicle)}

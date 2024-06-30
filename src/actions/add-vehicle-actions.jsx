@@ -1,4 +1,5 @@
 import axios from "axios";
+import toast from "react-hot-toast";
 
 const HandleSaveChanges = (vehicle) => {
     const errorStatus = HandleRequiredFields(vehicle);
@@ -13,7 +14,6 @@ const HandleSaveChanges = (vehicle) => {
         sendData(vehicle);
         return errorStatus;
     }
-
 }
 
 const sendData = async (vehicle) => {
@@ -49,6 +49,15 @@ const sendData = async (vehicle) => {
         console.error('Error sending data:', error);
     } finally {
         location.href = "/dashboard";
+        toast((t) => {
+            t.duration = 5000;
+
+            return (
+                <div className="flex items-center">
+                    <p>Vehicle Added: <span className="font-medium">{vehicle.vehicleNo}</span></p>
+                </div>
+            )
+        });
     }
 }
 
@@ -86,4 +95,4 @@ function HandleRequiredFields(vehicle) {
     return errorStatus;
 }
 
-export { HandleSaveChanges, HandleRequiredFields };
+export { HandleSaveChanges };
