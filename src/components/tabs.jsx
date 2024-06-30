@@ -5,11 +5,11 @@ import { Button } from "@nextui-org/react";
 import { useEffect, useRef, useState } from "react"
 import { IoIosAddCircle } from "react-icons/io";
 import Link from "next/link";
-import DashboardTable from "./DashboardTable";
+import DashboardTable from "./dashboardTable";
 import { soldVehicleTableHeads, vehicleTableHeads } from "@/data/static-data";
 import { soldVehicles, vehicles } from "./vehicleData";
 
-export default function TabComp() {
+export default function Tabs() {
     const items = [
         {title: "Active", content: <DashboardTable tableHeaders={vehicleTableHeads} data={vehicles} tab={"vehicles"} />},
         {title: "Sold", content: <DashboardTable tableHeaders={soldVehicleTableHeads} data={soldVehicles} tab={"sold vehicles"} />},

@@ -1,3 +1,14 @@
+export type addVehicle = {
+    date: Date;
+    vehicleNo: string;
+    make: string;
+    yom: string;
+    cr: boolean;
+    purchasedFrom: string;
+    document: string;
+    pCost: number;
+}
+
 export type activeVehicle = {
     id: string;
     date: Date;

@@ -48,7 +48,7 @@ export default function RestorationModal({ vehicle }) {
                     </Button>
                     <Button 
                         size="sm"
-                        className="bg-[#0c0c0c] px-8 text-white font- text-sm rounded-md hover:bg-[#1d1d1d] hover:text-white"
+                        className="bg-[#0c0c0c] px-8 text-white font-extralight text-sm rounded-md hover:bg-[#1d1d1d] hover:text-white"
                         onClick={handleCancel}
                     >
                         No
