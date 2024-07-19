@@ -15,12 +15,18 @@ const getALLVehicles = () => {
 }
 
 const fillUpData = (data) => {
+    data.date = formatDate(data.date, 10);
+    data.yom = formatDate(data.yom, 4);
     data.pRemaining = pRemainingCalculation(data.pCost, data.payments);
     data.totalCost = totalCostCalculation(data.pCost, data.maintenance);
     data.sellingPrice = data.totalCost;
     data.months = monthsCalculation(data.date);
     data.cr = data.cr ? "Ok" : "Pending";
     data.coc = 12000;
+}
+
+const formatDate = (date, charCount) => {
+    return date.slice(0, charCount);
 }
 
 const pRemainingCalculation = (pCost, payments) => {
@@ -57,7 +63,7 @@ const processDashboardData = (data) => {
 
         const payments = listOfPayments.map(payment => ({
             id: payment.id,
-            date: payment.date,
+            date: formatDate(payment.date, 10),
             account: payment.paymentTypeId,
             amount: payment.paymentAmount,
             order: payment.paymentOrder
@@ -65,7 +71,7 @@ const processDashboardData = (data) => {
 
         const maintenance = listOfMaintenance.map(maintenance => ({
             id: maintenance.id,
-            date: maintenance.maintenanceDate,
+            date: formatDate(maintenance.maintenanceDate, 10),
             description: maintenance.maintenanceTypeId,
             account: maintenance.paymentTypeId,
             amount: maintenance.maintenanceCost

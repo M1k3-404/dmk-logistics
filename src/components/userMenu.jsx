@@ -1,15 +1,22 @@
 import Link from "next/link";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "./ui/dropdown-menu";
+import { Avatar } from "@nextui-org/react";
 
 export default function UserMenu() {
     return (
         <DropdownMenu>
             <DropdownMenuTrigger asChild>
-                <p>Dilruksh Wickramarathne</p>
+                <div className="flex items-center cursor-pointer">
+                    <Avatar name="DW" size="sm" className="rounded-lg bg-violet-200 text-sm" />
+                    <p className="ml-2 font-light">Dilruksh Wickramarathne</p>
+                </div>
             </DropdownMenuTrigger>
             <DropdownMenuContent className="mt-3 p-4">
                 <DropdownMenuGroup>
                     {/* <DropdownMenuItem>Theme</DropdownMenuItem> */}             
+                    <DropdownMenuItem asChild>
+                        <Link href="/">Home</Link>
+                    </DropdownMenuItem>
                     <DropdownMenuItem asChild>
                         <Link href="/dashboard">Dashboard</Link>
                     </DropdownMenuItem>

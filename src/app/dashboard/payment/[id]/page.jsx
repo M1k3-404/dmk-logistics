@@ -128,7 +128,7 @@ export default function Payment({ params }) {
 
                         <div className="w-full py-5">
                             <p className="mb-4 font-medium">Payments</p>
-                            {vehicle.payments.map((payment, index) => {
+                            {vehicle?.payments.map((payment, index) => {
                                 return(
                                     <PaymentRecord 
                                         key={index}

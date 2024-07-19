@@ -1,4 +1,4 @@
-import { Button, Input } from "@nextui-org/react";
+import { Button, Chip, Input } from "@nextui-org/react";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "./ui/table";
 import { useCallback, useMemo, useState } from "react";
 import { GoChevronUp, GoChevronDown } from "react-icons/go";
@@ -9,13 +9,13 @@ import RestorationModal from "./Dashboard/restorationModal";
 import Link from "next/link";
 import SalesModal from "./Dashboard/salesModal";
 
-export default function DashboardTable({tableHeaders, data, tab}) {
+export default function DashboardTable({tableHeaders, data, tab, reload}) {
   const [filterValue, setFilterValue] = useState("");
   const [page, setPage] = useState(1);
   const [selectedRow, setSelectedRow] = useState(null);
 
   const hasSearchFilter = Boolean(filterValue);
-  const rowsPerPage = 6;
+  const rowsPerPage = 7;
 
   // handle search input value
   const onSearchChange = useCallback((value) => {
@@ -66,13 +66,13 @@ export default function DashboardTable({tableHeaders, data, tab}) {
     return(
       <div className="w-full grid grid-cols-4 gap-x-2">
         <div className="col-span-3 flex flex-col">
-          <div className="grid grid-cols-3 gap-y-4 p-5 border-b border-black/25">
+          <div className="grid grid-cols-3 gap-y-4 p-2 border-b border-black/25">
             <Input
               isReadOnly
               classNames={{
                 base: "bg-transparent",
                 label: "mr-2",
-                inputWrapper: "w-[25%] rounded-lg bg-[#f5f5f5]",
+                inputWrapper: "w-[25%] rounded-lg bg-gray-200",
                 input: "text-center text-sm text-[#0c0c0c]",
               }}
               defaultValue={vehicle.months}
@@ -82,27 +82,17 @@ export default function DashboardTable({tableHeaders, data, tab}) {
               labelPlacement="outside-left"
             />
             
-            <Input
-              isReadOnly
-              classNames={{
-                base: "bg-transparent",
-                label: "mr-2",
-                inputWrapper: "w-[75%] rounded-lg bg-[#f5f5f5]",
-                input: "text-center text-sm text-[#0c0c0c]",
-              }}
-              defaultValue={vehicle.cr}
-              size="sm"
-              variant="flat"
-              label="CR"
-              labelPlacement="outside-left"
-            />
+            <div className="flex items-center space-x-2">
+              <label className="mr-2">CR</label>
+              {vehicle.cr == "Pending" ? <Chip className="bg-red-200">{vehicle.cr}</Chip> : <Chip className="bg-green-200">{vehicle.cr}</Chip>}
+            </div>
 
             <Input
               isReadOnly
               classNames={{
                 base: "bg-transparent",
                 label: "mr-2",
-                inputWrapper: "w-[100%] rounded-lg bg-[#f5f5f5]",
+                inputWrapper: "w-[100%] rounded-lg bg-gray-200",
                 input: "text-center text-sm text-[#0c0c0c]",
               }}
               defaultValue={vehicle.purchasedFrom}
@@ -116,8 +106,8 @@ export default function DashboardTable({tableHeaders, data, tab}) {
               isReadOnly
               classNames={{
                 base: "bg-transparent",
-                label: "mr-2",
-                inputWrapper: "w-[75%] rounded-lg bg-[#f5f5f5]",
+                label: "mr-7",
+                inputWrapper: "w-[75%] rounded-lg bg-gray-200",
                 input: "text-center text-sm text-[#0c0c0c]",
               }}
               defaultValue={vehicle.coc}
@@ -128,9 +118,9 @@ export default function DashboardTable({tableHeaders, data, tab}) {
             />
           </div>
 
-          <div className="p-5 border-b border-black/25">
-            <p className="my-2 font-medium">Payment Details</p>
-            <Table className="w-[75%]">
+          <div className="p-4 border-b border-black/25">
+            <p className="mt-1 mb-2 font-medium">Payment Details</p>
+            <Table className="w-[75%]" >
               <TableHeader className="border-b border-black/25">
                 <TableRow>
                   <TableHead className="text-black">Date</TableHead>
@@ -152,8 +142,8 @@ export default function DashboardTable({tableHeaders, data, tab}) {
             </Table>
           </div>
 
-          <div className="p-5">
-            <p className="my-2 font-medium">Mainteneace Records</p>
+          <div className="p-4">
+            <p className="mt-1 mb-2 font-medium">Mainteneace Records</p>
             <Table className="w-[75%]">
               <TableHeader className="border-b border-black/25">
                 <TableRow>
@@ -180,8 +170,8 @@ export default function DashboardTable({tableHeaders, data, tab}) {
         </div>
 
         <div className="col-span-1 border-l border-black/25">
-          <div className="h-full p-5 flex flex-col justify-end">
-            <div className="w-full py-4 border-b border-black/25">
+          <div className="h-full p-3 flex flex-col justify-end">
+            <div className="w-full py-3 border-b border-black/25">
               <Button 
                 as={Link}
                 href={`/dashboard/payment/${vehicle.id}`}
@@ -202,7 +192,7 @@ export default function DashboardTable({tableHeaders, data, tab}) {
             <Button 
               as={Link}
               href={`/dashboard/edit-vehicle/${vehicle.id}`}
-              className="bg-white text-black px-12 font-extralight rounded-md hover:bg-[#fafafa] mt-4" 
+              className="bg-white text-black px-12 font-extralight rounded-md hover:bg-[#fafafa] mt-3" 
               size="sm"
             >
               Edit Record
@@ -220,13 +210,13 @@ export default function DashboardTable({tableHeaders, data, tab}) {
     return(
       <div className="w-full grid grid-cols-4 gap-x-2">
         <div className="col-span-3 flex flex-col">
-          <div className="grid grid-cols-2 gap-y-4 p-5 border-b border-black/25">
+          <div className="grid grid-cols-2 gap-y-4 p-2 border-b border-black/25">
             <Input
               isReadOnly
               classNames={{
                 base: "bg-transparent",
                 label: "mr-2",
-                inputWrapper: "w-[25%] rounded-lg bg-[#f5f5f5]",
+                inputWrapper: "w-[25%] rounded-lg bg-gray-200",
                 input: "text-center text-sm text-[#0c0c0c]",
               }}
               defaultValue={vehicle.months}
@@ -241,7 +231,7 @@ export default function DashboardTable({tableHeaders, data, tab}) {
               classNames={{
                 base: "bg-transparent",
                 label: "mr-2",
-                inputWrapper: "w-[100%] rounded-lg bg-[#f5f5f5]",
+                inputWrapper: "w-[100%] rounded-lg bg-gray-200",
                 input: "text-center text-sm text-[#0c0c0c]",
               }}
               defaultValue={vehicle.purchasedFrom}
@@ -252,8 +242,8 @@ export default function DashboardTable({tableHeaders, data, tab}) {
             />
           </div>
 
-          <div className="p-5 border-b border-black/25">
-            <p className="my-2 font-medium">Payment Details</p>
+          <div className="p-4 border-b border-black/25">
+            <p className="mt-1 mb-2 font-medium">Payment Details</p>
             <Table className="w-[75%]">
               <TableHeader className="border-b border-black/25">
                 <TableRow>
@@ -276,8 +266,8 @@ export default function DashboardTable({tableHeaders, data, tab}) {
             </Table>
           </div>
 
-          <div className="p-5">
-            <p className="my-2 font-medium">Mainteneace Records</p>
+          <div className="p-4">
+            <p className="mt-1 mb-2 font-medium">Mainteneace Records</p>
             <Table className="w-[75%]">
               <TableHeader className="border-b border-black/25">
                 <TableRow>
@@ -304,7 +294,7 @@ export default function DashboardTable({tableHeaders, data, tab}) {
         </div>
 
         <div className="col-span-1 border-l border-black/25">
-          <div className="h-full p-5 flex flex-col justify-end">
+          <div className="h-full p-3 flex flex-col justify-end">
                 <SalesModal btnText={"Edit Record"} vehicle={vehicle} />
                 <RestorationModal vehicle={vehicle} />
           </div>
@@ -342,22 +332,26 @@ export default function DashboardTable({tableHeaders, data, tab}) {
             }
           </TableCell>
           <TableCell>{vehicle.date}</TableCell>
-          <TableCell>{vehicle.vehicleNo}</TableCell>
+          <TableCell>
+            <Chip className="bg-violet-200">{vehicle.vehicleNo}</Chip>
+          </TableCell>
           <TableCell>{vehicle.make}</TableCell>
           <TableCell>{vehicle.yom}</TableCell>
           <TableCell>{vehicle.document}</TableCell>
           <TableCell>{vehicle.pCost}</TableCell>
-          <TableCell>{vehicle.pRemaining}</TableCell>
+          <TableCell>
+            {vehicle.pRemaining > 0 ? <span className="text-red-400">{vehicle.pRemaining}</span> : <Chip className="bg-green-200">Complete</Chip>}
+          </TableCell>
           <TableCell>{vehicle.totalCost}</TableCell>
           <TableCell>{vehicle.sellingPrice}</TableCell>
           <TableCell>            
-            <SalesModal btnText={"Sell"} vehicle={vehicle} />
+            <SalesModal btnText={"Sell"} vehicle={vehicle} reload={reload} />
           </TableCell>
         </TableRow>
         {
           selectedRow === vehicle.id && (
             <TableRow>
-              <TableCell colspan="11" className="rounded-b-lg bg-[#ebebeb]">
+              <TableCell colspan="11" className="rounded-b-lg bg-gray-100">
                 {renderCollapsedRow(vehicle)}
               </TableCell>
             </TableRow>
@@ -396,7 +390,9 @@ export default function DashboardTable({tableHeaders, data, tab}) {
             }
           </TableCell>
           <TableCell>{vehicle.date}</TableCell>
-          <TableCell>{vehicle.vehicleNo}</TableCell>
+          <TableCell>
+            <Chip className="bg-violet-200">{vehicle.vehicleNo}</Chip>
+          </TableCell>
           <TableCell>{vehicle.make}</TableCell>
           <TableCell>{vehicle.yom}</TableCell>
           <TableCell>{vehicle.document}</TableCell>
@@ -408,7 +404,7 @@ export default function DashboardTable({tableHeaders, data, tab}) {
         {
           selectedRow === vehicle.id && (
             <TableRow>
-              <TableCell colspan="11" className="rounded-b-lg bg-[#ebebeb]">
+              <TableCell colspan="11" className="rounded-b-lg bg-gray-100">
                 {renderSoldCollapsedRow(vehicle)}
               </TableCell>
             </TableRow>
@@ -420,9 +416,9 @@ export default function DashboardTable({tableHeaders, data, tab}) {
 
   return(
     <>
-      {topContent({filterValue, setFilterValue, onSearchChange})}
+      {topContent({filterValue, setFilterValue, onSearchChange, filteredItems})}
 
-      <Table className="mt-2">
+      <Table className="mt-2 mb-4">
         <TableHeader>
           <TableRow>
             {tableHeaders.map((head, index) => {

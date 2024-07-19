@@ -1,9 +1,9 @@
-import { Button, Input } from "@nextui-org/react";
+import { Button, DateInput, Input } from "@nextui-org/react";
 import { AlertDialog, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogOverlay, AlertDialogTitle, AlertDialogTrigger } from "../ui/alert-dialog";
 import { useState } from "react";
 import { HandleSaveChanges } from "@/actions/sales-actions";
 
-export default function SalesModal({ btnText, vehicle }) {
+export default function SalesModal({ btnText, vehicle, reload }) {
     const [openModal, setOpenModal] = useState(false);
 
     const [date, setDate] = useState("");
@@ -14,12 +14,13 @@ export default function SalesModal({ btnText, vehicle }) {
 
     const handleSave = () => {
         const saleRecord = {
-            // "date": date,
+            "id": vehicle.id,
+            "date": date,
             "buyerName": buyerName,
             "sellingPrice": sellingPrice
         };
 
-        const requiredFields = HandleSaveChanges(saleRecord);
+        const requiredFields = HandleSaveChanges(saleRecord, setOpenModal, reload);
         setErrorStatus(requiredFields);
     }
 
@@ -45,13 +46,29 @@ export default function SalesModal({ btnText, vehicle }) {
                 <AlertDialogHeader>
                     <AlertDialogDescription>
                         <p className="text-black">Please enter the buyer’s details and selling price to confirm the sale.</p>
+                        
+                        <DateInput
+                            label="Selling Date"
+                            labelPlacement="outside-left"
+                            variant="flat"
+                            errorMessage={errorStatus[1]?.error}
+                            isInvalid={errorStatus[1]?.isInvalid}
+                            onChange={setDate}
+                            classNames={{
+                                label: "text-sm w-[24%]",
+                                inputWrapper: "w-full rounded-lg bg-[#f5f5f5]",
+                                errorMessage: "text-red-600 text-xs"
+                            }}
+                            className="mt-4"
+                            size="sm"          
+                        />
                         <Input
                             type="text"
                             label="Buyer's Name"
                             labelPlacement="outside-left"
                             variant="flat"
-                            errorMessage={errorStatus[0]?.error}
-                            isInvalid={errorStatus[0]?.isInvalid}
+                            errorMessage={errorStatus[2]?.error}
+                            isInvalid={errorStatus[2]?.isInvalid}
                             onChange={(e) => setBuyerName(e.target.value)}
                             classNames={{
                                 mainWrapper: "w-full",
@@ -60,7 +77,7 @@ export default function SalesModal({ btnText, vehicle }) {
                                 input: "text-left text-sm text-black",
                                 errorMessage: "text-red-600 text-xs"
                             }}
-                            className="mt-4"
+                            className="mt-2"
                             size="sm"                          
                         />
                         <Input
@@ -68,8 +85,8 @@ export default function SalesModal({ btnText, vehicle }) {
                             label="Selling Price"
                             labelPlacement="outside-left"
                             variant="flat"
-                            errorMessage={errorStatus[1]?.error}
-                            isInvalid={errorStatus[1]?.isInvalid}
+                            errorMessage={errorStatus[3]?.error}
+                            isInvalid={errorStatus[3]?.isInvalid}
                             onChange={(e) => setSellingPrice(e.target.value)}
                             classNames={{
                                 mainWrapper: "w-full",
