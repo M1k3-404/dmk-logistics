@@ -1,9 +1,10 @@
 "use client"
 
-import { HandleRequiredFields, HandleSaveChanges } from "@/actions/add-vehicle-actions";
+import { HandleSaveChanges } from "@/actions/add-vehicle-actions";
 import CancellationModal from "@/components/Add Vehicle/cancellationModal";
-import { Button, DateInput, Input, Modal, ModalBody, ModalContent, ModalFooter, Select, SelectItem, useDisclosure } from "@nextui-org/react";
+import { Button, DateInput, Input, Select, SelectItem } from "@nextui-org/react";
 import { useState } from "react";
+import toast from "react-hot-toast";
 
 export default function Page() {
     const [date, setDate] = useState("");
@@ -14,9 +15,6 @@ export default function Page() {
     const [purchasedFrom, setPurchasedFrom] = useState("");
     const [document, setDocument] = useState("");
     const [pCost, setPCost] = useState("");
-
-    //Change model to shadcn
-    const {isOpen, onOpen, onOpenChange} = useDisclosure();
 
     const [errorStatus, setErrorStatus] = useState([]);
 
@@ -33,7 +31,7 @@ export default function Page() {
         };
         
         const status = HandleSaveChanges(vehicleData);
-        setErrorStatus(status)
+        setErrorStatus(status);
     }
 
     return(

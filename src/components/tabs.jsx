@@ -7,11 +7,16 @@ import { IoIosAddCircle } from "react-icons/io";
 import Link from "next/link";
 import DashboardTable from "./dashboardTable";
 import { soldVehicleTableHeads, vehicleTableHeads } from "@/data/static-data";
-import { soldVehicles, vehicles } from "./vehicleData";
+import { getALLVehicles } from "@/actions/dashboard-actions";
 
 export default function Tabs() {
+    const [activeVehicles, setActiveVehicles] = useState([]);
+    const [soldVehicles, setSoldVehicles] = useState([]);
+
+    const [reloadAgain, setReloadAgain] = useState(0);
+
     const items = [
-        {title: "Active", content: <DashboardTable tableHeaders={vehicleTableHeads} data={vehicles} tab={"vehicles"} />},
+        {title: "Active", content: <DashboardTable tableHeaders={vehicleTableHeads} data={activeVehicles} tab={"vehicles"} reload={setReloadAgain} />},
         {title: "Sold", content: <DashboardTable tableHeaders={soldVehicleTableHeads} data={soldVehicles} tab={"sold vehicles"} />},
     ]
 
@@ -20,19 +25,30 @@ export default function Tabs() {
     const [selectedTab, setSelectedTab] = useState(0);
 
     useEffect(() => {
+        getALLVehicles()
+            .then(({ activeVehicles, soldVehicles }) => {
+                setActiveVehicles(activeVehicles);
+                setSoldVehicles(soldVehicles);
+            })
+            .catch(error => {
+                console.error('Error fetching vehicles:', error);
+            });
+    }, [reloadAgain]);
+
+    useEffect(() => {
         firstBtnRef.current.focus();
     }, []);
 
     return(
         <div>
-            <div className="mt-6 mx-8 flex justify-between items-center">
-                <div className="flex">
+            <div className="pt-6 mx-8 flex justify-between items-center">
+                <div className="flex spac-x-2">
                     {items.map((item, index) => (
                         <Button
                             ref={index === 0 ? firstBtnRef : null}
                             key={index}
                             onClick={() => setSelectedTab(index)}
-                            className={`bg-transparent text-[#606060] text-xl font-bold px-5 py-1 hover:text-black ${selectedTab === index ? 'text-[#0c0c0c]' : ''}`}
+                            className={`bg-transparent text-[#606060] rounded-lg font-bold px-5 py-1 transition-colors duration-200 ease-in-out ${selectedTab === index ? 'bg-green-200 text-black' : 'hover:text-black'}`}
                         >
                             {item.title}
                         </Button>
@@ -40,7 +56,7 @@ export default function Tabs() {
                 </div>
                 
                 <Button 
-                    className="bg-[#0c0c0c] hover:bg-[#1d1d1d] px-8 py-4 text-white font-extralight rounded-md"
+                    className="bg-[#0c0c0c] hover:bg-[#1d1d1d] px-4 py-1 text-white font-light rounded-lg"
                     as={Link}
                     href="/dashboard/add-vehicle"
                 >

@@ -2,14 +2,14 @@ import { useMemo } from "react";
 import { IoIosSearch } from "react-icons/io";
 const { Input } = require("@nextui-org/react");
 
-const topContent = ({filterValue, setFilterValue, onSearchChange}) => useMemo(() => {
+const topContent = ({filterValue, setFilterValue, onSearchChange, filteredItems}) => useMemo(() => {
     return(
         <div className="flex justify-between">
             <Input
                 isClearable
                 classNames={{
                     base: "w-[85%] bg-transparent",
-                    inputWrapper: "rounded-lg bg-[#f5f5f5]",
+                    inputWrapper: "rounded-lg bg-[#f1f1f1]",
                     innerWrapper: "px-1",
                 }}
                 placeholder="Search"
@@ -26,10 +26,10 @@ const topContent = ({filterValue, setFilterValue, onSearchChange}) => useMemo(()
                 classNames={{
                     base: "w-[12%] bg-transparent",
                     label: "mr-2",
-                    inputWrapper: "rounded-lg bg-[#f5f5f5]",
+                    inputWrapper: "rounded-lg bg-[#f1f1f1]",
                     input: "text-center text-sm font-semibold text-[#0c0c0c]",
                 }}
-                defaultValue={12}
+                value={filteredItems.length}
                 size="sm"
                 variant="flat"
                 label="Vehicles"

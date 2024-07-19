@@ -1,3 +1,23 @@
+import { CiDeliveryTruck, CiDollar, CiSettings } from "react-icons/ci";
+import { RiMoneyDollarCircleFill, RiSettings5Fill, RiTruckFill } from "react-icons/ri";
+
+const sidebarItems = [
+    {
+        name: "Warehouse",
+        icon: <CiDeliveryTruck size={20} />,
+    },
+
+    {
+        name: "Accounts",
+        icon: <CiDollar size={20} />,
+    },
+
+    {
+        name: "Settings",
+        icon: <CiSettings size={20} />,
+    },
+];
+
 const vehicleTableHeads = [
     "",
     "Date",
@@ -25,4 +45,4 @@ const soldVehicleTableHeads = [
     "Buyer's Name",
 ];
 
-export {vehicleTableHeads, soldVehicleTableHeads};
+export { sidebarItems, vehicleTableHeads, soldVehicleTableHeads };

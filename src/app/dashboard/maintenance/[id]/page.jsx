@@ -1,5 +1,6 @@
 "use client"
 
+import { HandleSaveChanges } from "@/actions/maintenance-actions";
 import EditableMaintenaceRecord from "@/components/Maintenance/editableMaintenanceRecord";
 import MaintenaceRecord from "@/components/Maintenance/maintenanceRecord";
 import { vehicles } from "@/components/vehicleData";
@@ -29,6 +30,8 @@ export default function Maintenace({ params }) {
         })
     }
 
+    // ------------------------------------------------------------------------------------------------
+
     return(
         <div className="w-[95%] p-6 bg-white rounded-lg overflow-y-auto">
             <div className="w-full">
@@ -39,7 +42,7 @@ export default function Maintenace({ params }) {
                     }}
                 >
                     <BreadcrumbItem href="/dashboard">
-                        <p className={`text-[#606060] text-xl font-bold`}>{vehicle.vehicleNo}</p>
+                        <p className={`text-[#606060] text-xl font-bold`}>"LM ..."</p>
                     </BreadcrumbItem>
                     <BreadcrumbItem>
                         <p className={`text-[#606060] text-xl font-bold`}>Maintenance</p>
@@ -140,7 +143,7 @@ export default function Maintenace({ params }) {
                                 return(
                                     <EditableMaintenaceRecord 
                                         key={index}
-                                        onDelete={() => handleDeleteNewRecord(index)}    
+                                        onDelete={() => handleDeleteNewRecord(index)}
                                     />
                                 )
                             })}
@@ -162,9 +165,7 @@ export default function Maintenace({ params }) {
                             Cancel
                         </Button>
                         
-                        <Button 
-                            as={Link}
-                            href="/dashboard"
+                        <Button
                             className="bg-[#0c0c0c] text-white font-extralight rounded-md mt-2 hover:bg-green-600"
                         >
                             Save Changes
