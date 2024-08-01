@@ -7,7 +7,7 @@ import { IoIosAddCircle } from "react-icons/io";
 import Link from "next/link";
 import DashboardTable from "./dashboardTable";
 import { soldVehicleTableHeads, vehicleTableHeads } from "@/data/static-data";
-import { getALLVehicles } from "@/actions/dashboard-actions";
+import { getAllVehicles } from "@/actions/vehicle/vehicle-getAll-action";
 
 export default function Tabs() {
     const [activeVehicles, setActiveVehicles] = useState([]);
@@ -25,7 +25,7 @@ export default function Tabs() {
     const [selectedTab, setSelectedTab] = useState(0);
 
     useEffect(() => {
-        getALLVehicles()
+        getAllVehicles()
             .then(({ activeVehicles, soldVehicles }) => {
                 setActiveVehicles(activeVehicles);
                 setSoldVehicles(soldVehicles);

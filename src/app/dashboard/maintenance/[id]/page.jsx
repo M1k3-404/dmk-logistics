@@ -35,19 +35,7 @@ export default function Maintenace({ params }) {
     return(
         <div className="w-[95%] p-6 bg-white rounded-lg overflow-y-auto">
             <div className="w-full">
-                <Breadcrumbs
-                    separator="/"
-                    itemClasses={{
-                        separator: "text-xl font-bold px-2"
-                    }}
-                >
-                    <BreadcrumbItem href="/dashboard">
-                        <p className={`text-[#606060] text-xl font-bold`}>"LM ..."</p>
-                    </BreadcrumbItem>
-                    <BreadcrumbItem>
-                        <p className={`text-[#606060] text-xl font-bold`}>Maintenance</p>
-                    </BreadcrumbItem>
-                </Breadcrumbs>
+                <p className={`text-[#606060] text-xl font-bold`}>Maintenance</p>
                 
                 <div className="mt-8 flex w-full">
                     <div className="w-3/4 pr-6 pl-12">

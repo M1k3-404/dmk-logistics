@@ -1,7 +1,6 @@
 import { Button, DateInput, Input, Select, SelectItem, SelectSection } from "@nextui-org/react";
 import { RiDraggable } from "react-icons/ri";
-import { CiCircleMinus, CiEdit } from "react-icons/ci";
-import { useState } from "react";
+import { CiCircleMinus, CiCircleCheck } from "react-icons/ci";
 
 export default function EditablePaymentRecord({onDelete}) {
 
@@ -52,13 +51,21 @@ export default function EditablePaymentRecord({onDelete}) {
                 }
             />
 
-            <Button
-                isIconOnly
-                onClick={onDelete}
-                className="mx-auto"
-            >
-                <CiCircleMinus className="hover:text-red-500" />
-            </Button>
+            <div className="col-span-1 flex justify-start">
+                <Button
+                    isIconOnly
+                    // onClick={}
+                >
+                    <CiCircleCheck className="hover:text-green-600" />
+                </Button>
+                <Button
+                    isIconOnly
+                    className="mx-auto"
+                    onClick={onDelete}
+                >
+                    <CiCircleMinus className="hover:text-red-500" />
+                </Button>
+            </div>
         </div>
     )
 }

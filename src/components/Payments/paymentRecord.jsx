@@ -1,15 +1,16 @@
 import { Button, DateInput, Input, Select, SelectItem, SelectSection } from "@nextui-org/react";
 import { RiDraggable } from "react-icons/ri";
 import RecordDeletionModal from "../Maintenance/recordDeletionModal";
-import { useState } from "react";
-import { CiCircleCheck, CiEdit } from "react-icons/ci";
+import { useEffect, useState } from "react";
+import { CiCircleCheck, CiEdit, CiCircleMinus } from "react-icons/ci";
 import { parseDate } from "@internationalized/date";
 
-export default function PaymentRecord({record, onDelete}) {
-    const [isEditable, setIsEditable] = useState(false);
+export default function PaymentRecord({record, newRecord, paymentTypes, editable, onDelete, deleteNewRecord}) {
+    const [isNewRecord, setIsNewRecord] = useState(newRecord);
+    const [isEditable, setIsEditable] = useState(editable);
 
     return(
-        <div className="w-full grid grid-cols-10 items-center rounded-lg border border-black my-1">
+        <div className={`w-full grid grid-cols-9 items-center rounded-lg border border-black my-1 ${ isEditable ? "border-dashed" : "border-solid"}`}>
             <Button 
                 isIconOnly
                 className="col-span-1 ml-3"
@@ -19,10 +20,10 @@ export default function PaymentRecord({record, onDelete}) {
 
             <DateInput 
                 isReadOnly={!isEditable}
-                defaultValue={parseDate(record.date)}
+                defaultValue={!isNewRecord ? parseDate(record.date) : null}
                 isRequired
                 variant="underlined"
-                className="col-span-3"
+                className="col-span-2"
             />
 
             <Select
@@ -31,19 +32,19 @@ export default function PaymentRecord({record, onDelete}) {
                 variant="underlined"
                 placeholder="account"
                 className="col-span-2"
-                defaultSelectedKeys={[record.account.toLowerCase()]}
+                defaultSelectedKeys={!isNewRecord ? [record.account] : []}
                 classNames={{
                     base: "w-5/6",
+                    popoverContent: "w-[200px]",
                     listboxWrapper: "bg-white shadow-lg rounded-lg",
                 }}
             >
                 <SelectSection
                     showDivider
                 >
-                    <SelectItem key="cash">Cash</SelectItem>
-                    <SelectItem key="dmk auto">DMK Auto</SelectItem>
-                    <SelectItem key="bank">DDW Online</SelectItem>
-                    <SelectItem key="other">Other</SelectItem>
+                    {paymentTypes.map((type) => (
+                        <SelectItem key={type.paymentTitle}>{type.paymentTitle}</SelectItem>
+                    ))}
                 </SelectSection>
             </Select>
 
@@ -53,7 +54,7 @@ export default function PaymentRecord({record, onDelete}) {
                 variant="underlined"
                 placeholder="amount"
                 className="col-span-3 placeholder:text-black"
-                defaultValue={record.amount}
+                defaultValue={!isNewRecord ? record.amount : null}
                 startContent={
                     <div className="pointer-events-none flex items-center">
                         <span className="text-default-400 text-xs mr-1">LKR</span>
@@ -80,7 +81,21 @@ export default function PaymentRecord({record, onDelete}) {
                     )
                 }
 
-                <RecordDeletionModal onDelete={onDelete} />
+                {
+                    isNewRecord ? (
+                        <Button
+                            isIconOnly
+                            className="mx-auto"
+                        >
+                            <CiCircleMinus 
+                                className="hover:text-red-500"
+                                onClick={deleteNewRecord}
+                            />
+                        </Button>
+                    ) : (
+                        <RecordDeletionModal onDelete={onDelete} />
+                    )
+                }
             </div>
         </div>
     )
