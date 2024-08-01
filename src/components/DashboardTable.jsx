@@ -29,7 +29,6 @@ export default function DashboardTable({tableHeaders, data, tab, reload}) {
 
   // filter function
   const filteredItems = useMemo(() => {
-    console.log('data:', data);
     let filteredVehicles = [...data];
 
     if (hasSearchFilter) {
@@ -81,11 +80,21 @@ export default function DashboardTable({tableHeaders, data, tab, reload}) {
               label="Months"
               labelPlacement="outside-left"
             />
-            
-            <div className="flex items-center space-x-2">
-              <label className="mr-2">CR</label>
-              {vehicle.cr == "Pending" ? <Chip className="bg-red-200">{vehicle.cr}</Chip> : <Chip className="bg-green-200">{vehicle.cr}</Chip>}
-            </div>
+
+            <Input
+              isReadOnly
+              classNames={{
+                base: "bg-transparent",
+                label: "mr-2",
+                inputWrapper: `w-[75%] rounded-lg ${vehicle.cr === "Pending" ? "bg-red-200" : "bg-green-200"}`,
+                input: "text-center text-sm text-[#0c0c0c]",
+              }}
+              defaultValue={vehicle.cr}
+              size="sm"
+              variant="flat"
+              label="CR"
+              labelPlacement="outside-left"
+            />
 
             <Input
               isReadOnly
@@ -174,7 +183,10 @@ export default function DashboardTable({tableHeaders, data, tab, reload}) {
             <div className="w-full py-3 border-b border-black/25">
               <Button 
                 as={Link}
-                href={`/dashboard/payment/${vehicle.id}`}
+                href={{
+                  pathname: `/dashboard/payment/${vehicle.id}`,
+                  query: { vehicle: JSON.stringify(vehicle) }
+                }}
                 className="w-full bg-[#0c0c0c] text-white px-12 font-extralight rounded-md hover:bg-[#1d1d1d] " 
                 size="sm"
               >
@@ -191,14 +203,17 @@ export default function DashboardTable({tableHeaders, data, tab, reload}) {
             </div>
             <Button 
               as={Link}
-              href={`/dashboard/edit-vehicle/${vehicle.id}`}
+              href={{
+                pathname: `/dashboard/edit-vehicle/${vehicle.id}`,
+                query: { vehicle: JSON.stringify(vehicle) }
+              }}
               className="bg-white text-black px-12 font-extralight rounded-md hover:bg-[#fafafa] mt-3" 
               size="sm"
             >
               Edit Record
             </Button>
 
-            <VehicleDeletionModal vehicle={vehicle} />
+            <VehicleDeletionModal vehicle={vehicle} reload={reload} />
           </div>
         </div>
       </div>
@@ -211,6 +226,21 @@ export default function DashboardTable({tableHeaders, data, tab, reload}) {
       <div className="w-full grid grid-cols-4 gap-x-2">
         <div className="col-span-3 flex flex-col">
           <div className="grid grid-cols-2 gap-y-4 p-2 border-b border-black/25">
+            <Input
+              isReadOnly
+              classNames={{
+                base: "bg-transparent",
+                label: "mr-2",
+                inputWrapper: "w-[100%] rounded-lg bg-gray-200",
+                input: "text-center text-sm text-[#0c0c0c]",
+              }}
+              defaultValue={vehicle.date}
+              size="sm"
+              variant="flat"
+              label="Purchased Date"
+              labelPlacement="outside-left"
+            />
+            
             <Input
               isReadOnly
               classNames={{
@@ -389,7 +419,7 @@ export default function DashboardTable({tableHeaders, data, tab, reload}) {
               )
             }
           </TableCell>
-          <TableCell>{vehicle.date}</TableCell>
+          <TableCell>{vehicle.dateSold}</TableCell>
           <TableCell>
             <Chip className="bg-violet-200">{vehicle.vehicleNo}</Chip>
           </TableCell>

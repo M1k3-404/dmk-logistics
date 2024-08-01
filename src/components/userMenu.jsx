@@ -11,17 +11,23 @@ export default function UserMenu() {
                     <p className="ml-2 font-light">Dilruksh Wickramarathne</p>
                 </div>
             </DropdownMenuTrigger>
-            <DropdownMenuContent className="mt-3 p-4">
+            <DropdownMenuContent className="mt-3 px-8 py-4">
                 <DropdownMenuGroup>
-                    {/* <DropdownMenuItem>Theme</DropdownMenuItem> */}             
+                    <DropdownMenuLabel className="text-xs font-light">Quick Links</DropdownMenuLabel>
                     <DropdownMenuItem asChild>
-                        <Link href="/">Home</Link>
-                    </DropdownMenuItem>
+                        <Link href="/dashboard/add-vehicle">Add Vehicle</Link>
+                    </DropdownMenuItem>           
                     <DropdownMenuItem asChild>
                         <Link href="/dashboard">Dashboard</Link>
                     </DropdownMenuItem>
+                    <DropdownMenuItem asChild>
+                        <Link href="/dashboard">Accounts</Link>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem asChild>
+                        <Link href="/settings">Settings</Link>
+                    </DropdownMenuItem>
                 </DropdownMenuGroup>
-                <DropdownMenuSeparator />
+                {/* <DropdownMenuSeparator />
                 <DropdownMenuGroup>
                     <DropdownMenuLabel className="text-xs font-light">Settings</DropdownMenuLabel>
                     <DropdownMenuItem className="mt-1 py-2" asChild>
@@ -30,7 +36,7 @@ export default function UserMenu() {
                     <DropdownMenuItem className="py-2" asChild>
                         <Link href="/dashboard/audit-log">Audit Log</Link>
                     </DropdownMenuItem>
-                </DropdownMenuGroup>
+                </DropdownMenuGroup> */}
                 <DropdownMenuSeparator />
                 <DropdownMenuItem className="text-red-500" asChild>
                     <Link href="/login">Logout</Link>

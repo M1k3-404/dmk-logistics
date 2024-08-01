@@ -1,7 +1,8 @@
 import { Button } from "@nextui-org/react";
 import { AlertDialog, AlertDialogTrigger, AlertDialogContent, AlertDialogHeader, AlertDialogDescription, AlertDialogFooter, AlertDialogAction, AlertDialogCancel } from "../ui/alert-dialog";
+import { deleteVehicle } from "@/actions/vehicle-actions";
 
-export default function VehicleDeletionModal({ vehicle }) {
+export default function VehicleDeletionModal({ vehicle, reload }) {
     return(
         <AlertDialog>
             <AlertDialogTrigger asChild>
@@ -23,6 +24,7 @@ export default function VehicleDeletionModal({ vehicle }) {
                         <Button 
                             size="sm"
                             className="bg-white px-8 text-[#0c0c0c] font-extralight rounded-md border hover:shadow-sm hover:bg-white"
+                            onClick={() => deleteVehicle(vehicle.id, reload)}
                         >
                             Yes
                         </Button>

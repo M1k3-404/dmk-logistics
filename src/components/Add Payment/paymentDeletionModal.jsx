@@ -2,14 +2,10 @@ import { Button } from "@nextui-org/react";
 import { AlertDialog, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTrigger } from "../ui/alert-dialog";
 import { MdCancel } from "react-icons/md";
 import { useState } from "react";
+import { deletePaymentType } from "@/actions/payment-types-actions";
 
-export default function PaymentDeletionModal({ onDelete }) {
+export default function PaymentDeletionModal({ id }) {
     const [openModal, setOpenModal] = useState(false);
-
-    const handleDeletion = () => {
-        onDelete;
-        setOpenModal(false);
-    }
 
     return(
         <AlertDialog open={openModal} onOpenChange={setOpenModal}>
@@ -33,7 +29,7 @@ export default function PaymentDeletionModal({ onDelete }) {
                     <Button
                         size="sm"
                         className="bg-white px-8 text-[#0c0c0c] font-extralight rounded-md border hover:shadow-sm hover:bg-white"
-                        onClick={handleDeletion}
+                        onClick={() => deletePaymentType(id)}
                     >
                         Yes
                     </Button>

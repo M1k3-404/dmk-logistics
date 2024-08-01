@@ -1,10 +1,9 @@
 "use client"
 
-import { HandleSaveChanges } from "@/actions/add-vehicle-actions";
+import { addVehicle } from "@/actions/vehicle/vehicle-add-action";
 import CancellationModal from "@/components/Add Vehicle/cancellationModal";
 import { Button, DateInput, Input, Select, SelectItem } from "@nextui-org/react";
 import { useState } from "react";
-import toast from "react-hot-toast";
 
 export default function Page() {
     const [date, setDate] = useState("");
@@ -30,7 +29,7 @@ export default function Page() {
             "pCost": pCost
         };
         
-        const status = HandleSaveChanges(vehicleData);
+        const status = addVehicle(vehicleData);
         setErrorStatus(status);
     }
 
