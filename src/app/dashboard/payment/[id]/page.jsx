@@ -1,10 +1,7 @@
 "use client"
 
 import { getAllPaymentTypes } from "@/actions/payment-types-actions";
-import EditablePaymentRecord from "@/components/Payments/editablePaymentRecord";
 import PaymentRecord from "@/components/Payments/paymentRecord";
-import { vehicles } from "@/components/vehicleData";
-import { parseDate } from "@internationalized/date";
 import { Button, Input } from "@nextui-org/react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
@@ -18,14 +15,6 @@ export default function Payment({ params }) {
     const [vehicle, setVehicle] = useState(null);
     const [loading, setLoading] = useState(true);
 
-    const [date, setDate] = useState(null);
-    const [vehicleNo, setVehicleNo] = useState(null);
-    const [cr, setCr] = useState(null);
-    const [purchasedFrom, setPurchasedFrom] = useState(null);
-    const [pCost, setPCost] = useState(null);
-    const [pRemaining, setPRemaining] = useState(null);
-    const [payments, setPayments] = useState([]);
-
     const [paymentTypes, setPaymentTypes] = useState([]);
 
     useEffect(() => {
@@ -33,14 +22,6 @@ export default function Payment({ params }) {
             setVehicle(JSON.parse(vehicleQuery));
             setLoading(false);
             console.log(vehicleQuery);
-
-            setDate(parseDate(JSON.parse(vehicleQuery).date));
-            setVehicleNo(JSON.parse(vehicleQuery).vehicleNo);
-            setCr(JSON.parse(vehicleQuery).cr);
-            setPurchasedFrom(JSON.parse(vehicleQuery).purchasedFrom);
-            setPCost(JSON.parse(vehicleQuery).pCost);
-            setPRemaining(JSON.parse(vehicleQuery).pRemaining);
-            setPayments(JSON.parse(vehicleQuery).payments);
         }
     }, [])
 
@@ -65,18 +46,6 @@ export default function Payment({ params }) {
             return updatedRecords;
         })
     }
-
-    // const handleEditRecord = (index) => {
-    //     //Edit
-    // }
-
-    // const handleDeleteRecord = (index) => {
-    //     //Delete
-    // }
-
-    // const handleSaveRecord = (index) => {
-    //     //Save
-    // }
 
     if (loading) {
         return <div className="w-[95%] h-[25%] p-6 bg-white rounded-lg">Loading...</div>
@@ -181,11 +150,11 @@ export default function Payment({ params }) {
                                 return(
                                     <PaymentRecord 
                                         key={index}
+                                        vehicleId={id}
                                         record={payment}
                                         paymentTypes={paymentTypes}
                                         editable={false}
                                         newRecord={false}
-                                        onDelete={() => handleDeleteRecord(index)}
                                     />
                                 )
                             })}
@@ -193,11 +162,11 @@ export default function Payment({ params }) {
                                 return(
                                     <PaymentRecord
                                         key={index}
+                                        vehicleId={id}
                                         record={_}
                                         paymentTypes={paymentTypes}
                                         editable={true}
                                         newRecord={true}
-                                        onDelete={() => handleDeleteNewRecord(index)}
                                         deleteNewRecord = {handleDeleteNewRecord}
                                     />
                                 )
@@ -212,19 +181,12 @@ export default function Payment({ params }) {
                     </div>
 
                     <div className="w-1/4 p-6 border-l border-black/25 flex flex-col justify-end">
-                        <Button
-                            as={Link}
-                            href="/dashboard"
-                            className="bg-white text-[#0c0c0c] font-extralight rounded-md border hover:shadow-sm hover:text-red-600"
-                        >
-                            Cancel
-                        </Button>
                         <Button 
                             as={Link}
                             href="/dashboard"
                             className="bg-[#0c0c0c] text-white font-extralight rounded-md mt-2 hover:bg-green-600"
                         >
-                            Save Changes
+                            Save Changes & Exit
                         </Button>
                     </div>
                 </div>

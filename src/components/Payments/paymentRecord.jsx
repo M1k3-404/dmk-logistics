@@ -1,13 +1,43 @@
 import { Button, DateInput, Input, Select, SelectItem, SelectSection } from "@nextui-org/react";
 import { RiDraggable } from "react-icons/ri";
 import RecordDeletionModal from "../Maintenance/recordDeletionModal";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { CiCircleCheck, CiEdit, CiCircleMinus } from "react-icons/ci";
 import { parseDate } from "@internationalized/date";
+import { addPayment, editPayment } from "@/actions/payment-actions";
 
-export default function PaymentRecord({record, newRecord, paymentTypes, editable, onDelete, deleteNewRecord}) {
+export default function PaymentRecord({record, newRecord, paymentTypes, editable, deleteNewRecord, vehicleId}) {
     const [isNewRecord, setIsNewRecord] = useState(newRecord);
     const [isEditable, setIsEditable] = useState(editable);
+
+    const id = isNewRecord ? null : record.id;
+    const [date, setDate] = useState(isNewRecord ? null : parseDate(record.date));
+    const [account, setAccount] = useState(isNewRecord ? null : record.account);
+    const [amount, setAmount] = useState(isNewRecord ? null : record.amount);
+
+    const [errorStatus, setErrorStatus] = useState([]);
+
+    const handleSave = () => {
+        const paymentRecord = {
+            "date": date,
+            "account": account,
+            "amount": amount
+        };
+
+        const requiredFields = addPayment(paymentRecord, paymentTypes, vehicleId);
+        setErrorStatus(requiredFields);
+    }
+
+    const handleEdit = () => {
+        const paymentRecord = {
+            "date": date,
+            "account": account,
+            "amount": amount
+        };
+
+        const requiredFields = editPayment(paymentRecord, paymentTypes, vehicleId, id, setIsEditable);
+        setErrorStatus(requiredFields);
+    }
 
     return(
         <div className={`w-full grid grid-cols-9 items-center rounded-lg border border-black my-1 ${ isEditable ? "border-dashed" : "border-solid"}`}>
@@ -20,7 +50,8 @@ export default function PaymentRecord({record, newRecord, paymentTypes, editable
 
             <DateInput 
                 isReadOnly={!isEditable}
-                defaultValue={!isNewRecord ? parseDate(record.date) : null}
+                value={date}
+                onChange={(value) => setDate(value)}
                 isRequired
                 variant="underlined"
                 className="col-span-2"
@@ -32,7 +63,8 @@ export default function PaymentRecord({record, newRecord, paymentTypes, editable
                 variant="underlined"
                 placeholder="account"
                 className="col-span-2"
-                defaultSelectedKeys={!isNewRecord ? [record.account] : []}
+                selectedKeys={account ? [account] : []}
+                onChange={(e) => setAccount(e.target.value)}
                 classNames={{
                     base: "w-5/6",
                     popoverContent: "w-[200px]",
@@ -54,7 +86,8 @@ export default function PaymentRecord({record, newRecord, paymentTypes, editable
                 variant="underlined"
                 placeholder="amount"
                 className="col-span-3 placeholder:text-black"
-                defaultValue={!isNewRecord ? record.amount : null}
+                value={amount}
+                onChange={(e) => setAmount(e.target.value)}
                 startContent={
                     <div className="pointer-events-none flex items-center">
                         <span className="text-default-400 text-xs mr-1">LKR</span>
@@ -67,7 +100,7 @@ export default function PaymentRecord({record, newRecord, paymentTypes, editable
                     isEditable ? (
                         <Button
                             isIconOnly
-                            onClick={() => setIsEditable(false)}
+                            onClick={isNewRecord ? handleSave : handleEdit}
                         >
                             <CiCircleCheck className="hover:text-green-600" />
                         </Button>
@@ -93,7 +126,7 @@ export default function PaymentRecord({record, newRecord, paymentTypes, editable
                             />
                         </Button>
                     ) : (
-                        <RecordDeletionModal onDelete={onDelete} />
+                        <RecordDeletionModal id={id} />
                     )
                 }
             </div>

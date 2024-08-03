@@ -2,12 +2,13 @@ import { Button } from "@nextui-org/react";
 import { AlertDialog, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTrigger } from "../ui/alert-dialog";
 import { CiCircleMinus } from "react-icons/ci";
 import { useState } from "react";
+import { deletePayment } from "@/actions/payment-actions";
 
-export default function RecordDeletionModal({ onDelete }) {
+export default function RecordDeletionModal({ id }) {
     const [openModal, setOpenModal] = useState(false);
 
     const handleDeletion = () => {
-        onDelete;
+        deletePayment(id);
         setOpenModal(false);
     }
 
