@@ -2,46 +2,69 @@ import axios from "axios";
 import toast from "react-hot-toast";
 
 const addVehicle = async (vehicle) => {
-    const errorStatus = validateRequiredFields(vehicle);
-    const hasError = errorStatus.some(field => field.isInvalid);
+    const errors = validateFields(vehicle);
 
-    if (hasError) {
-        return errorStatus;
+    if (errors.length > 0) {
+        return errors;
     } else {
         await sendData(vehicle);
-        return errorStatus;
+        return [];
     }
 }
 
-// Function to validate required fields
-const validateRequiredFields = (vehicle) => {
-    const errorStatus = [];
+// Function to validate fields
+const validateFields = (vehicle) => {
+    const errors = {};
+
+    // Check for empty values
     const requiredFields = ['date', 'vehicleNo', 'make', 'yom', 'cr', 'purchasedFrom', 'document', 'pCost'];
-
     requiredFields.forEach(field => {
-        const value = vehicle[field];
-        if (isEmpty(value)) {
-            errorStatus.push({ key: field, isInvalid: true, error: "This field is required" });
-        } else {
-            errorStatus.push({ key: field, isInvalid: false, error: "" });
+        if (isEmpty(vehicle[field])) {
+            errors[field] = 'This field is required';
         }
-    });
+    })
 
-    return errorStatus;
-};
+    // Validate dates
+    const date = new Date(vehicle.date.year, vehicle.date.month - 1, vehicle.date.day);
+    const today = new Date();
+
+    if (!isValidDate(date)) {
+        errors.date = 'Invalid date';
+    } else if (date > today) {
+        errors.date = 'Date cannot be in the future';
+    }
+
+    // Validate year of manufacture
+    const yom = new Date(vehicle.yom, 0, 1);
+    if (!isValidDate(yom)) {
+        errors.yom = 'Invalid year of manufacture';
+    } else if (yom > date) {
+        errors.yom = 'Year of manufacture cannot be after the purchase date';
+    }
+
+    return errors;
+}
+
+// Function to check if a date is valid
+const isValidDate = (date) => {
+    return date instanceof Date && !isNaN(date);
+}
 
 // Function to send data to the server
 const sendData = async (vehicle) => {
     const formattedVehicleData = formatVehicleData(vehicle);
+    console.log('Formatted vehicle data:', formattedVehicleData);
 
     try {
         const response = await axios.post('http://localhost:7174/api/Vehicle/AddVehicle?userId=23', formattedVehicleData);
         console.log('Data sent successfully:', response.data);
-        toast.success(`Vehicle Added: ${vehicle.vehicleNo}`, { duration: 5000 });
-        window.location.href = "/dashboard";
     } catch (error) {
         console.error('Error sending data:', error);
+        const errorMsg = error.response?.data?.message || 'Failed to add vehicle. Please try again.';
         toast.error('Failed to add vehicle. Please try again.', { duration: 5000 });
+    } finally {
+        toast.success(`Vehicle Added: ${vehicle.vehicleNo}`, { duration: 5000 });
+        window.location.href = "/dashboard";
     }
 };
 

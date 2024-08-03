@@ -2,38 +2,30 @@
 
 import { addVehicle } from "@/actions/vehicle/vehicle-add-action";
 import CancellationModal from "@/components/Add Vehicle/cancellationModal";
+import { useFormState } from "@/lib/hooks/useFormState";
 import { Button, DateInput, Input, Select, SelectItem } from "@nextui-org/react";
-import { useState } from "react";
+import { memo } from "react";
 
-export default function Page() {
-    const [date, setDate] = useState("");
-    const [vehicleNo, setVehicleNo] = useState("");
-    const [make, setMake] = useState("");
-    const [yom, setYom] = useState("");
-    const [cr, setCr] = useState("");
-    const [purchasedFrom, setPurchasedFrom] = useState("");
-    const [document, setDocument] = useState("");
-    const [pCost, setPCost] = useState("");
+const initialState = {
+    date: "",
+    vehicleNo: "",
+    make: "",
+    yom: "",
+    cr: "",
+    purchasedFrom: "",
+    document: "",
+    pCost: ""
+};
 
-    const [errorStatus, setErrorStatus] = useState([]);
+const Page = () => {
+    const [formState, handleChange, handleDateChange, errorStatus, setErrorStatus] = useFormState(initialState);
 
-    const handleSave = () => {
-        const vehicleData = {
-            "date": date,
-            "vehicleNo": vehicleNo,
-            "make": make,
-            "yom": yom,
-            "cr": cr,
-            "purchasedFrom": purchasedFrom,
-            "document": document,
-            "pCost": pCost
-        };
-        
-        const status = addVehicle(vehicleData);
-        setErrorStatus(status);
+    const handleSave = async () => {
+        const errors = await addVehicle(formState);
+        setErrorStatus(errors);
     }
 
-    return(
+    return (
         <div className="w-[95%] p-6 bg-white rounded-lg">
             <div className="w-full">
                 <p className={`text-[#606060] text-xl font-bold`}>Add Vehicle Details</p>
@@ -42,12 +34,13 @@ export default function Page() {
                     <div className="w-3/4 pr-6">
                         <div className="w-full grid grid-cols-2 gap-x-12 gap-y-6 pb-5">
                             <DateInput
+                                name="date"
                                 label="Date of Purchase"
                                 labelPlacement="outside-left"
                                 variant="flat"
-                                errorMessage={errorStatus[0]?.error}
-                                isInvalid={errorStatus[0]?.isInvalid}
-                                onChange={setDate}
+                                errorMessage={errorStatus.date}
+                                isInvalid={!!errorStatus.date}
+                                onChange={(date) => handleDateChange('date', date)} 
                                 classNames={{  
                                     label: "mr-2",  
                                     inputWrapper: "w-full rounded-lg bg-[#f5f5f5]",
@@ -56,12 +49,13 @@ export default function Page() {
                             />
 
                             <Input
+                                name="vehicleNo"
                                 label="Vehicle No"
                                 labelPlacement="outside-left"
                                 variant="flat"
-                                errorMessage={errorStatus[1]?.error}
-                                isInvalid={errorStatus[1]?.isInvalid}
-                                onChange={(e) => setVehicleNo(e.target.value)}
+                                errorMessage={errorStatus.vehicleNo}
+                                isInvalid={!!errorStatus.vehicleNo}
+                                onChange={(e) => handleChange(e)}
                                 classNames={{
                                     mainWrapper: ["ml-8 w-full"],
                                     label: "mr-2",
@@ -71,13 +65,13 @@ export default function Page() {
                             />
 
                             <Input
-                            
+                                name="make"
                                 label="Make"
                                 labelPlacement="outside-left"
                                 variant="flat"
-                                errorMessage={errorStatus[2]?.error}
-                                isInvalid={errorStatus[2]?.isInvalid}
-                                onChange={(e) => setMake(e.target.value)}
+                                errorMessage={errorStatus.make}
+                                isInvalid={!!errorStatus.make}
+                                onChange={(e) => handleChange(e)}
                                 classNames={{
                                     mainWrapper: ["ml-24 w-full"],
                                     inputWrapper: "w-full rounded-lg bg-[#f5f5f5]",
@@ -86,13 +80,14 @@ export default function Page() {
                             />
 
                             <DateInput
+                                name="yom"
                                 label="YOM"
                                 labelPlacement="outside-left"
                                 variant="flat"
                                 granularity="year"
-                                errorMessage={errorStatus[3]?.error}
-                                isInvalid={errorStatus[3]?.isInvalid}
-                                onChange={setYom}
+                                errorMessage={errorStatus.yom}
+                                isInvalid={!!errorStatus.yom}
+                                onChange={(yom) => handleDateChange('yom', yom)}
                                 classNames={{  
                                     label: "mr-16",  
                                     inputWrapper: "w-full rounded-lg bg-[#f5f5f5]",
@@ -101,12 +96,13 @@ export default function Page() {
                             />
 
                             <Select
+                                name="cr"
                                 label="CR"
                                 labelPlacement="outside-left"
                                 variant="flat"
-                                errorMessage={errorStatus[4]?.error}
-                                isInvalid={errorStatus[4]?.isInvalid}
-                                onChange={(e) => setCr(e.target.value)}
+                                errorMessage={errorStatus.cr}
+                                isInvalid={!!errorStatus.cr}
+                                onChange={(e) => handleChange(e)}
                                 classNames={{                    
                                     popoverContent: ["bg-white rounded-lg shadow-lg"],
                                     mainWrapper: ["ml-28"],
@@ -119,13 +115,14 @@ export default function Page() {
                             </Select>
 
                             <Input
+                                name="purchasedFrom"
                                 label="Purchased from"
                                 labelPlacement="outside-left"
                                 variant="flat"
                                 className="w-full col-span-2"
-                                errorMessage={errorStatus[5]?.error}
-                                isInvalid={errorStatus[5]?.isInvalid}
-                                onChange={(e) => setPurchasedFrom(e.target.value)}
+                                errorMessage={errorStatus.purchasedFrom}
+                                isInvalid={!!errorStatus.purchasedFrom}
+                                onChange={(e) => handleChange(e)}
                                 classNames={{
                                     mainWrapper: ["ml-8 w-full"],
                                     inputWrapper: "w-full rounded-lg bg-[#f5f5f5]",
@@ -134,12 +131,13 @@ export default function Page() {
                             />
 
                             <Input
+                                name="document"
                                 label="Document"
                                 labelPlacement="outside-left"
                                 variant="flat"
-                                errorMessage={errorStatus[6]?.error}
-                                isInvalid={errorStatus[6]?.isInvalid}
-                                onChange={(e) => setDocument(e.target.value)}
+                                errorMessage={errorStatus.document}
+                                isInvalid={!!errorStatus.document}
+                                onChange={(e) => handleChange(e)}
                                 classNames={{
                                     mainWrapper: ["ml-14 w-full"],
                                     inputWrapper: "w-full rounded-lg bg-[#f5f5f5]",
@@ -148,13 +146,14 @@ export default function Page() {
                             />
 
                             <Input
+                                name="pCost"
                                 type="number"
                                 label="P/Cost"
                                 labelPlacement="outside-left"
                                 variant="flat"
-                                errorMessage={errorStatus[7]?.error}
-                                isInvalid={errorStatus[7]?.isInvalid}
-                                onChange={(e) => setPCost(e.target.value)}
+                                errorMessage={errorStatus.pCost}
+                                isInvalid={!!errorStatus.pCost}
+                                onChange={(e) => handleChange(e)}
                                 classNames={{
                                     mainWrapper: ["ml-8 w-full"],
                                     inputWrapper: "w-full rounded-lg bg-[#f5f5f5]",
@@ -184,3 +183,5 @@ export default function Page() {
         </div>
     )
 }
+
+export default memo(Page);
