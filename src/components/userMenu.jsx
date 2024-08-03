@@ -1,8 +1,9 @@
 import Link from "next/link";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "./ui/dropdown-menu";
 import { Avatar } from "@nextui-org/react";
+import { memo } from "react";
 
-export default function UserMenu() {
+const UserMenu = () => {
     return (
         <DropdownMenu>
             <DropdownMenuTrigger asChild>
@@ -27,16 +28,6 @@ export default function UserMenu() {
                         <Link href="/settings">Settings</Link>
                     </DropdownMenuItem>
                 </DropdownMenuGroup>
-                {/* <DropdownMenuSeparator />
-                <DropdownMenuGroup>
-                    <DropdownMenuLabel className="text-xs font-light">Settings</DropdownMenuLabel>
-                    <DropdownMenuItem className="mt-1 py-2" asChild>
-                        <Link href="/dashboard/add-payment-methods">Add Payment Methods</Link>
-                    </DropdownMenuItem>
-                    <DropdownMenuItem className="py-2" asChild>
-                        <Link href="/dashboard/audit-log">Audit Log</Link>
-                    </DropdownMenuItem>
-                </DropdownMenuGroup> */}
                 <DropdownMenuSeparator />
                 <DropdownMenuItem className="text-red-500" asChild>
                     <Link href="/login">Logout</Link>
@@ -45,3 +36,5 @@ export default function UserMenu() {
         </DropdownMenu>
     )
 }
+
+export default memo(UserMenu);
