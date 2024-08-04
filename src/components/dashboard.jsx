@@ -1,9 +1,8 @@
 import bottomContent from "./Dashboard/TableComponent/bottomContent";
 import TopContent from "./Dashboard/TableComponent/topContent";
 import VehicleRow from "./Dashboard/TableComponent/VehicleRow";
-
-const { useState, useCallback, useMemo } = require("react");
-const { Table, TableHeader, TableRow, TableHead, TableBody } = require("./ui/table");
+import { useState, useCallback, useMemo } from "react";
+import { Table, TableHeader, TableRow, TableHead, TableBody } from "@/components/ui/table";
 
 const DashboardTable = ({ tableHeaders, data, tab, reload }) => {
     const [filterValue, setFilterValue] = useState("");
