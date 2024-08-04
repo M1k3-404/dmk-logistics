@@ -64,7 +64,7 @@ const sendData = async (vehicle, id) => {
     const formattedYom = vehicle.yom + "-01-01";
     console.log('Sending YOM:', formattedYom);
 
-    const formattedCR = vehicle.cr === "true" ? true : false;
+    const formattedCR = vehicle.cr === "ok" ? true : false;
     console.log('Sending CR:', formattedCR);
 
     const formattedPCost = parseFloat(vehicle.pCost);
@@ -95,7 +95,7 @@ const sendData = async (vehicle, id) => {
     } catch (error) {
         console.error('Error sending data:', error);
     } finally {
-        location.href = "/dashboard";
+        // location.href = "/dashboard";
         toast((t) => {
             t.duration = 5000;
 

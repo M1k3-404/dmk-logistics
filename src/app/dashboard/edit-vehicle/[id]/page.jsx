@@ -214,7 +214,7 @@ export default function Page({ params }) {
                                 variant="flat"
                                 errorMessage={errorStatus[8]?.error}
                                 isInvalid={errorStatus[8]?.isInvalid}
-                                onChange={(e) => setPCost(e.target.value)}
+                                onChange={(e) => setSellingPrice(e.target.value)}
                                 classNames={{
                                     mainWrapper: ["ml-16 w-full"],
                                     inputWrapper: "w-full rounded-lg bg-[#f5f5f5]",
