@@ -1,3 +1,4 @@
+import { formatDate, formatYom, isEmpty } from "@/lib/utils";
 import axios from "axios";
 import toast from "react-hot-toast";
 
@@ -82,24 +83,6 @@ const formatVehicleData = (vehicle) => {
         "LegalOwnerName": vehicle.document,
         "AgreedAmount": parseFloat(vehicle.pCost)
     };
-};
-
-// Function to format date
-const formatDate = (date) => {
-    const year = date.year.toString().padStart(4, '0');
-    const month = date.month.toString().padStart(2, '0');
-    const day = date.day.toString().padStart(2, '0');
-    return `${year}-${month}-${day}`;
-};
-
-// Function to format year of manufacture
-const formatYom = (yom) => {
-    return formatDate(yom).substring(0, 4) + "-01-01";
-};
-
-// Utility function to check if a value is empty
-const isEmpty = (value) => {
-    return value === null || value === undefined || value === "";
 };
 
 export { addVehicle };
