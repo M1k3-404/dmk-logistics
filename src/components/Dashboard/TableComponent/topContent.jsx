@@ -1,9 +1,8 @@
-import { useMemo } from "react";
 import { IoIosSearch } from "react-icons/io";
 const { Input } = require("@nextui-org/react");
 
-const topContent = ({filterValue, setFilterValue, onSearchChange, filteredItems}) => useMemo(() => {
-    return(
+const TopContent = ({ filterValue, setFilterValue, onSearchChange, filteredItems }) => {
+    return (
         <div className="flex justify-between">
             <Input
                 isClearable
@@ -37,6 +36,6 @@ const topContent = ({filterValue, setFilterValue, onSearchChange, filteredItems}
             />
         </div>
     )
-});
+}
 
-export default topContent;
+export default TopContent;

@@ -5,9 +5,9 @@ import { Button } from "@nextui-org/react";
 import { useEffect, useRef, useState } from "react"
 import { IoIosAddCircle } from "react-icons/io";
 import Link from "next/link";
-import DashboardTable from "./dashboardTable";
 import { soldVehicleTableHeads, vehicleTableHeads } from "@/data/static-data";
 import { getAllVehicles } from "@/actions/vehicle/vehicle-getAll-action";
+import DashboardTable from "./dashboard";
 
 export default function Tabs() {
     const [activeVehicles, setActiveVehicles] = useState([]);
