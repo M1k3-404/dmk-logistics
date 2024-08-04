@@ -1,6 +1,6 @@
 "use client"
 
-import React from "react";
+import React, { useCallback } from "react";
 import { Button } from "@nextui-org/react";
 import { useEffect, useRef, useState } from "react"
 import { IoIosAddCircle } from "react-icons/io";
@@ -12,32 +12,31 @@ import DashboardTable from "./dashboard";
 export default function Tabs() {
     const [activeVehicles, setActiveVehicles] = useState([]);
     const [soldVehicles, setSoldVehicles] = useState([]);
-
-    const [reloadAgain, setReloadAgain] = useState(0);
-
-    const items = [
-        {title: "Active", content: <DashboardTable tableHeaders={vehicleTableHeads} data={activeVehicles} tab={"vehicles"} reload={setReloadAgain} />},
-        {title: "Sold", content: <DashboardTable tableHeaders={soldVehicleTableHeads} data={soldVehicles} tab={"sold vehicles"} />},
-    ]
-
-    const firstBtnRef = useRef();
-
+    const [reloadTrigger, setReloadTrigger] = useState(0);
     const [selectedTab, setSelectedTab] = useState(0);
+    const firstBtnRef = useRef();
+    const fetchVehicles = useCallback(async () => {
+        try {
+            const { activeVehicles, soldVehicles } = await getAllVehicles();
+            setActiveVehicles(activeVehicles);
+            setSoldVehicles(soldVehicles);
+        } catch (error) {
+            console.error('Error fetching vehicles:', error);
+        }
+    }, []);
 
     useEffect(() => {
-        getAllVehicles()
-            .then(({ activeVehicles, soldVehicles }) => {
-                setActiveVehicles(activeVehicles);
-                setSoldVehicles(soldVehicles);
-            })
-            .catch(error => {
-                console.error('Error fetching vehicles:', error);
-            });
-    }, [reloadAgain]);
+        fetchVehicles();
+    }, [fetchVehicles, reloadTrigger]);
 
     useEffect(() => {
         firstBtnRef.current.focus();
     }, []);
+
+    const items = [
+        { title: "Active", content: <DashboardTable tableHeaders={vehicleTableHeads} data={activeVehicles} tab={"vehicles"} reload={setReloadTrigger} /> },
+        { title: "Sold", content: <DashboardTable tableHeaders={soldVehicleTableHeads} data={soldVehicles} tab={"sold vehicles"} /> },
+    ]
 
     return(
         <div>
@@ -66,11 +65,7 @@ export default function Tabs() {
             </div>
 
             <div className="mt-5 mx-8">
-                {items.map((item, index) => (
-                    <div className={`${selectedTab === index ? '' : 'hidden'}`}>
-                        {item.content}
-                    </div>
-                ))}
+                {items[selectedTab].content}
             </div>
         </div>
     )
