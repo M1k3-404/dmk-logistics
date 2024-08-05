@@ -1,24 +1,44 @@
+import { formatDate, isEmpty } from "@/lib/utils";
 import axios from "axios";
-import toast from "react-hot-toast";
 
-const HandleSaveChanges = (saleRecord, setOpenModal, reload) => {
-    const requiredFields = HandleRequiredFields(saleRecord);
+const AddSale = async (vehicle, saleRecord, setOpenModal, reload) => {
+    const errors = ValidateFields(vehicle, saleRecord);
 
-    const hasError = requiredFields.some(field => field.isInvalid);
-
-    if (hasError) {
-        return requiredFields;
+    if (Object.keys(errors).length > 0) {
+        return errors;
     } else {
-        sendData(saleRecord);
-        reload((prev) => prev + 1);
-        setOpenModal(false);
-        return requiredFields;
+        await sendData(saleRecord, reload, setOpenModal);
+        return [];
     }
 }
 
-const sendData = async (saleRecord) => {
-    const formattedDate = formatDate(saleRecord.date);
+const ValidateFields = (vehicle, saleRecord) => {
+    const errors = {};
 
+    const requiredFields = ['date', 'buyerName', 'sellingPrice'];
+    requiredFields.forEach(field => {
+        if (isEmpty(saleRecord[field])) {
+            errors[field] = 'This field is required';
+        }
+    })
+
+    if (new Date(vehicle.date) > new Date(saleRecord.date)) {
+        errors.date = 'Selling Date must be later than bought date';
+    }
+
+    if (vehicle.pRemaining !== 0) {
+        errors.pRemaining = 'Purchase payment is not complete';
+    }
+
+    if (vehicle.cr !== 'ok') {
+        errors.cr = 'CR not available';
+    }
+
+    return errors;
+}
+
+const sendData = async (saleRecord, reload, setOpenModal) => {
+    const formattedDate = formatDate(saleRecord.date);
     const formattedSellingPrice = parseFloat(saleRecord.sellingPrice);
 
     const saleData = {
@@ -30,58 +50,14 @@ const sendData = async (saleRecord) => {
     console.log('Sale Data:', saleData);
 
     try {
-        console.log('try...');
         const response = await axios.post('http://localhost:7174/api/SalesDetails/AddSalesDetails?userId=23', saleData);
         console.log('Data sent successfully:', response.data);
     } catch (error) {
-        console.log('catch...');
         console.error('Error sending data:', error);
     } finally {
-        console.log('finally...');
-        toast((t) => {
-            t.duration = 5000;
-
-            return (
-                <div className="flex items-center">
-                    <p>Vehicle Sold: <span className="font-medium">{saleRecord.vehicleNo}</span></p>
-                </div>
-            )
-        });
+        reload((prev) => prev + 1);
+        setOpenModal(false);
     }
 }
 
-function HandleRequiredFields(saleRecord) {
-    var errorStatus = [];
-
-    const isEmpty = (value) => {
-        return value === null || value === undefined || value === "";
-    }
-
-    Object.keys(saleRecord).forEach(key => {
-        const value = saleRecord[key];
-        if (isEmpty(value)) {
-            errorStatus.push({
-                key: key,
-                isInvalid: true,
-                error: "This field is required"
-            });
-        } else {
-            errorStatus.push({
-                key: key,
-                isInvalid: false,
-                error: ""
-            });
-        }
-    })
-
-    return errorStatus;
-}
-
-const formatDate = (date) => {
-    const year = date.year.toString().padStart(4, '0');
-    const month = (date.month).toString().padStart(2, '0');
-    const day = date.day.toString().padStart(2, '0');
-    return `${year}-${month}-${day}`;
-}
-
-export { HandleSaveChanges };
+export { AddSale };

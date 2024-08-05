@@ -1,33 +1,37 @@
 import { Button, DateInput, Input } from "@nextui-org/react";
-import { AlertDialog, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogOverlay, AlertDialogTitle, AlertDialogTrigger } from "../ui/alert-dialog";
+import { AlertDialog, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTrigger } from "../ui/alert-dialog";
 import { useState } from "react";
-import { HandleSaveChanges } from "@/actions/sales-actions";
+import { AddSale } from "@/actions/sales-actions";
 
 export default function SalesModal({ btnText, vehicle, reload }) {
     const [openModal, setOpenModal] = useState(false);
-
-    const [date, setDate] = useState("");
-    const [buyerName, setBuyerName] = useState("");
-    const [sellingPrice, setSellingPrice] = useState(vehicle.sellingPrice);
-
+    const [formData, setFormData] = useState({
+        date: "",
+        buyerName: "",
+        sellingPrice: vehicle.sellingPrice,
+    });
     const [errorStatus, setErrorStatus] = useState([]);
+
+    const handleInputChange = (field) => (value) => {
+        setFormData((prev) => ({ ...prev, [field]: value }));
+    }
 
     const handleSave = () => {
         const saleRecord = {
             "id": vehicle.id,
-            "date": date,
-            "buyerName": buyerName,
-            "sellingPrice": sellingPrice
+            ...formData
         };
 
-        const requiredFields = HandleSaveChanges(saleRecord, setOpenModal, reload);
+        const requiredFields = AddSale(vehicle, saleRecord, setOpenModal, reload);
         setErrorStatus(requiredFields);
     }
 
     const handleCancel = () => {
-        setBuyerName("");
-        setSellingPrice(vehicle.sellingPrice);
-
+        setFormData({
+            date: "",
+            buyerName: "",
+            sellingPrice: vehicle.sellingPrice,
+        })
         setOpenModal(false);
     }
 
@@ -53,7 +57,7 @@ export default function SalesModal({ btnText, vehicle, reload }) {
                             variant="flat"
                             errorMessage={errorStatus[1]?.error}
                             isInvalid={errorStatus[1]?.isInvalid}
-                            onChange={setDate}
+                            onChange={handleInputChange("date")}
                             classNames={{
                                 label: "text-sm w-[24%]",
                                 inputWrapper: "w-full rounded-lg bg-[#f5f5f5]",
@@ -69,7 +73,7 @@ export default function SalesModal({ btnText, vehicle, reload }) {
                             variant="flat"
                             errorMessage={errorStatus[2]?.error}
                             isInvalid={errorStatus[2]?.isInvalid}
-                            onChange={(e) => setBuyerName(e.target.value)}
+                            onChange={(e) => handleInputChange("buyerName")(e.target.value)}
                             classNames={{
                                 mainWrapper: "w-full",
                                 label: "text-sm w-[30%] mr-3",
@@ -87,7 +91,7 @@ export default function SalesModal({ btnText, vehicle, reload }) {
                             variant="flat"
                             errorMessage={errorStatus[3]?.error}
                             isInvalid={errorStatus[3]?.isInvalid}
-                            onChange={(e) => setSellingPrice(e.target.value)}
+                            onChange={(e) => handleInputChange("sellingPrice")(e.target.value)}
                             classNames={{
                                 mainWrapper: "w-full",
                                 label: "text-sm w-[30%] mr-3",
