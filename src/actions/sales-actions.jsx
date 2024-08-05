@@ -5,6 +5,7 @@ const AddSale = async (vehicle, saleRecord, setOpenModal, reload) => {
     const errors = ValidateFields(vehicle, saleRecord);
 
     if (Object.keys(errors).length > 0) {
+        console.log('Errors:', errors);
         return errors;
     } else {
         await sendData(saleRecord, reload, setOpenModal);
@@ -30,7 +31,7 @@ const ValidateFields = (vehicle, saleRecord) => {
         errors.pRemaining = 'Purchase payment is not complete';
     }
 
-    if (vehicle.cr !== 'ok') {
+    if (vehicle.cr !== 'Ok') {
         errors.cr = 'CR not available';
     }
 
