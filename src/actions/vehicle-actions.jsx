@@ -95,7 +95,7 @@ const sendData = async (vehicle, id) => {
     } catch (error) {
         console.error('Error sending data:', error);
     } finally {
-        // location.href = "/dashboard";
+        location.href = "/dashboard";
         toast((t) => {
             t.duration = 5000;
 
