@@ -1,65 +1,59 @@
 "use client"
 
 import { editVehicle } from "@/actions/vehicle-actions";
+import { useFormState } from "@/lib/hooks/useFormState";
 import { parseDate } from "@internationalized/date";
 import { Button, DateInput, Input, Select, SelectItem } from "@nextui-org/react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 
+const initialState = {
+    date: "",
+    vehicleNo: "",
+    make: "",
+    yom: "",
+    cr: "",
+    purchasedFrom: "",
+    document: "",
+    pCost: "",
+    sellingPrice: ""
+}
+
 export default function Page({ params }) {
     const { id } = params;
     const searchParams = useSearchParams();
     const vehicleQuery = searchParams.get("vehicle");
 
-    const [vehicle, setVehicle] = useState(null);
+    const [formState, handleChange, handleDateChange, errorStatus, setErrorStatus, setFormState] = useFormState(initialState);
     const [loading, setLoading] = useState(true);
 
     const [date, setDate] = useState(null);
-    const [vehicleNo, setVehicleNo] = useState(null);
-    const [make, setMake] = useState(null);
     const [yom, setYom] = useState(null);
-    const [cr, setCr] = useState(null);
-    const [purchasedFrom, setPurchasedFrom] = useState(null);
-    const [document, setDocument] = useState(null);
-    const [pCost, setPCost] = useState(null);
-    const [sellingPrice, setSellingPrice] = useState(null);
-
-    const [errorStatus, setErrorStatus] = useState([]);
 
     useEffect(() => {
-        if (vehicleQuery) {
-            setVehicle(JSON.parse(vehicleQuery));
-            setLoading(false);
-            console.log(vehicleQuery);
+        const vehicle = JSON.parse(vehicleQuery);
+        setFormState({
+            date: vehicle.date,
+            vehicleNo: vehicle.vehicleNo,
+            make: vehicle.make,
+            yom: vehicle.yom,
+            cr: vehicle.cr,
+            purchasedFrom: vehicle.purchasedFrom,
+            document: vehicle.document,
+            pCost: vehicle.pCost,
+            sellingPrice: vehicle.sellingPrice
+        })
+        console.log('vehicle:', vehicle);
 
-            setDate(parseDate(JSON.parse(vehicleQuery).date));
-            setVehicleNo(JSON.parse(vehicleQuery).vehicleNo);
-            setMake(JSON.parse(vehicleQuery).make);
-            setYom(JSON.parse(vehicleQuery).yom);
-            setCr(JSON.parse(vehicleQuery).cr);
-            setPurchasedFrom(JSON.parse(vehicleQuery).purchasedFrom);
-            setDocument(JSON.parse(vehicleQuery).document);
-            setPCost(JSON.parse(vehicleQuery).pCost);
-            setSellingPrice(JSON.parse(vehicleQuery).sellingPrice);
-        }
-    }, []);
+        setDate(parseDate(vehicle.date));
+        setYom(parseDate(vehicle.yom + "-01-01"));
 
-    const handleSave = () => {
-        const vehicleData = {
-            "date": date,
-            "vehicleNo": vehicleNo,
-            "make": make,
-            "yom": yom,
-            "cr": cr,
-            "purchasedFrom": purchasedFrom,
-            "document": document,
-            "pCost": pCost,
-            "sellingPrice": sellingPrice
-        };
-        console.log('Vehicle data:', vehicleData);
-        
-        const status = editVehicle(vehicleData, id);
+        setLoading(false);
+    }, [vehicleQuery]);
+
+    const handleSave = async () => {
+        const status = await editVehicle(formState, id);
         setErrorStatus(status);
     }
 
@@ -76,124 +70,133 @@ export default function Page({ params }) {
                     <div className="w-3/4 pr-6 pl-12">
                         <div className="w-full grid grid-cols-2 gap-x-12 gap-y-6 pb-5">
                             <DateInput
+                                name="date"
                                 label="Date of Purchase"
                                 labelPlacement="outside-left"
                                 variant="flat"
                                 errorMessage={errorStatus[0]?.error}
                                 isInvalid={errorStatus[0]?.isInvalid}
-                                onChange={setDate}
+                                onChange={(date) => handleDateChange('date', date)}
                                 classNames={{  
                                     label: "mr-2",  
                                     inputWrapper: "w-full rounded-lg bg-[#f5f5f5]",
                                     errorMessage: "text-red-600 text-xs"
                                 }}
-                                defaultValue={parseDate(vehicle.date)}
+                                defaultValue={date}
                             />
 
                             <Input
+                                name="vehicleNo"
                                 label="Vehicle No"
                                 labelPlacement="outside-left"
                                 variant="flat"
                                 errorMessage={errorStatus[1]?.error}
                                 isInvalid={errorStatus[1]?.isInvalid}
-                                onChange={(e) => setVehicleNo(e.target.value)}
+                                onChange={(e) => handleChange(e)}
                                 classNames={{
                                     mainWrapper: ["ml-8 w-full"],
                                     label: "mr-10",
                                     inputWrapper: "w-full rounded-lg bg-[#f5f5f5]",
                                     errorMessage: "text-red-600 text-xs"
                                 }}
-                                defaultValue={vehicle.vehicleNo}
+                                value={formState.vehicleNo}
                             />
 
                             <Input
+                                name="make"
                                 label="Make"
                                 labelPlacement="outside-left"
                                 variant="flat"
                                 errorMessage={errorStatus[2]?.error}
                                 isInvalid={errorStatus[2]?.isInvalid}
-                                onChange={(e) => setMake(e.target.value)}
+                                onChange={(e) => handleChange(e)}
                                 classNames={{
                                     mainWrapper: ["ml-24 w-full"],
                                     inputWrapper: "w-full rounded-lg bg-[#f5f5f5]",
                                     errorMessage: "text-red-600 text-xs"
                                 }}
-                                defaultValue={vehicle.make}
+                                value={formState.make}
                             />
 
-                            <Input
+                            <DateInput
+                                name="yom"
                                 label="YOM"
                                 labelPlacement="outside-left"
                                 variant="flat"
+                                granularity="year"
                                 errorMessage={errorStatus[3]?.error}
                                 isInvalid={errorStatus[3]?.isInvalid}
-                                onChange={(e) => setYom(e.target.value)}
+                                onChange={(yom) => handleDateChange('yom', yom)}
                                 classNames={{
-                                    mainWrapper: ["ml-24 w-full"],
+                                    label: "mr-24",  
                                     inputWrapper: "w-full rounded-lg bg-[#f5f5f5]",
-                                    errorMessage: "text-red-600 text-xs"
+                                    errorMessage: "text-red-600 text-xs",
                                 }}
-                                defaultValue={vehicle.yom}
+                                defaultValue={yom}
                             />
 
                             <Select
+                                name="cr"
                                 label="CR"
                                 labelPlacement="outside-left"
                                 variant="flat"
                                 errorMessage={errorStatus[4]?.error}
                                 isInvalid={errorStatus[4]?.isInvalid}
-                                onChange={(e) => setCr(e.target.value)}
+                                onChange={(e) => handleChange(e)}
                                 classNames={{                    
                                     popoverContent: ["bg-white rounded-lg shadow-lg"],
                                     mainWrapper: ["ml-28"],
                                     trigger: "w-full rounded-lg bg-[#f5f5f5]",
                                     errorMessage: "text-red-600 text-xs"
                                 }}
-                                defaultSelectedKeys={[vehicle.cr.toLowerCase()]}
+                                defaultSelectedKeys={[formState.cr.toLowerCase()]}
                             >
                                 <SelectItem key={"pending"} className="rounded-lg hover:bg-[#ebebeb]">Pending</SelectItem>
                                 <SelectItem key={"ok"} className="rounded-lg hover:bg-[#ebebeb]">Ok</SelectItem>
                             </Select>
 
                             <Input
+                                name="purchasedFrom"
                                 label="Purchased from"
                                 labelPlacement="outside-left"
                                 variant="flat"
                                 className="w-full col-start-1 col-span-1"
                                 errorMessage={errorStatus[5]?.error}
                                 isInvalid={errorStatus[5]?.isInvalid}
-                                onChange={(e) => setPurchasedFrom(e.target.value)}
+                                onChange={(e) => handleChange(e)}
                                 classNames={{
                                     mainWrapper: ["ml-12 w-full"],
                                     inputWrapper: "w-full rounded-lg bg-[#f5f5f5]",
                                     errorMessage: "text-red-600 text-xs"
                                 }}
-                                defaultValue={vehicle.purchasedFrom}
+                                value={formState.purchasedFrom}
                             />
 
                             <Input
+                                name="document"
                                 label="Document"
                                 labelPlacement="outside-left"
                                 variant="flat"
                                 errorMessage={errorStatus[6]?.error}
                                 isInvalid={errorStatus[6]?.isInvalid}
-                                onChange={(e) => setDocument(e.target.value)}
+                                onChange={(e) => handleChange(e)}
                                 classNames={{
                                     mainWrapper: ["ml-14 w-full"],
                                     inputWrapper: "w-full rounded-lg bg-[#f5f5f5]",
                                     errorMessage: "text-red-600 text-xs"
                                 }}
-                                defaultValue={vehicle.document}
+                                value={formState.document}
                             />
 
                             <Input
+                                name="pCost"
                                 type="number"
                                 label="P/Cost"
                                 labelPlacement="outside-left"
                                 variant="flat"
                                 errorMessage={errorStatus[7]?.error}
                                 isInvalid={errorStatus[7]?.isInvalid}
-                                onChange={(e) => setPCost(e.target.value)}
+                                onChange={(e) => handleChange(e)}
                                 classNames={{
                                     mainWrapper: ["ml-20 w-full"],
                                     inputWrapper: "w-full rounded-lg bg-[#f5f5f5]",
@@ -204,17 +207,18 @@ export default function Page({ params }) {
                                         <span className="text-default-400 text-xs mr-1">LKR</span>
                                     </div>
                                 }
-                                defaultValue={vehicle.pCost}
+                                value={formState.pCost}
                             />
 
                             <Input
+                                name="sellingPrice"
                                 type="number"
                                 label="Selling Price"
                                 labelPlacement="outside-left"
                                 variant="flat"
                                 errorMessage={errorStatus[8]?.error}
                                 isInvalid={errorStatus[8]?.isInvalid}
-                                onChange={(e) => setSellingPrice(e.target.value)}
+                                onChange={(e) => handleChange(e)}
                                 classNames={{
                                     mainWrapper: ["ml-16 w-full"],
                                     inputWrapper: "w-full rounded-lg bg-[#f5f5f5]",
@@ -225,7 +229,7 @@ export default function Page({ params }) {
                                         <span className="text-default-400 text-xs mr-1">LKR</span>
                                     </div>
                                 }
-                                defaultValue={vehicle.sellingPrice}
+                                value={formState.sellingPrice}
                             />
                         </div>    
                     </div>

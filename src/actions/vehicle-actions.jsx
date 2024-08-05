@@ -1,4 +1,5 @@
-const { default: axios } = require("axios");
+import { formatYom, isEmpty } from "@/lib/utils";
+import axios from "axios";
 import toast from "react-hot-toast";
 
 //Delete vehicle
@@ -15,82 +16,57 @@ const deleteVehicle = async (id, reload) => {
 }
 
 //Edit vehicle
-const editVehicle = (vehicle, id) => {
-    const errorStatus = handleRequiredFields(vehicle);
-    console.log('Error status:', errorStatus);
+const editVehicle = async (vehicle, id) => {
+    const errors = validateFields(vehicle);
 
-    const hasError = errorStatus.some(field => field.isInvalid);
-    console.log('Has error:', hasError);
-
-    if (hasError) {
-        return errorStatus;
+    if(errors.length > 0) {
+        return errors;
     } else {
-        sendData(vehicle, id);
-        return errorStatus;
+        await sendData(vehicle, id);
+        return [];
     }
 }
 
-function handleRequiredFields(vehicle) {
-    var errorStatus = [];
+// Function to validate fields
+const validateFields = (vehicle) => {
+    const errors = {};
 
-    const isEmpty = (value) => {
-        return value === null || value === undefined || value === "";
-    }
-
-    Object.keys(vehicle).forEach(key => {
-        const value = vehicle[key];
-        if (isEmpty(value)) {
-            errorStatus.push({
-                key: key,
-                isInvalid: true,
-                error: "This field is required"
-            });
-        } else {
-            errorStatus.push({
-                key: key,
-                isInvalid: false,
-                error: ""
-            });
+    // Check for empty values
+    const requiredFields = ['date', 'vehicleNo', 'make', 'yom', 'cr', 'purchasedFrom', 'document', 'pCost', 'sellingPrice'];
+    requiredFields.forEach(field => {
+        if (isEmpty(vehicle[field])) {
+            errors[field] = 'This field is required';
         }
     })
 
-    return errorStatus; 
+    return errors;
+}
+
+// Function to format vehicle data before sending
+const formatVehicleData = (vehicle, id) => {
+    console.log('Vehicle data:', vehicle);
+    return {
+        "Id": id,
+        "BoughtDate": vehicle.date,
+        "vehicleNumber": vehicle.vehicleNo,
+        "make": vehicle.make,
+        "YearOfManufacture": formatYom(vehicle.yom),
+        "AvailabilityStatus": 1,
+        "ExpectedSellingPrice": parseFloat(vehicle.sellingPrice),
+        "IsCR": vehicle.cr === "ok" ? true : false,
+        "PurchasedFrom": vehicle.purchasedFrom,
+        "LegalOwnerName": vehicle.document,
+        "AgreedAmount": parseFloat(vehicle.pCost),
+        "ModifiedBy": 23,
+    }
 }
 
 const sendData = async (vehicle, id) => {
-    const formattedDate = formatDate(vehicle.date);
-    console.log('Sending date:', formattedDate);
-
-    const formattedYom = vehicle.yom + "-01-01";
-    console.log('Sending YOM:', formattedYom);
-
-    const formattedCR = vehicle.cr === "ok" ? true : false;
-    console.log('Sending CR:', formattedCR);
-
-    const formattedPCost = parseFloat(vehicle.pCost);
-    console.log('Sending PCost:', formattedPCost);
-
-    const formattedSellingPrice = parseFloat(vehicle.sellingPrice);
-    console.log('Sending Selling Price:', formattedSellingPrice);
-
-    const vehicleData = {
-        "Id": id,
-        "VehicleNumber": vehicle.vehicleNo,
-        "make": vehicle.make,
-        "YearOfManufacture": formattedYom,
-        "AvailabilityStatus": 1,
-        "ExpectedSellingPrice": formattedSellingPrice,
-        "IsCR": formattedCR,
-        "BoughtDate": formattedDate,
-        "PurchasedFrom": vehicle.purchasedFrom,
-        "LegalOwnerName": vehicle.document,
-        "AgreedAmount": formattedPCost,
-        "ModifiedBy": 23,
-    }
+    const formattedVehicleData = formatVehicleData(vehicle, id);
+    console.log('Formatted vehicle data:', formattedVehicleData);
 
     try {
-        console.log('Vehicle data:', vehicleData);
-        const response = await axios.put(`http://localhost:7174/api/Vehicle/UpdateVehicle?userId=23`, vehicleData);
+        const response = await axios.put(`http://localhost:7174/api/Vehicle/UpdateVehicle?userId=23`, formattedVehicleData);
         console.log('Data sent successfully:', response.data);
     } catch (error) {
         console.error('Error sending data:', error);
@@ -106,13 +82,6 @@ const sendData = async (vehicle, id) => {
             )
         });
     }
-}
-
-const formatDate = (date) => {
-    const year = date.year.toString().padStart(4, '0');
-    const month = (date.month).toString().padStart(2, '0');
-    const day = date.day.toString().padStart(2, '0');
-    return `${year}-${month}-${day}`;
 }
 
 export { deleteVehicle, editVehicle };

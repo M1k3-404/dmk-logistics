@@ -24,5 +24,9 @@ export const useFormState = (initialState) => {
         setErrors(errorMap);
     }
 
-    return [state, handleChange, handleDateChange, errors, setErrorStatus];
+    const setFormState = (newState) => {
+        setState(newState);
+    }
+
+    return [state, handleChange, handleDateChange, errors, setErrorStatus, setFormState];
 }
