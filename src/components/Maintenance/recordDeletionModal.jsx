@@ -3,12 +3,13 @@ import { AlertDialog, AlertDialogCancel, AlertDialogContent, AlertDialogDescript
 import { CiCircleMinus } from "react-icons/ci";
 import { useState } from "react";
 import { deletePayment } from "@/actions/payment-actions";
+import { deleteQuotation } from "@/actions/quotation-actions";
 
-export default function RecordDeletionModal({ id }) {
+export default function RecordDeletionModal({ recordType, id }) {
     const [openModal, setOpenModal] = useState(false);
 
     const handleDeletion = () => {
-        deletePayment(id);
+        recordType === 'quotation' ? deleteQuotation(id) : deletePayment(id);
         setOpenModal(false);
     }
 

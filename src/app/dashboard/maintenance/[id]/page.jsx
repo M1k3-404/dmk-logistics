@@ -1,33 +1,82 @@
 "use client"
 
 import { HandleSaveChanges } from "@/actions/maintenance-actions";
-import EditableMaintenaceRecord from "@/components/Maintenance/editableMaintenanceRecord";
-import MaintenaceRecord from "@/components/Maintenance/maintenanceRecord";
-import { vehicles } from "@/components/vehicleData";
-import { BreadcrumbItem, Breadcrumbs, Button, Input } from "@nextui-org/react";
+import { getAllMaintenanceTypes } from "@/actions/maintenance-types-actions";
+import { getAllPaymentTypes } from "@/actions/payment-types-actions";
+import { getVehicleBYId } from "@/actions/vehicle-actions";
+import { getAllVendors } from "@/actions/vendors-actions";
+import Quotation from "@/components/Maintenance/quotation";
+import { Button, Input } from "@nextui-org/react";
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 export default function Maintenace({ params }) {
-    const id = params.id;
-    const vehicle = vehicles[id-1];
+    const { id } = params;
 
-    const [editableRecords, setEditableRecords] = useState([]);
+    const [state, setState] = useState({
+        vehicle: null,
+        paymentTypes: [],
+        maintenanceTypes: [],
+        vendors: [],
+        editableRecords: [],
+        loading: true
+    });
 
-    const handleAddRecord = () => {
-        setEditableRecords((prevRecords) => [...prevRecords, {}]);
-    }
+    const initializePage = async () => {
+        try {
+            const vehicle = await getVehicleBYId(id);
+            const paymentTypes = await getAllPaymentTypes();
+            const maintenanceTypes = await getAllMaintenanceTypes();
+            const vendors = await getAllVendors();
 
-    const handleDeleteRecord = (index) => {
-        vehicle.maintenance.splice(index);
-    }
+            setState({
+                vehicle: vehicle,
+                paymentTypes: paymentTypes,
+                maintenanceTypes: maintenanceTypes,
+                vendors: vendors,
+                editableRecords: [],
+                loading: false,
+            })
+        } catch (error) {
+            console.error('Error initializing page:', error);
+        }
+    };
+
+    useEffect(() => {
+        initializePage();
+    }, [id]);
+
+    const handleAddNewRecord = () => {
+        setState((prevState) => ({
+            ...prevState,
+            editableRecords: [...prevState.editableRecords, {}],
+        }));
+    };
 
     const handleDeleteNewRecord = (index) => {
-        setEditableRecords((prevRecords) => {
-            const updatedRecords = [...prevRecords];
-            updatedRecords.splice(index);
-            return updatedRecords;
-        })
+        setState((prevState) => {
+            const updatedRecords = [...prevState.editableRecords];
+            updatedRecords.splice(index, 1);
+            return {
+                ...prevState,
+                editableRecords: updatedRecords
+            };
+        });
+    };
+
+    const handleAddQuotation = (newQuotation) => {
+        setState((prevState) => ({
+            ...prevState,
+            vehicle: {
+                ...prevState.vehicle,
+                quotations: [...prevState.vehicle.quotations, newQuotation]
+            },
+            editableRecords: prevState.editableRecords.filter(record => record !== newQuotation)
+        }));
+    };
+
+    if (state.loading) {
+        return <div className="w-[95%] h-[25%] p-6 bg-white rounded-lg">Loading...</div>
     }
 
     // ------------------------------------------------------------------------------------------------
@@ -40,106 +89,65 @@ export default function Maintenace({ params }) {
                 <div className="mt-8 flex w-full">
                     <div className="w-3/4 pr-6 pl-12">
                         <div className="w-full grid grid-cols-2 gap-x-12 gap-y-6 pb-5 border-b border-black/25">
-                            <Input
-                                isReadOnly
-                                classNames={{
-                                    base: "w-full",
-                                    label: "mr-2 w-[25%]",
-                                    inputWrapper: "w-full rounded-lg bg-[#f5f5f5]",
-                                    input: "text-center text-sm text-[#0c0c0c]",
-                                }}
-                                defaultValue={vehicle.date}
-                                size="sm"
-                                variant="flat"
-                                label="Date"
-                                labelPlacement="outside-left"
-                            />
-
-                            <Input
-                                isReadOnly
-                                classNames={{
-                                    base: "w-full",
-                                    label: "mr-2 w-[25%]",
-                                    inputWrapper: "w-full rounded-lg bg-[#f5f5f5]",
-                                    input: "text-center text-sm text-[#0c0c0c]",
-                                }}
-                                defaultValue={vehicle.vehicleNo}
-                                size="sm"
-                                variant="flat"
-                                label="Vehicle No"
-                                labelPlacement="outside-left"
-                            />
-
-                            <Input
-                                isReadOnly
-                                classNames={{
-                                    base: "w-full",
-                                    label: "mr-2 w-[25%]",
-                                    inputWrapper: "w-full rounded-lg bg-[#f5f5f5]",
-                                    input: "text-center text-sm text-[#0c0c0c]",
-                                }}
-                                defaultValue={vehicle.make}
-                                size="sm"
-                                variant="flat"
-                                label="Make"
-                                labelPlacement="outside-left"
-                            />
-
-                            <Input
-                                isReadOnly
-                                classNames={{
-                                    base: "w-full",
-                                    label: "mr-2 w-[25%]",
-                                    inputWrapper: "w-full rounded-lg bg-[#f5f5f5]",
-                                    input: "text-center text-sm text-[#0c0c0c]",
-                                }}
-                                defaultValue={vehicle.yom}
-                                size="sm"
-                                variant="flat"
-                                label="YOM"
-                                labelPlacement="outside-left"
-                            />
-
-                            <Input
-                                isReadOnly
-                                classNames={{
-                                    base: "w-full",
-                                    label: "mr-2 w-[25%]",
-                                    inputWrapper: "w-full rounded-lg bg-[#f5f5f5]",
-                                    input: "text-center text-sm text-[#0c0c0c]",
-                                }}
-                                defaultValue={vehicle.cr}
-                                size="sm"
-                                variant="flat"
-                                label="CR"
-                                labelPlacement="outside-left"
-                            />
+                            {[
+                                {label: "Date", value: state.vehicle.date},
+                                {label: "Vehicle No", value: state.vehicle.vehicleNo},
+                                {label: "Make", value: state.vehicle.make},
+                                {label: "YOM", value: state.vehicle.yom},
+                                {label: "CR", value: state.vehicle.cr},
+                            ].map((field, index) => (
+                                <Input
+                                    key={index}
+                                    label={field.label}
+                                    labelPlacement="outside-left"
+                                    variant="flat"
+                                    isReadOnly
+                                    classNames={{
+                                        base: "w-full",
+                                        label: "mr-2 w-[25%]",
+                                        inputWrapper: "w-full rounded-lg bg-[#f5f5f5]",
+                                        input: "text-center text-sm text-[#0c0c0c]",
+                                    }}
+                                    defaultValue={field.value}
+                                />
+                            ))}
                         </div>
 
                         <div className="w-full py-5">
-                            <p className="mb-4 font-medium">Maintenance Records</p>
-                            {vehicle.maintenance.map((record, index) => {
+                            <p className="mb-4 font-medium">Quotations</p>
+                            {state.vehicle.quotations.map((record, index) => {
                                 return(
-                                    <MaintenaceRecord 
-                                        key={index}    
-                                        record={record}
-                                        onDelete={() => handleDeleteRecord(index)} 
+                                    <Quotation 
+                                        data={record}
+                                        key={index}
+                                        vehicleId={id}
+                                        newRecord={false}
+                                        editable={false}
+                                        vendors={state.vendors}
+                                        maintenanceTypes={state.maintenanceTypes}    
                                     />
                                 )
                             })}
-                            {editableRecords.map((_, index) => {
+                            {state.editableRecords.map((_, index) => {
                                 return(
-                                    <EditableMaintenaceRecord 
-                                        key={index}
-                                        onDelete={() => handleDeleteNewRecord(index)}
+                                    <Quotation 
+                                        data={_}
+                                        key={index} 
+                                        vehicleId={id}
+                                        vendors={state.vendors}
+                                        maintenanceTypes={state.maintenanceTypes}
+                                        newRecord={true}
+                                        editable={true}
+                                        deleteNewRecord={() => handleDeleteNewRecord(index)}
+                                        onAddQuotation={handleAddQuotation}
                                     />
                                 )
                             })}
                             <Button
                                 className="w-full bg-transparent rounded-lg border border-black"
-                                onClick={handleAddRecord}
+                                onClick={handleAddNewRecord}
                             >
-                                Add New Maintenance Record
+                                Add Quotation
                             </Button>
                         </div>
                     </div>
@@ -148,15 +156,9 @@ export default function Maintenace({ params }) {
                         <Button 
                             as={Link}
                             href="/dashboard"
-                            className="bg-white text-[#0c0c0c] font-extralight rounded-md border hover:shadow-sm hover:text-red-600"
-                        >
-                            Cancel
-                        </Button>
-                        
-                        <Button
                             className="bg-[#0c0c0c] text-white font-extralight rounded-md mt-2 hover:bg-green-600"
                         >
-                            Save Changes
+                            Save Changes & Exit
                         </Button>
                     </div>
                 </div>

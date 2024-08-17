@@ -1,7 +1,7 @@
 import axios from "axios";
 
 //Add Payment
-const addPayment = (payment, paymentTypes, vehicleId) => {
+const addPayment = (payment, paymentTypes, vehicleId, onAddPayment, setIsNewRecord) => {
     const requiredFields = checkRequiredFields(payment);
 
     const hasError = requiredFields.some(field => field.isInvalid);
@@ -9,7 +9,7 @@ const addPayment = (payment, paymentTypes, vehicleId) => {
     if (hasError) {
         return requiredFields;
     } else {
-        sendData(payment, paymentTypes, vehicleId);
+        sendData(payment, paymentTypes, vehicleId, onAddPayment, setIsNewRecord);
         return requiredFields;
     }
 }
@@ -113,6 +113,7 @@ const SendEditData = async (payment, paymentTypes, vehicleId, id, setIsEditable)
         console.error('Error sending data:', error);
     } finally {
         setIsEditable(false);
+        window.location.reload();
     }
 }
 
@@ -124,6 +125,8 @@ const deletePayment = async (id) => {
         return response.data;
     } catch (error) {
         console.error('Error deleting data:', error);
+    } finally {
+        window.location.reload();
     }
 }
 

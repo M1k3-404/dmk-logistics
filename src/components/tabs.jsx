@@ -41,7 +41,7 @@ export default function Tabs() {
     return(
         <div>
             <div className="pt-6 mx-8 flex justify-between items-center">
-                <div className="flex spac-x-2">
+                <div className="flex space-x-2">
                     {items.map((item, index) => (
                         <Button
                             ref={index === 0 ? firstBtnRef : null}

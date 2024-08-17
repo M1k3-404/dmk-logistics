@@ -75,7 +75,7 @@ const formatVehicleData = (vehicle) => {
         "BoughtDate": formatDate(vehicle.date),
         "VehicleNumber": vehicle.vehicleNo,
         "make": vehicle.make,
-        "YearOfManufacture": formatYom(vehicle.yom),
+        "YearOfManufacture": formatYom(formatDate(vehicle.yom)),
         "AvailabilityStatus": 1,
         "IsCR": vehicle.cr === "true",
         "ModifiedBy": 23,

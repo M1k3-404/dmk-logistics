@@ -18,7 +18,7 @@ export const formatDate = (date) => {
   return `${year}-${month}-${day}`;
 }
 
-// Utility Function to format year of manufacture
+// Utility Function to format year of manufacture (final)
 export const formatYom = (yom) => {
-  return formatDate(yom).substring(0, 4) + "-01-01";
+  return yom.substring(0, 4) + "-01-01";
 };

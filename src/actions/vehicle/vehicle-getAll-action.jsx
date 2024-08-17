@@ -1,12 +1,13 @@
 import axios from "axios";
 import { getAllPaymentTypes } from "../payment-types-actions";
+import { getAllMaintenanceTypes } from "../maintenance-types-actions";
+import { getAllVendors } from "../vendors-actions";
 
 // Get All Vehicles for the Dashboard 
 const getAllVehicles = async () => {
     try {
         const response = await getDashboardData();
         const processedData = await processDashboardData(response);
-        console.log('Filled up data:', processedData);
 
         const activeVehicles = processedData.filter(vehicle => vehicle.availabilityStatus === 1);
         const soldVehicles = processedData.filter(vehicle => vehicle.availabilityStatus === 2);
@@ -31,9 +32,11 @@ const getDashboardData = async () => {
 // Process and fill up dashboard data
 const processDashboardData = async (data) => {
     const paymentTypeMap = await getPaymentTypeMap();
+    const maintenanceTypeMap = await getMaintenanceTypeMap();
+    const vendorMap = await getVendorMap();
 
     return data.map(item => {
-        const { vehicle, purchaseDetails, analytics, listOfPayments, listOfMaintenance, salesDetails } = item;
+        const { vehicle, purchaseDetails, analytics, listOfPayments, listOfQuotations, salesDetails } = item;
 
         const payments = listOfPayments.map(payment => ({
             id: payment.id,
@@ -43,13 +46,29 @@ const processDashboardData = async (data) => {
             order: payment.paymentOrder
         }));
 
-        const maintenance = listOfMaintenance.map(maintenance => ({
-            id: maintenance.id,
-            date: formatDate(maintenance.maintenanceDate, 10),
-            description: maintenance.maintenanceTypeId,
-            account: paymentTypeMap[maintenance.paymentTypeId], // Replace ID with title
-            amount: maintenance.maintenanceCost
-        }));
+        const quotations = listOfQuotations.map((quotation) => {
+            return {
+                id: quotation.quotationInformation.id,
+                vendorId: vendorMap[quotation.quotationInformation.vendorId],
+                vehicleId: quotation.quotationInformation.vehicleId,
+                quotationDate: formatDate(quotation.quotationInformation.quotationDate, 10),
+                maintenanceTypeId: maintenanceTypeMap[quotation.quotationInformation.maintenanceTypeId],
+                quotedAmount: quotation.quotationInformation.quotedAmount,
+                dueAmount: quotation.quotationInformation.dueAmount,
+                isCompleted: quotation.quotationInformation.isCompleted,
+                entityStatus: quotation.quotationInformation.entityStatus,
+                quotationPayments: quotation.listOfQuotationPayments?.map((payment) => {
+                    return {
+                        id: payment.id,
+                        quotationId: payment.quotationId,
+                        paymentTypeId: paymentTypeMap[payment.paymentTypeId],
+                        dateOfPayment: formatDate(payment.dateOfPayment, 10),
+                        paymentAmount: payment.paymentAmount,
+                        entityStatus: payment.entityStatus
+                    }
+                })
+            }
+        });
 
         const processedItem = {
             id: vehicle.id,
@@ -68,7 +87,7 @@ const processDashboardData = async (data) => {
             purchasedFrom: purchaseDetails.purchasedFrom,
             coc: analytics.cocAmount,
             payments,
-            maintenance,
+            quotations,
             buyer: salesDetails?.buyerName || "",
             dateSold: formatDate(salesDetails?.dateOfSale || "", 10)
         };
@@ -90,6 +109,36 @@ const getPaymentTypeMap = async () => {
         });
     }
     return paymentTypeMapPromise;
+};
+
+// Fetch maintenance types once and cache the result
+let MaintenanceTypeMapPromise = null;
+const getMaintenanceTypeMap = async () => {
+    if (!MaintenanceTypeMapPromise) {
+        MaintenanceTypeMapPromise = getAllMaintenanceTypes().then(maintenanceTypes => {
+            const maintenanceTypeMap = {};
+            maintenanceTypes.forEach(maintenanceType => {
+                maintenanceTypeMap[maintenanceType.id] = maintenanceType.maintenanceTypeName;
+            });
+            return maintenanceTypeMap;
+        });
+    }
+    return MaintenanceTypeMapPromise;
+};
+
+// Fetch vendors once and cache the result
+let vendorMapPromise = null;
+const getVendorMap = async () => {
+    if (!vendorMapPromise) {
+        vendorMapPromise = getAllVendors().then(vendors => {
+            const vendorMap = {};
+            vendors.forEach(vendor => {
+                vendorMap[vendor.vendorInfo.id] = vendor.vendorInfo.vendorName;
+            });
+            return vendorMap;
+        });
+    }
+    return vendorMapPromise;
 };
 
 // Utility functions

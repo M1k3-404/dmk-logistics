@@ -11,10 +11,7 @@ const ActiveVehiclesActions = ({ vehicle, reload }) => {
             <div className="w-full py-3 border-b border-black/25">
                 <Button 
                     as={Link}
-                    href={{
-                        pathname: `/dashboard/payment/${vehicle.id}`,
-                        query: { vehicle: JSON.stringify(vehicle) }
-                    }}
+                    href={`/dashboard/payment/${vehicle.id}`}
                     className="w-full bg-[#0c0c0c] text-white px-12 font-extralight rounded-md hover:bg-[#1d1d1d] " 
                     size="sm"
                 >
@@ -207,18 +204,18 @@ const CollapsedRow = ({ vehicle, isSold, reload }) => {
                             <TableRow>
                                 <TableHead className="text-black">Date</TableHead>
                                 <TableHead className="text-black">Description</TableHead>
-                                <TableHead className="text-black">Account</TableHead>
+                                <TableHead className="text-black">Vendor</TableHead>
                                 <TableHead className="text-black">Amount</TableHead>
                             </TableRow>
                         </TableHeader>
                         <TableBody>
-                            {vehicle.maintenance.map((maintenance, index) => {
+                            {vehicle.quotations.map((quotation, index) => {
                                 return(
                                     <TableRow key={index}>
-                                        <TableCell>{maintenance.date}</TableCell>
-                                        <TableCell>{maintenance.description}</TableCell>
-                                        <TableCell>{maintenance.account}</TableCell>
-                                        <TableCell>{maintenance.amount}</TableCell>
+                                        <TableCell>{quotation.quotationDate}</TableCell>
+                                        <TableCell>{quotation.maintenanceTypeId}</TableCell>
+                                        <TableCell>{quotation.vendorId}</TableCell>
+                                        <TableCell>{quotation.quotedAmount}</TableCell>
                                     </TableRow>
                                 )
                             })}
