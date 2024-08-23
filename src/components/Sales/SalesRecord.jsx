@@ -1,24 +1,22 @@
+import { parseDate } from "@internationalized/date";
 import { Button, DateInput, Input, Select, SelectItem, SelectSection } from "@nextui-org/react";
+import { memo, useCallback, useMemo, useState } from "react";
+import { CiCircleCheck, CiCircleMinus, CiEdit } from "react-icons/ci";
 import { RiDraggable } from "react-icons/ri";
 import RecordDeletionModal from "../Maintenance/recordDeletionModal";
-import { useCallback, useMemo, useState } from "react";
-import { CiCircleCheck, CiEdit, CiCircleMinus } from "react-icons/ci";
-import { parseDate } from "@internationalized/date";
-import { addPayment, editPayment } from "@/actions/payment-actions";
+import { addSalesPayment, editSalesPayment } from "@/actions/sales-payment-actions";
 
-export default function PaymentRecord({record, newRecord, paymentTypes, editable, deleteNewRecord, vehicleId, onAddPayment}) {
-    const [isNewRecord, setIsNewRecord] = useState(newRecord);
+const SalesRecord = ({ record, editable, newRecord, paymentTypes, deleteNewRecord, salesDetailsId}) => {
     const [isEditable, setIsEditable] = useState(editable);
+    const [isNewRecord, setIsNewRecord] = useState(newRecord);
 
     console.log('Record:', record);
     const id = isNewRecord ? null : record.id;
     const [formState, setFormState] = useState({
         date: isNewRecord ? null : parseDate(record.date),
-        account: isNewRecord ? null : record.paymentTypeId,
-        amount: isNewRecord ? null : record.paymentAmount
+        account: isNewRecord ? null : record.salesPaymentTypeId,
+        amount: isNewRecord ? null : record.salesAmount
     });
-
-    const [errorStatus, setErrorStatus] = useState([]);
 
     const handleChange = useCallback((name, value) => {
         setFormState((prevState) => ({
@@ -28,14 +26,14 @@ export default function PaymentRecord({record, newRecord, paymentTypes, editable
     }, []);
 
     const handleSave = useCallback(() => {
-        const requiredFields = addPayment(formState, paymentTypes, vehicleId, onAddPayment, setIsNewRecord);
-        setErrorStatus(requiredFields);
-    }, [formState, paymentTypes, vehicleId]);
+        const requiredFields = addSalesPayment(formState, paymentTypes, salesDetailsId, setIsNewRecord);
+        // setErrorStatus(requiredFields);
+    }, [formState, paymentTypes, salesDetailsId]);
 
     const handleEdit = useCallback(() => {
-        const requiredFields = editPayment(formState, paymentTypes, vehicleId, id, setIsEditable);
-        setErrorStatus(requiredFields);
-    }, [formState, paymentTypes, vehicleId, id]);
+        const requiredFields = editSalesPayment(formState, paymentTypes, salesDetailsId, id, setIsEditable);
+        // setErrorStatus(requiredFields);
+    }, [formState, paymentTypes, salesDetailsId, id]);
 
     const renderSaveButton = useMemo(() => (
         <Button isIconOnly onClick={isNewRecord ? handleSave : handleEdit}>
@@ -55,17 +53,17 @@ export default function PaymentRecord({record, newRecord, paymentTypes, editable
                 <CiCircleMinus className="hover:text-red-500" />
             </Button>
         ) : (
-            <RecordDeletionModal recordType={"payment"} id={id} />
+            <RecordDeletionModal recordType={"salesPayment"} id={id} />
         )
     ), [isNewRecord, deleteNewRecord, id]);
 
-    return(
+    return (
         <div className={`w-full grid grid-cols-9 items-center rounded-lg border border-black my-1 ${ isEditable ? "border-dashed" : "border-solid"}`}>
             <Button isIconOnly className="col-span-1 ml-3">
                 <RiDraggable />
             </Button>
 
-            <DateInput 
+            <DateInput
                 isReadOnly={!isEditable}
                 value={formState.date}
                 onChange={(value) => handleChange("date", value)}
@@ -88,9 +86,7 @@ export default function PaymentRecord({record, newRecord, paymentTypes, editable
                     listboxWrapper: "bg-white shadow-lg rounded-lg",
                 }}
             >
-                <SelectSection
-                    showDivider
-                >
+                <SelectSection showDivider>
                     {paymentTypes.map((type) => (
                         <SelectItem key={type.paymentTitle}>{type.paymentTitle}</SelectItem>
                     ))}
@@ -119,3 +115,5 @@ export default function PaymentRecord({record, newRecord, paymentTypes, editable
         </div>
     )
 }
+
+export default memo(SalesRecord);

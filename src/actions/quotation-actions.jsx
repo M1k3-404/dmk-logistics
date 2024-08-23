@@ -114,7 +114,7 @@ const updateData = async (quotation, vendors, maintenanceTypes, vehicleId, id, s
         "QuotationDate": formattedDate,
         "MaintenanceTypeId": formattedMaintenanceType,
         "QuotedAmount": formattedQuotedAmount,
-        "DueAmount": 0.0,
+        "DueAmount": formattedQuotedAmount,
         "IsCompleted": formattedIsCompleted
     }
     console.log('Quotation Data:', quotationData);

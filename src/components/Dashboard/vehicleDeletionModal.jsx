@@ -24,7 +24,7 @@ export default function VehicleDeletionModal({ vehicle, reload }) {
                         <Button 
                             size="sm"
                             className="bg-white px-8 text-[#0c0c0c] font-extralight rounded-md border hover:shadow-sm hover:bg-white"
-                            onClick={() => deleteVehicle(vehicle.id, reload)}
+                            onClick={() => deleteVehicle(vehicle.vehicle.id, reload)}
                         >
                             Yes
                         </Button>

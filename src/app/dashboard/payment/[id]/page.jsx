@@ -81,12 +81,12 @@ const Payment = ({ params }) => {
                     <div className="w-3/4 pr-6 pl-12">
                         <div className="w-full grid grid-cols-2 gap-x-12 gap-y-6 pb-5 border-b border-black/25">
                             {[
-                                { label: "Date", value: state.vehicle.date },
-                                { label: "Vehicle No", value: state.vehicle.vehicleNo },
-                                { label: "CR", value: state.vehicle.cr },
-                                { label: "Purchased From", value: state.vehicle.purchasedFrom },
-                                { label: "P/Cost", value: state.vehicle.pCost },
-                                { label: "P/Remaining", value: state.vehicle.pRemaining },
+                                { label: "Date", value: state.vehicle.purchaseDetails.boughtDate },
+                                { label: "Vehicle No", value: state.vehicle.vehicle.vehicleNumber },
+                                { label: "CR", value: state.vehicle.vehicle.isCR },
+                                { label: "Purchased From", value: state.vehicle.purchaseDetails.purchasedFrom },
+                                { label: "P/Cost", value: state.vehicle.purchaseDetails.agreedAmount },
+                                { label: "P/Remaining", value: state.vehicle.additionalData.remainingCost },
                             ].map((field,index) => (
                                 <Input 
                                     key={index}
@@ -107,7 +107,7 @@ const Payment = ({ params }) => {
 
                         <div className="w-full py-5">
                             <p className="mb-4 font-medium">Payments</p>
-                            {state.vehicle.payments.map((payment, index) => {
+                            {state.vehicle.listOfPayments.map((payment, index) => {
                                 return(
                                     <PaymentRecord 
                                         key={index}
@@ -136,7 +136,7 @@ const Payment = ({ params }) => {
                             <Button
                                 className="w-full bg-transparent rounded-lg border border-black"
                                 onClick={handleAddNewRecord}
-                                disabled={state.vehicle.pRemaining === 0}
+                                disabled={state.vehicle.additionalData.remainingCost === 0}
                             >
                                 Add New Payment
                             </Button>

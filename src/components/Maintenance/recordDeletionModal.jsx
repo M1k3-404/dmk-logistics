@@ -4,12 +4,19 @@ import { CiCircleMinus } from "react-icons/ci";
 import { useState } from "react";
 import { deletePayment } from "@/actions/payment-actions";
 import { deleteQuotation } from "@/actions/quotation-actions";
+import { deleteSalesPayment } from "@/actions/sales-payment-actions";
 
 export default function RecordDeletionModal({ recordType, id }) {
     const [openModal, setOpenModal] = useState(false);
 
     const handleDeletion = () => {
-        recordType === 'quotation' ? deleteQuotation(id) : deletePayment(id);
+        if (recordType === 'quotation') {
+            deleteQuotation(id);
+        } else if (recordType === 'payment') {
+            deletePayment(id);
+        } else if (recordType === 'salesPayment') {
+            deleteSalesPayment(id);
+        }
         setOpenModal(false);
     }
 

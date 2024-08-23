@@ -13,11 +13,13 @@ const DashboardTable = ({ tableHeaders, data, tab, reload }) => {
     const rowsPerPage = 7;
 
     const handleToggle = (vehicleId) => {
-        setSelectedVehicles((prevSelected) =>
-            prevSelected.includes(vehicleId)
-                ? prevSelected.filter((id) => id !== vehicleId)
-                : [...prevSelected, vehicleId]
-        );
+        setSelectedVehicles((prevSelected) => {
+            if (prevSelected.includes(vehicleId)) {
+                return prevSelected.filter((id) => id !== vehicleId);
+            } else {
+                return [vehicleId];
+            }
+        })
     };
 
     const onSearchChange = useCallback((value) => {
@@ -75,7 +77,7 @@ const DashboardTable = ({ tableHeaders, data, tab, reload }) => {
                             <VehicleRow
                                 key={vehicle.id}
                                 vehicle={vehicle}
-                                isSelected={selectedVehicles.includes(vehicle.id)}
+                                isSelected={selectedVehicles.includes(vehicle.vehicle.id)}
                                 onToggle={handleToggle}
                                 isSold={false}
                                 reload={reload}
@@ -84,7 +86,7 @@ const DashboardTable = ({ tableHeaders, data, tab, reload }) => {
                             <VehicleRow
                                 key={vehicle.id}
                                 vehicle={vehicle}
-                                isSelected={selectedVehicles.includes(vehicle.id)}
+                                isSelected={selectedVehicles.includes(vehicle.vehicle.id)}
                                 onToggle={handleToggle}
                                 isSold={true}
                                 reload={reload}

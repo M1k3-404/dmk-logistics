@@ -50,10 +50,10 @@ const formatVehicleData = (vehicle, id) => {
     console.log('Vehicle data:', vehicle);
     return {
         "Id": id,
-        "BoughtDate": vehicle.date,
+        "BoughtDate": formatDates(vehicle.date),
         "vehicleNumber": vehicle.vehicleNo,
         "make": vehicle.make,
-        "YearOfManufacture": formatYom(vehicle.yom),
+        "YearOfManufacture": formatDates(vehicle.yom),
         "AvailabilityStatus": 1,
         "ExpectedSellingPrice": parseFloat(vehicle.sellingPrice),
         "IsCR": vehicle.cr === "ok" ? true : false,
@@ -62,6 +62,13 @@ const formatVehicleData = (vehicle, id) => {
         "AgreedAmount": parseFloat(vehicle.pCost),
         "ModifiedBy": 23,
     }
+}
+
+const formatDates = (date) => {
+    const year = date.year.toString().padStart(4, '0');
+    const month = (date.month).toString().padStart(2, '0');
+    const day = date.day.toString().padStart(2, '0');
+    return `${year}-${month}-${day}`;
 }
 
 const sendData = async (vehicle, id) => {
@@ -90,17 +97,17 @@ const sendData = async (vehicle, id) => {
 // Get vehicle by ID
 const getVehicleBYId = async (id) => {
     try {
-        const response = await getVehicle(id);
-        const processData = await processedData(response);
-        console.log('Processed data:', processData);
-        return processData;
+        const response = await fetchVehicle(id);
+        const processedData = await processedSingleData(response);
+        console.log('Processed data:', processedData);
+        return processedData;
     } catch (error) {
         console.error('Error processing data:', error);
         return [];
     }
 }
 
-const getVehicle = async (id) => {
+const fetchVehicle = async (id) => {
     try {
         const response = await axios.get(`http://localhost:7174/api/Vehicle/GetAllDataForVehicleId?vehicleId=${id}`);
         console.log('Data received successfully:', response.data);
@@ -110,69 +117,92 @@ const getVehicle = async (id) => {
     }
 };
 
-const processedData = async (data) => {
+const processedSingleData = async (data) => {
     const paymentTypeMap = await getPaymentTypeMap();
     const maintenanceTypeMap = await getMaintenanceTypeMap();
     const vendorMap = await getVendorMap();
 
-    const { vehicle, purchaseDetails, analytics, listOfPayments, listOfQuotations, salesDetails } = data;
+    const { vehicle, purchaseDetails, analytics, salesDetails, listOfPayments, listOfQuotations, listOfSalesPayments } = data;
 
-    const payments = listOfPayments.map(payment => ({
-        id: payment.id,
-        date: formatDate(payment.date),
-        account: paymentTypeMap[payment.paymentTypeId], // Replace ID with title
-        amount: payment.paymentAmount,
-        order: payment.paymentOrder
-    }));
-
-    const quotations = listOfQuotations.map((quotation) => {
-        return {
-            id: quotation.quotationInformation.id,
-            vendorId: vendorMap[quotation.quotationInformation.vendorId],
-            vehicleId: quotation.quotationInformation.vehicleId,
-            quotationDate: formatDate(quotation.quotationInformation.quotationDate, 10),
-            maintenanceTypeId: maintenanceTypeMap[quotation.quotationInformation.maintenanceTypeId],
-            quotedAmount: quotation.quotationInformation.quotedAmount,
-            dueAmount: quotation.quotationInformation.dueAmount,
-            isCompleted: quotation.quotationInformation.isCompleted,
-            entityStatus: quotation.quotationInformation.entityStatus,
-            quotationPayments: quotation.listOfQuotationPayments?.map((payment) => {
-                return {
-                    id: payment.id,
-                    quotationId: payment.quotationId,
-                    paymentTypeId: paymentTypeMap[payment.paymentTypeId],
-                    dateOfPayment: formatDate(payment.dateOfPayment, 10),
-                    paymentAmount: payment.paymentAmount,
-                    entityStatus: payment.entityStatus
-                }
-            })
+    return {
+        vehicle: {
+            id: vehicle.id,
+            vehicleNumber: vehicle.vehicleNumber,
+            make: vehicle.make,
+            isCR: vehicle.isCR ? "Ok" : "Pending",
+            YearOfManufacture: vehicle.yearOfManufacture.slice(0, 10),
+            ExpectedSellingPrice: vehicle.expectedSellingPrice,
+            AvailabilityStatus: vehicle.availabilityStatus,
+        },
+        purchaseDetails: {
+            id: purchaseDetails.id,
+            vehicleId: purchaseDetails.vehicleId,
+            boughtDate: purchaseDetails.boughtDate.slice(0, 10),
+            agreedAmount: purchaseDetails.agreedAmount,
+            purchasedFrom: purchaseDetails.purchasedFrom,
+            legalOwnerName: purchaseDetails.legalOwnerName,
+        },
+        analytics: {
+            id: analytics.id,
+            vehicleId: analytics.vehicleId,
+            cocAmount: analytics.cocAmount,
+            totalCost: analytics.totalCost,
+        },
+        salesDetails: {
+            id: salesDetails?.id,
+            vehicleId: salesDetails?.vehicleId,
+            saleAmount: salesDetails?.saleAmount,
+            buyerName: salesDetails?.buyerName,
+            dateOfSale: salesDetails?.dateOfSale.slice(0, 10),
+        },
+        listOfPayments: listOfPayments.map(payment => ({
+            id: payment.id,
+            date: payment.date.slice(0, 10),
+            paymentTypeId: paymentTypeMap[payment.paymentTypeId],
+            paymentAmount: payment.paymentAmount,
+            paymentOrder: payment.paymentOrder,
+        })),
+        listOfQuotations: listOfQuotations.map((quotation) => {
+            return {
+                quotationInformation: {
+                    id: quotation.quotationInformation.id,
+                    vendorId: vendorMap[quotation.quotationInformation.vendorId],
+                    vehicleId: quotation.quotationInformation.vehicleId,
+                    quotationDate: quotation.quotationInformation.quotationDate.slice(0, 10),
+                    maintenanceTypeId: maintenanceTypeMap[quotation.quotationInformation.maintenanceTypeId],
+                    quotedAmount: quotation.quotationInformation.quotedAmount,
+                    dueAmount: quotation.quotationInformation.dueAmount,
+                    isCompleted: quotation.quotationInformation.isCompleted,
+                    entityStatus: quotation.quotationInformation.entityStatus,
+                },
+                listOfQuotationPayments: quotation.listOfQuotationPayments?.map((payment) => {
+                    return {
+                        id: payment.id,
+                        quotationId: payment.quotationId,
+                        paymentTypeId: paymentTypeMap[payment.paymentTypeId],
+                        dateOfPayment: payment.dateOfPayment.slice(0, 10),
+                        paymentAmount: payment.paymentAmount,
+                        entityStatus: payment.entityStatus,
+                    }
+                })
+            }
+        }),
+        listOfSalesPayments: listOfSalesPayments.map((payment) => {
+            return {
+                id: payment.id,
+                salesDetailsId: payment.salesDetailsId,
+                transactionId: payment.transactionId,
+                date: payment.date.slice(0, 10),
+                salesPaymentTypeId: paymentTypeMap[payment.salesPaymentTypeId],
+                salesAmount: payment.salesAmount
+            }
+        }),
+        additionalData: {
+            remainingCost: calculateRemainingCost(purchaseDetails.agreedAmount, listOfPayments),
+            months: calculateMonths(vehicle.availabilityStatus, purchaseDetails.boughtDate, salesDetails?.dateOfSale),
+            remainingSAmount: salesDetails ? salesDetails.saleAmount - listOfSalesPayments.reduce((total, payment) => total + payment.salesAmount, 0) : 0,
         }
-    });
-
-    const processedItem = {
-        id: vehicle.id,
-        availabilityStatus: vehicle.availabilityStatus,
-        date: formatDate(purchaseDetails.boughtDate, 10),
-        vehicleNo: vehicle.vehicleNumber,
-        make: vehicle.make,
-        yom: formatDate(vehicle.yearOfManufacture, 4),
-        document: purchaseDetails.legalOwnerName,
-        pCost: purchaseDetails.agreedAmount,
-        pRemaining: calculateRemainingCost(purchaseDetails.agreedAmount, payments),
-        totalCost: analytics.totalCost,
-        sellingPrice: vehicle.availabilityStatus === 2 ? salesDetails.saleAmount : vehicle.expectedSellingPrice,
-        months: calculateMonths(vehicle.availabilityStatus, purchaseDetails.boughtDate, salesDetails?.dateOfSale || ""),
-        cr: vehicle.isCR ? "Ok" : "Pending",
-        purchasedFrom: purchaseDetails.purchasedFrom,
-        coc: analytics.cocAmount,
-        payments,
-        quotations,
-        buyer: salesDetails?.buyerName || "",
-        dateSold: formatDate(salesDetails?.dateOfSale || "", 10)
-    };
-
-    console.log('Processed item:', processedItem);
-    return processedItem;
+    }
 }
 
 // Fetch payment types once and cache the result
@@ -220,12 +250,9 @@ const getVendorMap = async () => {
     return vendorMapPromise;
 };
 
-// Function to format date
-const formatDate = (date, charCount) => date.slice(0, charCount);
-
 // Function to calculate remaining cost
 const calculateRemainingCost = (pCost, payments) => {
-    const totalPayments = payments.reduce((total, payment) => total + payment.amount, 0);
+    const totalPayments = payments.reduce((total, payment) => total + payment.paymentAmount, 0);
     return pCost - totalPayments;
 };
 

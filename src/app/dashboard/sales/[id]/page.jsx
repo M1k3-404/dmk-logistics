@@ -1,49 +1,40 @@
 "use client"
 
-import { HandleSaveChanges } from "@/actions/maintenance-actions";
-import { getAllMaintenanceTypes } from "@/actions/maintenance-types-actions";
-import { getAllPaymentTypes } from "@/actions/payment-types-actions";
-import { getVehicleBYId } from "@/actions/vehicle-actions";
-import { getAllVendors } from "@/actions/vendors-actions";
-import Quotation from "@/components/Maintenance/quotation";
-import { Button, Input } from "@nextui-org/react";
+import { memo, useEffect, useState } from "react";
+import { Input, Button } from "@nextui-org/react";
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { getVehicleBYId } from "@/actions/vehicle-actions";
+import { getAllPaymentTypes } from "@/actions/payment-types-actions";
+import SalesRecord from "@/components/Sales/SalesRecord";
 
-export default function Maintenace({ params }) {
+const Sales = ({ params }) => {
     const { id } = params;
 
     const [state, setState] = useState({
         vehicle: null,
         paymentTypes: [],
-        maintenanceTypes: [],
-        vendors: [],
         editableRecords: [],
         loading: true
     });
 
-    const initializePage = async () => {
-        try {
-            const vehicle = await getVehicleBYId(id);
-            const paymentTypes = await getAllPaymentTypes();
-            const maintenanceTypes = await getAllMaintenanceTypes();
-            const vendors = await getAllVendors();
-
-            console.log('data:', vehicle);
-            setState({
-                vehicle: vehicle,
-                paymentTypes: paymentTypes,
-                maintenanceTypes: maintenanceTypes,
-                vendors: vendors,
-                editableRecords: [],
-                loading: false,
-            })
-        } catch (error) {
-            console.error('Error initializing page:', error);
-        }
-    };
-
     useEffect(() => {
+        const initializePage = async () => {
+            try {
+                const Vehicle = await getVehicleBYId(id);
+                const paymentTypes = await getAllPaymentTypes();
+
+                console.log('data:', Vehicle);
+                setState({
+                    vehicle: Vehicle,
+                    paymentTypes: paymentTypes,
+                    editableRecords: [],
+                    loading: false,
+                })
+            } catch (error) {
+                console.error('Error initializing page:', error);
+            }
+        };
+
         initializePage();
     }, [id]);
 
@@ -65,14 +56,14 @@ export default function Maintenace({ params }) {
         });
     };
 
-    const handleAddQuotation = (newQuotation) => {
+    const handleAddPayment = (newPayment) => {
         setState((prevState) => ({
             ...prevState,
             vehicle: {
                 ...prevState.vehicle,
-                quotations: [...prevState.vehicle.quotations, newQuotation]
+                payments: [...prevState.vehicle.payments, newPayment]
             },
-            editableRecords: prevState.editableRecords.filter(record => record !== newQuotation)
+            editableRecords: prevState.editableRecords.filter(record => record !== newPayment)
         }));
     };
 
@@ -80,22 +71,20 @@ export default function Maintenace({ params }) {
         return <div className="w-[95%] h-[25%] p-6 bg-white rounded-lg">Loading...</div>
     }
 
-    // ------------------------------------------------------------------------------------------------
-
     return(
         <div className="w-[95%] p-6 bg-white rounded-lg overflow-y-auto">
             <div className="w-full">
-                <p className={`text-[#606060] text-xl font-bold`}>Maintenance</p>
-                
+                <p className="text-[#606060] text-xl font-bold">Sales</p>
+
                 <div className="mt-8 flex w-full">
                     <div className="w-3/4 pr-6 pl-12">
                         <div className="w-full grid grid-cols-2 gap-x-12 gap-y-6 pb-5 border-b border-black/25">
                             {[
-                                {label: "Date", value: state.vehicle.purchaseDetails.boughtDate},
-                                {label: "Vehicle No", value: state.vehicle.vehicle.vehicleNumber},
-                                {label: "Make", value: state.vehicle.vehicle.make},
-                                {label: "YOM", value: state.vehicle.vehicle.YearOfManufacture.slice(0, 4)},
-                                {label: "CR", value: state.vehicle.vehicle.isCR},
+                                { label: 'Date of Sale', value: state.vehicle.salesDetails.dateOfSale.slice(0, 10) },
+                                { label: 'Vehicle No', value: state.vehicle.vehicle.vehicleNumber },
+                                { label: 'Buyer', value: state.vehicle.salesDetails.buyerName },
+                                { label: 'S/Amount', value: state.vehicle.salesDetails.saleAmount },
+                                { label: 'S/Remaining', value: state.vehicle.additionalData.remainingSAmount },
                             ].map((field, index) => (
                                 <Input
                                     key={index}
@@ -115,40 +104,40 @@ export default function Maintenace({ params }) {
                         </div>
 
                         <div className="w-full py-5">
-                            <p className="mb-4 font-medium">Quotations</p>
-                            {state.vehicle.listOfQuotations.map((record, index) => {
+                            <p className="mb-4 font-medium">Payments</p>
+                            {state.vehicle.listOfSalesPayments.map((payment, index) => {
                                 return(
-                                    <Quotation 
-                                        data={record}
+                                    <SalesRecord 
                                         key={index}
-                                        vehicleId={id}
-                                        newRecord={false}
+                                        salesDetailsId={state.vehicle.salesDetails.id}
+                                        record={payment}
+                                        paymentTypes={state.paymentTypes}
                                         editable={false}
-                                        vendors={state.vendors}
-                                        maintenanceTypes={state.maintenanceTypes}    
+                                        newRecord={false}
                                     />
                                 )
                             })}
                             {state.editableRecords.map((_, index) => {
                                 return(
-                                    <Quotation 
-                                        data={_}
-                                        key={index} 
-                                        vehicleId={id}
-                                        vendors={state.vendors}
-                                        maintenanceTypes={state.maintenanceTypes}
-                                        newRecord={true}
+                                    <SalesRecord
+                                        key={index}
+                                        salesDetailsId={state.vehicle.salesDetails.id}
+                                        record={_}
+                                        paymentTypes={state.paymentTypes}
                                         editable={true}
-                                        deleteNewRecord={() => handleDeleteNewRecord(index)}
-                                        onAddQuotation={handleAddQuotation}
+                                        newRecord={true}
+                                        deleteNewRecord = {() => handleDeleteNewRecord(index)}
+                                        onAddPayment={handleAddPayment}
                                     />
                                 )
                             })}
+
                             <Button
                                 className="w-full bg-transparent rounded-lg border border-black"
                                 onClick={handleAddNewRecord}
+                                disabled={state.vehicle.additionalData.remainingSAmount === 0}
                             >
-                                Add Quotation
+                                Add New Payment
                             </Button>
                         </div>
                     </div>
@@ -167,3 +156,5 @@ export default function Maintenace({ params }) {
         </div>
     )
 }
+
+export default memo(Sales);

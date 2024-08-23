@@ -61,4 +61,54 @@ const sendData = async (saleRecord, reload, setOpenModal) => {
     }
 }
 
-export { AddSale };
+//Edit Sale
+const EditSale = async (vehicle, saleRecord, setOpenModal, reload) => {
+    const errors = ValidateFields(vehicle, saleRecord);
+
+    if (Object.keys(errors).length > 0) {
+        console.log('Errors:', errors);
+        return errors;
+    } else {
+        await sendEditData(saleRecord, reload, setOpenModal);
+        return [];
+    }
+}
+
+const sendEditData = async (saleRecord, reload, setOpenModal) => {
+    const formattedDate = formatDate(saleRecord.date);
+    const formattedSellingPrice = parseFloat(saleRecord.sellingPrice);
+
+    const saleData = {
+        "id": saleRecord.id,
+        "salesDate": formattedDate,
+        "buyerName": saleRecord.buyerName,
+        "saleAmount": formattedSellingPrice
+    }
+    console.log('Sale Data:', saleData);
+
+    try {
+        const response = await axios.put('http://localhost:7174/api/SalesDetails/UpdateSalesDetails?userId=23', saleData);
+        console.log('Data sent successfully:', response.data);
+    } catch (error) {
+        console.error('Error sending data:', error);
+    } finally {
+        // reload((prev) => prev + 1);
+        window.location.reload();
+        setOpenModal(false);
+    }
+}
+
+// Delete Sale
+const DeleteSale = async (saleId, reload) => {
+    try {
+        const response = await axios.delete(`http://localhost:7174/api/SalesDetails/DeleteSalesDetails?userId=23&salesDetailsId=${saleId}`);
+        console.log('Data deleted successfully:', response.data);
+    } catch (error) {
+        console.error('Error deleting data:', error);
+    } finally {
+        // reload((prev) => prev + 1);
+        window.location.reload();
+    }
+}
+
+export { AddSale, EditSale, DeleteSale };

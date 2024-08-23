@@ -12,13 +12,14 @@ const Quotation = ({ data, newRecord, editable, vendors, maintenanceTypes, delet
     const [isNewRecord, setIsNewRecord] = useState(newRecord);
     const [isEditable, setIsEditable] = useState(editable);
 
-    const id = isNewRecord ? null : data.id;
+    console.log('quote:', data);
+    const id = isNewRecord ? null : data.quotationInformation.id;
     const [formState, setFormState] = useState({
-        date: isNewRecord ? null : parseDate(data.quotationDate),
-        vendor: isNewRecord ? null : data.vendorId,
-        maintenanceType: isNewRecord ? null : data.maintenanceTypeId,
-        quotedAmount: isNewRecord ? null : data.quotedAmount,
-        isCompleted: isNewRecord ? false : data.isCompleted
+        date: isNewRecord ? null : parseDate(data.quotationInformation.quotationDate),
+        vendor: isNewRecord ? null : data.quotationInformation.vendorId,
+        maintenanceType: isNewRecord ? null : data.quotationInformation.maintenanceTypeId,
+        quotedAmount: isNewRecord ? null : data.quotationInformation.quotedAmount,
+        isCompleted: isNewRecord ? false : data.quotationInformation.isCompleted
     });
 
     const [errorStatus, setErrorStatus] = useState([]);
@@ -76,6 +77,7 @@ const Quotation = ({ data, newRecord, editable, vendors, maintenanceTypes, delet
                 <DateInput
                     isReadOnly={!isEditable}
                     value={formState.date}
+                    format="yyyy-MM-dd"
                     onChange={(value) => handleChange("date", value)}
                     isRequired
                     variant="underlined"

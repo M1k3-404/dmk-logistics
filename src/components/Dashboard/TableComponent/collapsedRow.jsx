@@ -4,6 +4,7 @@ import Link from "next/link"
 import VehicleDeletionModal from "../vehicleDeletionModal"
 import SalesModal from "../salesModal"
 import RestorationModal from "../restorationModal"
+import EditSalesModal from "../editSalesModal"
 
 const ActiveVehiclesActions = ({ vehicle, reload }) => {
     return (
@@ -11,7 +12,7 @@ const ActiveVehiclesActions = ({ vehicle, reload }) => {
             <div className="w-full py-3 border-b border-black/25">
                 <Button 
                     as={Link}
-                    href={`/dashboard/payment/${vehicle.id}`}
+                    href={`/dashboard/payment/${vehicle.vehicle.id}`}
                     className="w-full bg-[#0c0c0c] text-white px-12 font-extralight rounded-md hover:bg-[#1d1d1d] " 
                     size="sm"
                 >
@@ -19,7 +20,7 @@ const ActiveVehiclesActions = ({ vehicle, reload }) => {
                 </Button>
                 <Button 
                     as={Link}
-                    href={`/dashboard/maintenance/${vehicle.id}`}
+                    href={`/dashboard/maintenance/${vehicle.vehicle.id}`}
                     className="w-full bg-[#0c0c0c] text-white px-12 font-extralight rounded-md hover:bg-[#1d1d1d] mt-2" 
                     size="sm"
                 >
@@ -29,7 +30,7 @@ const ActiveVehiclesActions = ({ vehicle, reload }) => {
             <Button 
                 as={Link}
                 href={{
-                    pathname: `/dashboard/edit-vehicle/${vehicle.id}`,
+                    pathname: `/dashboard/edit-vehicle/${vehicle.vehicle.id}`,
                     query: { vehicle: JSON.stringify(vehicle) }
                 }}
                 className="bg-white text-black px-12 font-extralight rounded-md hover:bg-[#fafafa] mt-3" 
@@ -43,11 +44,21 @@ const ActiveVehiclesActions = ({ vehicle, reload }) => {
     )
 }
 
-const SoldVehiclesActions = ({ vehicle }) => {
+const SoldVehiclesActions = ({ vehicle, reload }) => {
     return (
         <>
-            <SalesModal btnText={"Edit Record"} vehicle={vehicle} />
-            <RestorationModal vehicle={vehicle} />
+            <div className="w-full py-3 border-b border-black/25">
+                <Button 
+                    as={Link}
+                    href={`/dashboard/sales/${vehicle.vehicle.id}`}
+                    className="w-full bg-[#0c0c0c] text-white px-12 font-extralight rounded-md hover:bg-[#1d1d1d] " 
+                    size="sm"
+                >
+                    Sales Payments
+                </Button>
+            </div>
+            <EditSalesModal btnText={"Edit Record"} vehicle={vehicle} reload={reload} />
+            <RestorationModal vehicle={vehicle} reload={reload} />
         </>
     )
 }
@@ -69,7 +80,7 @@ const CollapsedRow = ({ vehicle, isSold, reload }) => {
                                     inputWrapper: "w-[25%] rounded-lg bg-gray-200",
                                     input: "text-center text-sm text-[#0c0c0c]",
                                 }}
-                                defaultValue={vehicle.months}
+                                defaultValue={vehicle.additionalData.months}
                                 size="sm"
                                 variant="flat"
                                 label="Months"
@@ -81,10 +92,10 @@ const CollapsedRow = ({ vehicle, isSold, reload }) => {
                                 classNames={{
                                     base: "bg-transparent",
                                     label: "mr-2",
-                                    inputWrapper: `w-[75%] rounded-lg ${vehicle.cr === "Pending" ? "bg-red-200" : "bg-green-200"}`,
+                                    inputWrapper: `w-[75%] rounded-lg ${vehicle.vehicle.isCR === "Pending" ? "bg-red-200" : "bg-green-200"}`,
                                     input: "text-center text-sm text-[#0c0c0c]",
                                 }}
-                                defaultValue={vehicle.cr}
+                                defaultValue={vehicle.vehicle.isCR}
                                 size="sm"
                                 variant="flat"
                                 label="CR"
@@ -99,7 +110,7 @@ const CollapsedRow = ({ vehicle, isSold, reload }) => {
                                     inputWrapper: "w-[100%] rounded-lg bg-gray-200",
                                     input: "text-center text-sm text-[#0c0c0c]",
                                 }}
-                                defaultValue={vehicle.purchasedFrom}
+                                defaultValue={vehicle.purchaseDetails.purchasedFrom}
                                 size="sm"
                                 variant="flat"
                                 label="Purchased From"
@@ -114,7 +125,7 @@ const CollapsedRow = ({ vehicle, isSold, reload }) => {
                                     inputWrapper: "w-[75%] rounded-lg bg-gray-200",
                                     input: "text-center text-sm text-[#0c0c0c]",
                                 }}
-                                defaultValue={vehicle.coc}
+                                defaultValue={vehicle.analytics.cocAmount}
                                 size="sm"
                                 variant="flat"
                                 label="COC"
@@ -131,7 +142,7 @@ const CollapsedRow = ({ vehicle, isSold, reload }) => {
                                     inputWrapper: "w-[100%] rounded-lg bg-gray-200",
                                     input: "text-center text-sm text-[#0c0c0c]",
                                 }}
-                                defaultValue={vehicle.date}
+                                defaultValue={vehicle.purchaseDetails.boughtDate.slice(0, 10)}
                                 size="sm"
                                 variant="flat"
                                 label="Purchased Date"
@@ -146,7 +157,7 @@ const CollapsedRow = ({ vehicle, isSold, reload }) => {
                                     inputWrapper: "w-[25%] rounded-lg bg-gray-200",
                                     input: "text-center text-sm text-[#0c0c0c]",
                                 }}
-                                defaultValue={vehicle.months}
+                                defaultValue={vehicle.additionalData.months}
                                 size="sm"
                                 variant="flat"
                                 label="Months"
@@ -161,7 +172,7 @@ const CollapsedRow = ({ vehicle, isSold, reload }) => {
                                     inputWrapper: "w-[100%] rounded-lg bg-gray-200",
                                     input: "text-center text-sm text-[#0c0c0c]",
                                 }}
-                                defaultValue={vehicle.purchasedFrom}
+                                defaultValue={vehicle.purchaseDetails.purchasedFrom}
                                 size="sm"
                                 variant="flat"
                                 label="Purchased From"
@@ -183,12 +194,12 @@ const CollapsedRow = ({ vehicle, isSold, reload }) => {
                             </TableRow>
                         </TableHeader>
                         <TableBody>
-                            {vehicle.payments.map((payment, index) => {
+                            {vehicle.listOfPayments.map((payment, index) => {
                                 return(
                                     <TableRow key={index}>
                                         <TableCell>{payment.date}</TableCell>
-                                        <TableCell>{payment.account}</TableCell>
-                                        <TableCell>{payment.amount}</TableCell>
+                                        <TableCell>{payment.paymentTypeId}</TableCell>
+                                        <TableCell>{payment.paymentAmount}</TableCell>
                                     </TableRow>
                                 )
                             })}
@@ -197,7 +208,7 @@ const CollapsedRow = ({ vehicle, isSold, reload }) => {
                 </div>
 
                 {/* Maintenance Details */}
-                <div className="p-4">
+                <div className="p-4 border-b border-black/25">
                     <p className="mt-1 mb-2 font-medium">Mainteneace Records</p>
                     <Table className="w-[75%]">
                         <TableHeader className="border-b border-black/25">
@@ -209,19 +220,46 @@ const CollapsedRow = ({ vehicle, isSold, reload }) => {
                             </TableRow>
                         </TableHeader>
                         <TableBody>
-                            {vehicle.quotations.map((quotation, index) => {
+                            {vehicle.listOfQuotations.map((quotation, index) => {
                                 return(
                                     <TableRow key={index}>
-                                        <TableCell>{quotation.quotationDate}</TableCell>
-                                        <TableCell>{quotation.maintenanceTypeId}</TableCell>
-                                        <TableCell>{quotation.vendorId}</TableCell>
-                                        <TableCell>{quotation.quotedAmount}</TableCell>
+                                        <TableCell>{quotation.quotationInformation.quotationDate}</TableCell>
+                                        <TableCell>{quotation.quotationInformation.maintenanceTypeId}</TableCell>
+                                        <TableCell>{quotation.quotationInformation.vendorId}</TableCell>
+                                        <TableCell>{quotation.quotationInformation.quotedAmount}</TableCell>
                                     </TableRow>
                                 )
                             })}
                         </TableBody>
                     </Table>
                 </div>
+
+                {/* Sales Details */}
+                {isSold && (
+                    <div className="p-4">
+                        <p className="mt-1 mb-2 font-medium">Sales Records</p>
+                        <Table className="w-[75%]" >
+                            <TableHeader className="border-b border-black/25">
+                                <TableRow>
+                                    <TableHead className="text-black">Date</TableHead>
+                                    <TableHead className="text-black">Account</TableHead>
+                                    <TableHead className="text-black">Amount</TableHead>
+                                </TableRow>
+                            </TableHeader>
+                            <TableBody>
+                                {vehicle.listOfSalesPayments.map((payment, index) => {
+                                    return(
+                                        <TableRow key={index}>
+                                            <TableCell>{payment.date}</TableCell>
+                                            <TableCell>{payment.salesPaymentTypeId}</TableCell>
+                                            <TableCell>{payment.salesAmount}</TableCell>
+                                        </TableRow>
+                                    )
+                                })}
+                            </TableBody>
+                        </Table>
+                    </div>
+                )}
             </div>
 
             {/* Right Content */}
@@ -230,7 +268,7 @@ const CollapsedRow = ({ vehicle, isSold, reload }) => {
                     { !isSold ? (
                         <ActiveVehiclesActions vehicle={vehicle} reload={reload} />
                     ) : (
-                        <SoldVehiclesActions vehicle={vehicle} />
+                        <SoldVehiclesActions vehicle={vehicle} reload={reload} />
                     )}
                 </div>
             </div>

@@ -28,26 +28,20 @@ export default function Page({ params }) {
     const [formState, handleChange, handleDateChange, errorStatus, setErrorStatus, setFormState] = useFormState(initialState);
     const [loading, setLoading] = useState(true);
 
-    const [date, setDate] = useState(null);
-    const [yom, setYom] = useState(null);
-
     useEffect(() => {
         const vehicle = JSON.parse(vehicleQuery);
-        setFormState({
-            date: vehicle.date,
-            vehicleNo: vehicle.vehicleNo,
-            make: vehicle.make,
-            yom: vehicle.yom,
-            cr: vehicle.cr,
-            purchasedFrom: vehicle.purchasedFrom,
-            document: vehicle.document,
-            pCost: vehicle.pCost,
-            sellingPrice: vehicle.sellingPrice
-        })
         console.log('vehicle:', vehicle);
-
-        setDate(parseDate(vehicle.date));
-        setYom(parseDate(vehicle.yom + "-01-01"));
+        setFormState({
+            date: parseDate(vehicle.purchaseDetails.boughtDate),
+            vehicleNo: vehicle.vehicle.vehicleNumber,
+            make: vehicle.vehicle.make,
+            yom: parseDate(vehicle.vehicle.YearOfManufacture),
+            cr: vehicle.vehicle.isCR.toLowerCase(),
+            purchasedFrom: vehicle.purchaseDetails.purchasedFrom,
+            document: vehicle.purchaseDetails.legalOwnerName,
+            pCost: vehicle.purchaseDetails.agreedAmount,
+            sellingPrice: vehicle.vehicle.ExpectedSellingPrice
+        })
 
         setLoading(false);
     }, [vehicleQuery]);
@@ -82,7 +76,7 @@ export default function Page({ params }) {
                                     inputWrapper: "w-full rounded-lg bg-[#f5f5f5]",
                                     errorMessage: "text-red-600 text-xs"
                                 }}
-                                defaultValue={date}
+                                defaultValue={formState.date}
                             />
 
                             <Input
@@ -132,7 +126,7 @@ export default function Page({ params }) {
                                     inputWrapper: "w-full rounded-lg bg-[#f5f5f5]",
                                     errorMessage: "text-red-600 text-xs",
                                 }}
-                                defaultValue={yom}
+                                defaultValue={formState.yom}
                             />
 
                             <Select

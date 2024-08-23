@@ -10,17 +10,19 @@ const inter = Inter({ subsets: ["latin"] });
 const RootLayout = ({ children}) => {
     return (
         <html lang="en">
-            <NextUIProvider>
-                <body className={`${inter.className} h-screen w-screen flex justify-start`}>
-                    <Sidebar />
-                    <div className="h-screen w-full bg-blue-200 flex-col overflow-x-hidden">
-                        <Header />
-                        <div className="h-[94%] w-full flex justify-center items-center bg-[#f1f1f1]">
-                            {children}
+            <body>
+                <NextUIProvider>
+                    <div className={`${inter.className} h-screen w-screen flex justify-start`}>
+                        <Sidebar />
+                        <div className="h-screen w-full bg-blue-200 flex-col overflow-x-hidden">
+                            <Header />
+                            <div className="h-[94%] w-full flex justify-center items-center bg-[#f1f1f1]">
+                                {children}
+                            </div>
                         </div>
                     </div>
-                </body>
-            </NextUIProvider>
+                </NextUIProvider>
+            </body>
         </html>
     );
 }
