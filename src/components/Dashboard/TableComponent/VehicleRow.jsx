@@ -34,7 +34,8 @@ const VehicleRow = ({ vehicle, isSelected, onToggle, isSold, reload }) => {
                     </TableCell>
                 )}
                 <TableCell>{vehicle.analytics.totalCost}</TableCell>
-                <TableCell>{vehicle.vehicle.ExpectedSellingPrice}</TableCell>
+                {isSold && <TableCell>{vehicle.salesDetails.saleAmount}</TableCell>}
+                {!isSold && <TableCell>{vehicle.vehicle.ExpectedSellingPrice}</TableCell>}
                 {isSold && <TableCell>{vehicle.salesDetails.buyerName}</TableCell>}
                 {!isSold && (
                     <TableCell>
