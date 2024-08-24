@@ -20,7 +20,7 @@ export default function EditSalesModal({ btnText, vehicle, reload }) {
 
     const handleSave = () => {
         const saleRecord = {
-            "id": vehicle.salesId,
+            "id": vehicle.salesDetails.id,
             ...formData
         };
 
