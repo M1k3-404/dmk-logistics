@@ -1,14 +1,24 @@
 "use client"
 
+import { getAllAuditLogs } from "@/actions/audit-log-actions";
 import AuditLog from "@/components/Audit Log/auditLog";
 import { auditLogs } from "@/components/vehicleData";
 import { BreadcrumbItem, Breadcrumbs, Input } from "@nextui-org/react";
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { IoIosSearch } from "react-icons/io";
 
 export default function Page() {
+    const [auditLogs, setAuditLogs] = useState([]);
     const [filterValue, setFilterValue] = useState("");
     const hasSearchFilter = Boolean(filterValue);
+
+    useEffect(() => {
+        getAllAuditLogs()
+            .then(((data) => {
+                setAuditLogs(data);
+                console.log("Audit Logs Data:", data);
+            }))
+    }, []);
 
     const onSearchChange = useCallback((value) => {
         if (value) {
@@ -33,19 +43,7 @@ export default function Page() {
     return (
         <div className="w-[95%] max-h-[95%] p-6 bg-white rounded-lg overflow-y-auto">
             <div className="w-full">
-                <Breadcrumbs
-                    separator="/"
-                    itemClasses={{
-                        separator: "text-xl font-bold px-2"
-                    }}
-                >
-                    <BreadcrumbItem>
-                        <p className={`text-[#606060] text-xl font-bold`}>Settings</p>
-                    </BreadcrumbItem>
-                    <BreadcrumbItem>
-                        <p className={`text-[#606060] text-xl font-bold`}>Audit Log</p>
-                    </BreadcrumbItem>
-                </Breadcrumbs>
+                <p className={`text-[#606060] text-xl font-bold`}>Audit Logs</p>
 
                 <div className="mt-8 w-[90%] mx-auto">
                     <Input
@@ -64,14 +62,14 @@ export default function Page() {
                         onValueChange={onSearchChange}
                     />
 
-                    <div className="mt-4 w-full min-h-full overflow-y-auto">
+                    <div className="mt-4 w-full">
                         {filteredLogs.map((log, index) => {
                             return (
                                 <AuditLog
                                     key={index}
                                     description={log.description}
-                                    time={log.time}
-                                    date={log.date}
+                                    timeDate={log.loggedAt}
+                                    user={log.userId}
                                 />
                             )
                         })}

@@ -28,14 +28,14 @@ export default function Settings() {
                         <CiPassport1 size={21} className="mx-4" />
                         <p>Maintenance Type</p>
                     </Button>
-                    {/* <Button
+                    <Button
                         as={Link}
                         href="/settings/audit-log"
                         className="w-full flex items-center justify-start border border-black rounded-lg p-2 hover:bg-black hover:text-white"
                     >
                         <CiGrid32 size={21} className="mx-4" />
                         <p>Audit Log</p>
-                    </Button> */}
+                    </Button>
                 </div>
             </div>
         </div>
