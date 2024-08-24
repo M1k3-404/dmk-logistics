@@ -23,15 +23,15 @@ const ValidateFields = (vehicle, saleRecord) => {
         }
     })
 
-    if (new Date(vehicle.date) > new Date(saleRecord.date)) {
+    if (new Date(vehicle.purchaseDetails.boughtDate) > new Date(saleRecord.date)) {
         errors.date = 'Selling Date must be later than bought date';
     }
 
-    if (vehicle.pRemaining !== 0) {
+    if (vehicle.additionalData.remainingCost !== 0) {
         errors.pRemaining = 'Purchase payment is not complete';
     }
 
-    if (vehicle.cr !== 'Ok') {
+    if (vehicle.vehicle.isCR !== 'Ok') {
         errors.cr = 'CR not available';
     }
 

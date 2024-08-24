@@ -4,11 +4,12 @@ import { useState } from "react";
 import { AddSale } from "@/actions/sales-actions";
 
 export default function SalesModal({ btnText, vehicle, reload }) {
+    console.log('Vehicle Sales:', vehicle);
     const [openModal, setOpenModal] = useState(false);
     const [formData, setFormData] = useState({
         date: "",
         buyerName: "",
-        sellingPrice: vehicle.sellingPrice,
+        sellingPrice: vehicle.vehicle.ExpectedSellingPrice,
     });
     const [errorStatus, setErrorStatus] = useState([]);
 
@@ -18,7 +19,7 @@ export default function SalesModal({ btnText, vehicle, reload }) {
 
     const handleSave = () => {
         const saleRecord = {
-            "id": vehicle.id,
+            "id": vehicle.vehicle.id,
             ...formData
         };
 
@@ -99,7 +100,7 @@ export default function SalesModal({ btnText, vehicle, reload }) {
                                 input: "text-left text-sm text-black",
                                 errorMessage: "text-red-600 text-xs"
                             }}
-                            defaultValue={vehicle.sellingPrice}
+                            defaultValue={formData.sellingPrice}
                             className="mt-2"
                             size="sm"
                         />
