@@ -43,7 +43,7 @@ const soldVehicleTableHeads = [
     "Document",
     "P/Cost",
     "Total Cost",
-    "Selling Price",
+    "Sold Price",
     "Buyer's Name",
 ];
 
