@@ -1,6 +1,6 @@
 "use client"
 
-import { getAllPaymentTypes } from "@/actions/payment-types-actions";
+import { getAllPaymentTypes, getEveryPaymentType } from "@/actions/payment-types-actions";
 import { getVehicleBYId } from "@/actions/vehicle-actions";
 import PaymentRecord from "@/components/Payments/paymentRecord";
 import { Button, Input } from "@nextui-org/react";
@@ -22,7 +22,7 @@ const Payment = ({ params }) => {
         const initializePage = async () => {
             try {
                 const Vehicle = await getVehicleBYId(id);
-                const paymentTypes = await getAllPaymentTypes();
+                const paymentTypes = await getEveryPaymentType();
 
                 console.log('data:', Vehicle);
                 setState({

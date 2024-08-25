@@ -1,5 +1,5 @@
 import axios from "axios";
-import { getAllPaymentTypes } from "../payment-types-actions";
+import { getAllPaymentTypes, getEveryPaymentType } from "../payment-types-actions";
 import { getAllMaintenanceTypes } from "../maintenance-types-actions";
 import { getAllVendors } from "../vendors-actions";
 
@@ -125,7 +125,7 @@ const processDashboardData = async (data) => {
 let paymentTypeMapPromise = null;
 const getPaymentTypeMap = async () => {
     if (!paymentTypeMapPromise) {
-        paymentTypeMapPromise = getAllPaymentTypes().then(paymentTypes => {
+        paymentTypeMapPromise = getEveryPaymentType().then(paymentTypes => {
             const paymentTypeMap = {};
             paymentTypes.forEach(paymentType => {
                 paymentTypeMap[paymentType.id] = paymentType.paymentTitle;

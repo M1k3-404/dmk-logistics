@@ -6,10 +6,11 @@ import { Chip } from "@nextui-org/react";
 import { getVehicleBYId } from "@/actions/vehicle-actions";
 import { getAllMaintenanceTypes } from "@/actions/maintenance-types-actions";
 import QuotationPayment from "./quotationPayment";
-import { getAllPaymentTypes } from "@/actions/payment-types-actions";
+import { getAllPaymentTypes, getEveryPaymentType } from "@/actions/payment-types-actions";
 import AddQuotationPaymentModal from "./addQuotationPaymentModal";
 
 const Quotation = ({ data }) => {
+    console.log('Quotation:', data);
     const isCompleted = data.quotationInformation.isCompleted;
     const date = data.quotationInformation.quotationDate.split("T")[0];
     const [vehicleNo, setVehicleNo] = useState("");
@@ -36,11 +37,11 @@ const Quotation = ({ data }) => {
 
     const getVehicleNo = async (id) => {
         const vehicle = await getVehicleBYId(id);
-        return vehicle.vehicleNo;
+        return vehicle.vehicle.vehicleNumber;
     }
 
     const getPaymentTypes = async () => {
-        const paymentTypes = await getAllPaymentTypes();
+        const paymentTypes = await getEveryPaymentType();
         setPaymentTypes(paymentTypes);
     }
 

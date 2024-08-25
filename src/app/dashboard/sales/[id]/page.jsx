@@ -4,7 +4,7 @@ import { memo, useEffect, useState } from "react";
 import { Input, Button } from "@nextui-org/react";
 import Link from "next/link";
 import { getVehicleBYId } from "@/actions/vehicle-actions";
-import { getAllPaymentTypes } from "@/actions/payment-types-actions";
+import { getAllPaymentTypes, getEveryPaymentType } from "@/actions/payment-types-actions";
 import SalesRecord from "@/components/Sales/SalesRecord";
 
 const Sales = ({ params }) => {
@@ -21,7 +21,7 @@ const Sales = ({ params }) => {
         const initializePage = async () => {
             try {
                 const Vehicle = await getVehicleBYId(id);
-                const paymentTypes = await getAllPaymentTypes();
+                const paymentTypes = await getEveryPaymentType();
 
                 console.log('data:', Vehicle);
                 setState({

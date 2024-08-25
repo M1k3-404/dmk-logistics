@@ -15,6 +15,17 @@ const getPaymentTypes = async () => {
     }
 }
 
+// Get Every Payment Type
+const getEveryPaymentType = async () => {
+    try {
+        const response = await axios.get('http://localhost:7174/api/PaymentType/GetActiveAndInActivePaymentTypes');
+        console.log('Data recieved successfully:', response.data);
+        return response.data;
+    } catch (error) {
+        console.error('Error recieving data:', error);
+    }
+}
+
 // Add Payment Type
 const addPaymentType = (paymentType, setOpenModal) => {
     const requiredFields = checkRequiredFields(paymentType);
@@ -88,4 +99,4 @@ const deletePaymentType = async (id) => {
     }
 }
 
-export { getAllPaymentTypes, deletePaymentType, addPaymentType }
+export { getAllPaymentTypes, getEveryPaymentType, deletePaymentType, addPaymentType }

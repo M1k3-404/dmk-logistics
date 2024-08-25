@@ -59,6 +59,8 @@ export default function PaymentRecord({record, newRecord, paymentTypes, editable
         )
     ), [isNewRecord, deleteNewRecord, id]);
 
+    const headingClasses = "flex w-full sticky top-1 z-20 py-1.5 px-2 bg-default-100 shadow-small rounded-small";
+
     return(
         <div className={`w-full grid grid-cols-9 items-center rounded-lg border border-black my-1 ${ isEditable ? "border-dashed" : "border-solid"}`}>
             <Button isIconOnly className="col-span-1 ml-3">
@@ -88,11 +90,26 @@ export default function PaymentRecord({record, newRecord, paymentTypes, editable
                     listboxWrapper: "bg-white shadow-lg rounded-lg",
                 }}
             >
-                <SelectSection
-                    showDivider
+                <SelectSection 
+                    showDivider 
+                    title={"Active"} 
+                    classNames={{
+                        heading: "text-xs text-default-500 ml-1",
+                    }}
                 >
-                    {paymentTypes.map((type) => (
-                        <SelectItem key={type.paymentTitle}>{type.paymentTitle}</SelectItem>
+                    {paymentTypes.filter((type) => type.entityStatus).map((type) => (
+                        <SelectItem key={type.paymentTitle} className="hover:bg-black/5 rounded-md">{type.paymentTitle}</SelectItem>
+                    ))}
+                </SelectSection>
+                <SelectSection 
+                    showDivider 
+                    title={"Inactive"}
+                    classNames={{
+                        heading: "text-xs text-default-500 ml-1",
+                    }}
+                >
+                    {paymentTypes.filter((type) => !type.entityStatus).map((type) => (
+                        <SelectItem key={type.paymentTitle} className="hover:bg-black/5 rounded-md" isDisabled>{type.paymentTitle}</SelectItem>
                     ))}
                 </SelectSection>
             </Select>
