@@ -1,14 +1,14 @@
 import { formatDate, isEmpty } from "@/lib/utils";
 import axios from "axios";
 
-const AddSale = async (vehicle, saleRecord, setOpenModal, reload) => {
+const AddSale = async (vehicle, saleRecord, setOpenModal, reload, userId) => {
     const errors = ValidateFields(vehicle, saleRecord);
 
     if (Object.keys(errors).length > 0) {
         console.log('Errors:', errors);
         return errors;
     } else {
-        await sendData(saleRecord, reload, setOpenModal);
+        await sendData(saleRecord, reload, setOpenModal, userId);
         return [];
     }
 }
@@ -38,7 +38,7 @@ const ValidateFields = (vehicle, saleRecord) => {
     return errors;
 }
 
-const sendData = async (saleRecord, reload, setOpenModal) => {
+const sendData = async (saleRecord, reload, setOpenModal, userId) => {
     const formattedDate = formatDate(saleRecord.date);
     const formattedSellingPrice = parseFloat(saleRecord.sellingPrice);
 
@@ -51,7 +51,7 @@ const sendData = async (saleRecord, reload, setOpenModal) => {
     console.log('Sale Data:', saleData);
 
     try {
-        const response = await axios.post('http://localhost:7174/api/SalesDetails/AddSalesDetails?userId=23', saleData);
+        const response = await axios.post(`http://localhost:7174/api/SalesDetails/AddSalesDetails?userId=${userId}`, saleData);
         console.log('Data sent successfully:', response.data);
     } catch (error) {
         console.error('Error sending data:', error);
@@ -62,19 +62,19 @@ const sendData = async (saleRecord, reload, setOpenModal) => {
 }
 
 //Edit Sale
-const EditSale = async (vehicle, saleRecord, setOpenModal, reload) => {
+const EditSale = async (vehicle, saleRecord, setOpenModal, reload, userId) => {
     const errors = ValidateFields(vehicle, saleRecord);
 
     if (Object.keys(errors).length > 0) {
         console.log('Errors:', errors);
         return errors;
     } else {
-        await sendEditData(saleRecord, reload, setOpenModal);
+        await sendEditData(saleRecord, reload, setOpenModal, userId);
         return [];
     }
 }
 
-const sendEditData = async (saleRecord, reload, setOpenModal) => {
+const sendEditData = async (saleRecord, reload, setOpenModal, userId) => {
     const formattedDate = formatDate(saleRecord.date);
     const formattedSellingPrice = parseFloat(saleRecord.sellingPrice);
 
@@ -87,7 +87,7 @@ const sendEditData = async (saleRecord, reload, setOpenModal) => {
     console.log('Sale Data:', saleData);
 
     try {
-        const response = await axios.put('http://localhost:7174/api/SalesDetails/UpdateSalesDetails?userId=23', saleData);
+        const response = await axios.put(`http://localhost:7174/api/SalesDetails/UpdateSalesDetails?userId=${userId}`, saleData);
         console.log('Data sent successfully:', response.data);
     } catch (error) {
         console.error('Error sending data:', error);
@@ -99,9 +99,9 @@ const sendEditData = async (saleRecord, reload, setOpenModal) => {
 }
 
 // Delete Sale
-const DeleteSale = async (saleId, reload) => {
+const DeleteSale = async (saleId, reload, userId) => {
     try {
-        const response = await axios.delete(`http://localhost:7174/api/SalesDetails/DeleteSalesDetails?userId=23&salesDetailsId=${saleId}`);
+        const response = await axios.delete(`http://localhost:7174/api/SalesDetails/DeleteSalesDetails?userId=${userId}&salesDetailsId=${saleId}`);
         console.log('Data deleted successfully:', response.data);
     } catch (error) {
         console.error('Error deleting data:', error);

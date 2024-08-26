@@ -1,6 +1,6 @@
 import { Button, DateInput, Input } from "@nextui-org/react";
 import { AlertDialog, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTrigger } from "../ui/alert-dialog";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { AddSale } from "@/actions/sales-actions";
 
 export default function SalesModal({ btnText, vehicle, reload }) {
@@ -12,6 +12,17 @@ export default function SalesModal({ btnText, vehicle, reload }) {
     });
     const [errorStatus, setErrorStatus] = useState([]);
 
+    const [userId, setUserId] = useState(null);
+
+    useEffect(() => {
+        const session = JSON.parse(localStorage.getItem("session"));
+        if (session && session.userId) {
+            setUserId(session.userId);
+        } else {
+            console.error("User is not logged in or session is missing userId.");
+        }
+    }, []);
+
     const handleInputChange = (field) => (value) => {
         setFormData((prev) => ({ ...prev, [field]: value }));
     }
@@ -22,7 +33,7 @@ export default function SalesModal({ btnText, vehicle, reload }) {
             ...formData
         };
 
-        const requiredFields = AddSale(vehicle, saleRecord, setOpenModal, reload);
+        const requiredFields = AddSale(vehicle, saleRecord, setOpenModal, reload, userId);
         setErrorStatus(requiredFields);
     }
 

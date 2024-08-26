@@ -1,6 +1,6 @@
 import { Button, Input, Progress } from "@nextui-org/react";
 import { AlertDialog, AlertDialogContent, AlertDialogFooter, AlertDialogHeader, AlertDialogTrigger } from "../ui/alert-dialog";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { users } from "../vehicleData";
 import { DeleteSale } from "@/actions/sales-actions";
 
@@ -8,6 +8,16 @@ export default function RestorationModal({ vehicle, reload }) {
     const [openModal, setOpenModal] = useState(false);
     const [stage, setStage] = useState("initial");
     const [password, setPassword] = useState("");
+    const [userId, setUserId] = useState(null);
+
+    useEffect(() => {
+        const session = JSON.parse(localStorage.getItem("session"));
+        if (session && session.userId) {
+            setUserId(session.userId);
+        } else {
+            console.error("User is not logged in or session is missing userId.");
+        }
+    }, []);
 
     const validatePassword = () => {
         console.log("password: " + password);
@@ -19,7 +29,7 @@ export default function RestorationModal({ vehicle, reload }) {
         // } else {
         //     console.log("invalid!")
         // }
-        DeleteSale(vehicle.salesDetails.id, reload);
+        DeleteSale(vehicle.salesDetails.id, reload, userId);
     }
 
     const handleCancel = () => {
