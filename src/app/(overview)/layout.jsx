@@ -1,13 +1,28 @@
+"use client"
+
 import { Inter } from "next/font/google";
 import "../globals.css";
 import { NextUIProvider } from "@nextui-org/react";
 import Header from "@/components/header";
 import Sidebar from "@/components/sidebar";
-import { memo } from "react";
+import { memo, useEffect } from "react";
+import { useRouter } from "next/navigation";
 
 const inter = Inter({ subsets: ["latin"] });
 
 const Layout = ({ children}) => {
+    const router = useRouter();
+
+    useEffect(() => {
+        if (typeof window != "undefined") {
+            const session = localStorage.getItem("session");
+            
+            if (!session) {
+                router.push("/login");
+            }
+        }
+    }, [router]);
+
     return (
         <div className={`${inter.className} h-screen w-screen flex justify-start`}>
             <Sidebar />

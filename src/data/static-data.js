@@ -47,4 +47,34 @@ const soldVehicleTableHeads = [
     "Buyer's Name",
 ];
 
-export { sidebarItems, vehicleTableHeads, soldVehicleTableHeads };
+const users = [
+    {
+        id: 0,
+        name: "Admin",
+        role: "Admin",
+        password: "Adm830@DMK24"
+    },
+
+    {
+        id: 1,
+        name: "Dilruksh Wickramarathne",
+        role: "Owner",
+        password: "DW125@DMK24"
+    },
+
+    {
+        id: 2,
+        name: "Lilan Wickramarathne",
+        role: "User",
+        password: "LW692@DMK24"
+    },
+
+    {
+        id: 3,
+        name: "Ravi Mahagedara",
+        role: "User",
+        password: "RM381@DMK24"
+    },
+]
+
+export { sidebarItems, vehicleTableHeads, soldVehicleTableHeads, users };

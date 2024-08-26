@@ -14,7 +14,9 @@ export default function Tabs() {
     const [soldVehicles, setSoldVehicles] = useState([]);
     const [reloadTrigger, setReloadTrigger] = useState(0);
     const [selectedTab, setSelectedTab] = useState(0);
+    const [userRole, setUserRole] = useState("Guest");
     const firstBtnRef = useRef();
+
     const fetchVehicles = useCallback(async () => {
         try {
             const { activeVehicles, soldVehicles } = await getAllVehicles();
@@ -26,6 +28,10 @@ export default function Tabs() {
     }, []);
 
     useEffect(() => {
+        const session = JSON.parse(localStorage.getItem("session"));
+        if (session) {
+            setUserRole(session.userRole);
+        }
         fetchVehicles();
     }, [fetchVehicles, reloadTrigger]);
 
@@ -35,14 +41,21 @@ export default function Tabs() {
 
     const items = [
         { title: "Active", content: <DashboardTable tableHeaders={vehicleTableHeads} data={activeVehicles} tab={"vehicles"} reload={setReloadTrigger} /> },
+    ]
+
+    const allItems = [
+        { title: "Active", content: <DashboardTable tableHeaders={vehicleTableHeads} data={activeVehicles} tab={"vehicles"} reload={setReloadTrigger} /> },
         { title: "Sold", content: <DashboardTable tableHeaders={soldVehicleTableHeads} data={soldVehicles} tab={"sold vehicles"} /> },
     ]
+
+    const displayItems = (userRole.toLowerCase() === "admin" || userRole.toLowerCase() === "owner") ? allItems : items;
 
     return(
         <div>
             <div className="pt-6 mx-8 flex justify-between items-center">
                 <div className="flex space-x-2">
-                    {items.map((item, index) => (
+
+                    {displayItems.map((item, index) => (
                         <Button
                             ref={index === 0 ? firstBtnRef : null}
                             key={index}
@@ -65,7 +78,7 @@ export default function Tabs() {
             </div>
 
             <div className="mt-5 mx-8">
-                {items[selectedTab].content}
+                {displayItems[selectedTab].content}
             </div>
         </div>
     )

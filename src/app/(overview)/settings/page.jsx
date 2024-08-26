@@ -1,8 +1,27 @@
+'use client'
+
 import { Button } from "@nextui-org/react";
 import Link from "next/link";
+import { useEffect, useState } from "react";
 import { CiCreditCard1, CiGrid32, CiPassport1, CiSettings } from "react-icons/ci";
 
 export default function Settings() {
+    const [session, setSession] = useState({
+        userId: -1,
+        userName: "Guest",
+        userRole: "Guest",
+    });
+
+    useEffect(() => {
+        if (typeof window !== "undefined") {
+            const session = localStorage.getItem("session");
+
+            if (session) {
+                setSession(JSON.parse(session));
+            }
+        }
+    }, [])
+
     return (
         <div className="w-[97%] h-[95%] bg-white rounded-lg overflow-y-auto">
             <div className="w-full h-full p-8">
@@ -28,14 +47,16 @@ export default function Settings() {
                         <CiPassport1 size={21} className="mx-4" />
                         <p>Maintenance Type</p>
                     </Button>
-                    <Button
-                        as={Link}
-                        href="/settings/audit-log"
-                        className="w-full flex items-center justify-start border border-black rounded-lg p-2 hover:bg-black hover:text-white"
-                    >
-                        <CiGrid32 size={21} className="mx-4" />
-                        <p>Audit Log</p>
-                    </Button>
+                    {session && (session.userRole.toLowerCase() === "admin" || session.userRole.toLowerCase() === "owner") && (
+                        <Button
+                            as={Link}
+                            href="/settings/audit-log"
+                            className="w-full flex items-center justify-start border border-black rounded-lg p-2 hover:bg-black hover:text-white"
+                        >
+                            <CiGrid32 size={21} className="mx-4" />
+                            <p>Audit Log</p>
+                        </Button>
+                    )}
                 </div>
             </div>
         </div>
