@@ -25,7 +25,7 @@ export default function RecordDeletionModal({ recordType, id }) {
         } else if (recordType === 'payment') {
             deletePayment(id, userId);
         } else if (recordType === 'salesPayment') {
-            deleteSalesPayment(id);
+            deleteSalesPayment(id, userId);
         }
         setOpenModal(false);
     }

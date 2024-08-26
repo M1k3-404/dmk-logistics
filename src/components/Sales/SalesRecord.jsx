@@ -1,6 +1,6 @@
 import { parseDate } from "@internationalized/date";
 import { Button, DateInput, Input, Select, SelectItem, SelectSection } from "@nextui-org/react";
-import { memo, useCallback, useMemo, useState } from "react";
+import { memo, useCallback, useEffect, useMemo, useState } from "react";
 import { CiCircleCheck, CiCircleMinus, CiEdit } from "react-icons/ci";
 import { RiDraggable } from "react-icons/ri";
 import RecordDeletionModal from "../Maintenance/recordDeletionModal";
@@ -9,6 +9,16 @@ import { addSalesPayment, editSalesPayment } from "@/actions/sales-payment-actio
 const SalesRecord = ({ record, editable, newRecord, paymentTypes, deleteNewRecord, salesDetailsId}) => {
     const [isEditable, setIsEditable] = useState(editable);
     const [isNewRecord, setIsNewRecord] = useState(newRecord);
+    const [userId, setUserId] = useState(null);
+
+    useEffect(() => {
+        const session = JSON.parse(localStorage.getItem("session"));
+        if (session && session.userId) {
+            setUserId(session.userId);
+        } else {
+            console.error("User is not logged in or session is missing userId.");
+        }
+    }, []);
 
     console.log('Record:', record);
     const id = isNewRecord ? null : record.id;
@@ -26,12 +36,12 @@ const SalesRecord = ({ record, editable, newRecord, paymentTypes, deleteNewRecor
     }, []);
 
     const handleSave = useCallback(() => {
-        const requiredFields = addSalesPayment(formState, paymentTypes, salesDetailsId, setIsNewRecord);
+        const requiredFields = addSalesPayment(formState, paymentTypes, salesDetailsId, userId);
         // setErrorStatus(requiredFields);
     }, [formState, paymentTypes, salesDetailsId]);
 
     const handleEdit = useCallback(() => {
-        const requiredFields = editSalesPayment(formState, paymentTypes, salesDetailsId, id, setIsEditable);
+        const requiredFields = editSalesPayment(formState, paymentTypes, salesDetailsId, id, userId);
         // setErrorStatus(requiredFields);
     }, [formState, paymentTypes, salesDetailsId, id]);
 
