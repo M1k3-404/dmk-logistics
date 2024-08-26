@@ -27,7 +27,7 @@ const getEveryPaymentType = async () => {
 }
 
 // Add Payment Type
-const addPaymentType = (paymentType, setOpenModal) => {
+const addPaymentType = (paymentType, setOpenModal, userId) => {
     const requiredFields = checkRequiredFields(paymentType);
 
     const hasError = requiredFields.some(field => field.isInvalid);
@@ -35,7 +35,7 @@ const addPaymentType = (paymentType, setOpenModal) => {
     if (hasError) {
         return requiredFields;
     } else {
-        sendData(paymentType);
+        sendData(paymentType, userId);
         window.location.reload();
         setOpenModal(false);
         return requiredFields;
@@ -69,7 +69,7 @@ const checkRequiredFields = (paymentType) => {
     return errorStatus;
 }
 
-const sendData = async (paymentType) => {
+const sendData = async (paymentType, userId) => {
     const paymentTypeData = {
         "paymentTitle": paymentType.paymentName,
         "initialBalance": paymentType.initialBalance,
@@ -79,7 +79,7 @@ const sendData = async (paymentType) => {
     console.log('Payment Type Data:', paymentTypeData);
 
     try {
-        const response =  await axios.post('http://localhost:7174/api/PaymentType/AddPaymentType?userId=23', paymentTypeData);
+        const response =  await axios.post(`http://localhost:7174/api/PaymentType/AddPaymentType?userId=${userId}`, paymentTypeData);
         console.log('Data sent successfully:', response.data);
     } catch (error) {
         console.error('Error sending data:', error);
@@ -87,9 +87,9 @@ const sendData = async (paymentType) => {
 }
 
 // Delete Payment Type
-const deletePaymentType = async (id) => {
+const deletePaymentType = async (id, userId) => {
     try {
-        const response = await axios.delete(`http://localhost:7174/api/PaymentType/DeletePaymentType?userId=23&paymentTypeId=${id}`);
+        const response = await axios.delete(`http://localhost:7174/api/PaymentType/DeletePaymentType?userId=${userId}&paymentTypeId=${id}`);
         console.log('Data deleted successfully:', response.data);
         return response.data;
     } catch (error) {

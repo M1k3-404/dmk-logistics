@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { AlertDialog, AlertDialogContent, AlertDialogFooter, AlertDialogHeader, AlertDialogTrigger } from "../ui/alert-dialog";
 import { Button, Input } from "@nextui-org/react";
 import { IoIosAddCircle } from "react-icons/io";
@@ -11,6 +11,16 @@ export default function PaymentTypeCreationModal() {
     const [initialBalance, setInitialBalance] = useState(0);
 
     const [errorStatus, setErrorStatus] = useState([]);
+    const [userId, setUserId] = useState(null);
+
+    useEffect(() => {
+        const session = JSON.parse(localStorage.getItem("session"));
+        if (session && session.userId) {
+            setUserId(session.userId);
+        } else {
+            console.error("User is not logged in or session is missing userId.");
+        }
+    }, []);
 
     const handleSave = () => {
         const paymentType = {
@@ -18,7 +28,7 @@ export default function PaymentTypeCreationModal() {
             "initialBalance": initialBalance
         };
 
-        const requiredFields = addPaymentType(paymentType, setOpenModal);
+        const requiredFields = addPaymentType(paymentType, setOpenModal, userId);
         setErrorStatus(requiredFields);
     }
 
