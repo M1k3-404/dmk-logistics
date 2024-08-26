@@ -5,8 +5,9 @@ import VehicleDeletionModal from "../vehicleDeletionModal"
 import SalesModal from "../salesModal"
 import RestorationModal from "../restorationModal"
 import EditSalesModal from "../editSalesModal"
+import { useEffect, useState } from "react"
 
-const ActiveVehiclesActions = ({ vehicle, reload }) => {
+const ActiveVehiclesActions = ({ vehicle, reload, userId }) => {
     return (
         <>
             <div className="w-full py-3 border-b border-black/25">
@@ -39,7 +40,7 @@ const ActiveVehiclesActions = ({ vehicle, reload }) => {
                 Edit Record
             </Button>
 
-            <VehicleDeletionModal vehicle={vehicle} reload={reload} />
+            <VehicleDeletionModal vehicle={vehicle} reload={reload} userId={userId} />
         </>
     )
 }
@@ -64,6 +65,17 @@ const SoldVehiclesActions = ({ vehicle, reload }) => {
 }
 
 const CollapsedRow = ({ vehicle, isSold, reload }) => {
+    const [userId, setUserId] = useState(null);
+
+    useEffect(() => {
+        const session = JSON.parse(localStorage.getItem("session"));
+        if (session && session.userId) {
+            setUserId(session.userId);
+        } else {
+            console.error("User is not logged in or session is missing userId.");
+        }
+    })
+
     return (
         <div className="w-full grid grid-cols-4 gap-x-2">
             {/* Left Content */}
@@ -281,7 +293,7 @@ const CollapsedRow = ({ vehicle, isSold, reload }) => {
             <div className="col-span-1 border-l border-black/25">
                 <div className="h-full p-3 flex flex-col justify-end">
                     { !isSold ? (
-                        <ActiveVehiclesActions vehicle={vehicle} reload={reload} />
+                        <ActiveVehiclesActions vehicle={vehicle} reload={reload} userId={userId} />
                     ) : (
                         <SoldVehiclesActions vehicle={vehicle} reload={reload} />
                     )}

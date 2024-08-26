@@ -4,7 +4,7 @@ import { addVehicle } from "@/actions/vehicle/vehicle-add-action";
 import CancellationModal from "@/components/Add Vehicle/cancellationModal";
 import { useFormState } from "@/lib/hooks/useFormState";
 import { Button, DateInput, Input, Select, SelectItem } from "@nextui-org/react";
-import { memo } from "react";
+import { memo, useEffect, useState } from "react";
 
 const initialState = {
     date: "",
@@ -19,9 +19,19 @@ const initialState = {
 
 const Page = () => {
     const [formState, handleChange, handleDateChange, errorStatus, setErrorStatus] = useFormState(initialState);
+    const [userId, setUserId] = useState(null);
+
+    useEffect(() => {
+        const session = JSON.parse(localStorage.getItem("session"));
+        if (session && session.userId) {
+            setUserId(session.userId);
+        } else {
+            console.error("User is not logged in or session is missing userId.");
+        }
+    }, []);
 
     const handleSave = async () => {
-        const errors = await addVehicle(formState);
+        const errors = await addVehicle(formState, userId);
         setErrorStatus(errors);
     }
 

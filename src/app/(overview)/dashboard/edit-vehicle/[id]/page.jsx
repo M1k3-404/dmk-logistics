@@ -28,6 +28,17 @@ export default function Page({ params }) {
     const [formState, handleChange, handleDateChange, errorStatus, setErrorStatus, setFormState] = useFormState(initialState);
     const [loading, setLoading] = useState(true);
 
+    const [userId, setUserId] = useState(null);
+
+    useEffect(() => {
+        const session = JSON.parse(localStorage.getItem("session"));
+        if (session && session.userId) {
+            setUserId(session.userId);
+        } else {
+            console.error("User is not logged in or session is missing userId.");
+        }
+    }, []);
+
     useEffect(() => {
         const vehicle = JSON.parse(vehicleQuery);
         console.log('vehicle:', vehicle);
@@ -47,7 +58,7 @@ export default function Page({ params }) {
     }, [vehicleQuery]);
 
     const handleSave = async () => {
-        const status = await editVehicle(formState, id);
+        const status = await editVehicle(formState, id, userId);
         setErrorStatus(status);
     }
 

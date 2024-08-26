@@ -2,13 +2,13 @@ import { formatDate, formatYom, isEmpty } from "@/lib/utils";
 import axios from "axios";
 import toast from "react-hot-toast";
 
-const addVehicle = async (vehicle) => {
+const addVehicle = async (vehicle, userId) => {
     const errors = validateFields(vehicle);
 
     if (errors.length > 0) {
         return errors;
     } else {
-        await sendData(vehicle);
+        await sendData(vehicle, userId);
         return [];
     }
 }
@@ -52,12 +52,12 @@ const isValidDate = (date) => {
 }
 
 // Function to send data to the server
-const sendData = async (vehicle) => {
+const sendData = async (vehicle, userId) => {
     const formattedVehicleData = formatVehicleData(vehicle);
     console.log('Formatted vehicle data:', formattedVehicleData);
 
     try {
-        const response = await axios.post('http://localhost:7174/api/Vehicle/AddVehicle?userId=23', formattedVehicleData);
+        const response = await axios.post(`http://localhost:7174/api/Vehicle/AddVehicle?userId=${userId}`, formattedVehicleData);
         console.log('Data sent successfully:', response.data);
     } catch (error) {
         console.error('Error sending data:', error);

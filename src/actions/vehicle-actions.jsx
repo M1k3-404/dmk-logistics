@@ -6,9 +6,9 @@ import { getAllMaintenanceTypes, getEveryMaintenanceType } from "./maintenance-t
 import { getAllVendors } from "./vendors-actions";
 
 //Delete vehicle
-const deleteVehicle = async (id, reload) => {
+const deleteVehicle = async (id, reload, userId) => {
     try {
-        const response = await axios.delete(`http://localhost:7174/api/Vehicle/DeleteVehicle?userId=23&vehicleId=${id}`);
+        const response = await axios.delete(`http://localhost:7174/api/Vehicle/DeleteVehicle?userId=${userId}&vehicleId=${id}`);
         console.log('Data deleted successfully:', response.data);
         return response.data;
     } catch (error) {
@@ -19,13 +19,13 @@ const deleteVehicle = async (id, reload) => {
 }
 
 //Edit vehicle
-const editVehicle = async (vehicle, id) => {
+const editVehicle = async (vehicle, id, userId) => {
     const errors = validateFields(vehicle);
 
     if(errors.length > 0) {
         return errors;
     } else {
-        await sendData(vehicle, id);
+        await sendData(vehicle, id, userId);
         return [];
     }
 }
@@ -71,12 +71,12 @@ const formatDates = (date) => {
     return `${year}-${month}-${day}`;
 }
 
-const sendData = async (vehicle, id) => {
+const sendData = async (vehicle, id, userId) => {
     const formattedVehicleData = formatVehicleData(vehicle, id);
     console.log('Formatted vehicle data:', formattedVehicleData);
 
     try {
-        const response = await axios.put(`http://localhost:7174/api/Vehicle/UpdateVehicle?userId=23`, formattedVehicleData);
+        const response = await axios.put(`http://localhost:7174/api/Vehicle/UpdateVehicle?userId=${userId}`, formattedVehicleData);
         console.log('Data sent successfully:', response.data);
     } catch (error) {
         console.error('Error sending data:', error);
