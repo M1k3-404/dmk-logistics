@@ -65,9 +65,9 @@ const processData = async (data) => {
 }
 
 // Add Vendor
-const AddVendor = async (vendorName, reload, setOpenModal) => {
+const AddVendor = async (vendorName, reload, setOpenModal, userId) => {
     try {
-        const response = await axios.post(`http://localhost:7174/api/Vendor/CreateVendor?vendorName=${vendorName}`);
+        const response = await axios.post(`http://localhost:7174/api/Vendor/CreateVendor?userId=${userId}&vendorName=${vendorName}`);
         console.log('Vendor added successfully:', response.data);
         return response.data;
     } catch (error) {

@@ -1,4 +1,4 @@
-import { memo, useState } from "react";
+import { memo, useEffect, useState } from "react";
 import { AlertDialog, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTrigger } from "../ui/alert-dialog";
 import { Button, Input } from "@nextui-org/react";
 import { IoIosAddCircle } from "react-icons/io";
@@ -7,10 +7,20 @@ import { AddVendor } from "@/actions/vendors-actions";
 const AddVendorModal = ({ reload }) => {
     const [openModal, setOpenModal] = useState(false);
     const [vendorName, setVendorName] = useState("");
+    const [userId, setUserId] = useState(null);
+
+    useEffect(() => {
+        const session = JSON.parse(localStorage.getItem("session"));
+        if (session && session.userId) {
+            setUserId(session.userId);
+        } else {
+            console.error("User is not logged in or session is missing userId.");
+        }
+    }, []);
 
     const handleSave = () => {
         console.log(vendorName);
-        const response = AddVendor(vendorName, reload, setOpenModal);
+        const response = AddVendor(vendorName, reload, setOpenModal, userId);
     }
 
     const handleCancel = () => {
