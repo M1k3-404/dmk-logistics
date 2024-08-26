@@ -1,6 +1,6 @@
 const { default: axios } = require("axios");
 
-const addQuotationPayment = (payment, paymentTypes) => {
+const addQuotationPayment = (payment, paymentTypes, userId) => {
     const requiredFields = checkRequiredFields(payment);
 
     const hasError = requiredFields.some(field => field.isInvalid);
@@ -8,7 +8,7 @@ const addQuotationPayment = (payment, paymentTypes) => {
     if (hasError) {
         return requiredFields;
     } else {
-        sendData(payment, paymentTypes);
+        sendData(payment, paymentTypes, userId);
         return requiredFields;
     }
 }
@@ -40,7 +40,7 @@ const checkRequiredFields = (payment) => {
     return errorStatus;
 }
 
-const sendData = async (payment, paymentTypes) => {
+const sendData = async (payment, paymentTypes, userId) => {
     const paymentData = {
         "QuotationId": payment.quotationId,
         "PaymentTypeId": getPaymentTypeId(paymentTypes, payment.paymentTypeId),
@@ -50,7 +50,7 @@ const sendData = async (payment, paymentTypes) => {
     console.log('Payment Data:', paymentData);
 
     try {
-        const response = await axios.post('http://localhost:7174/api/Quotation/CreateQuotationPayment', paymentData);
+        const response = await axios.post(`http://localhost:7174/api/Quotation/CreateQuotationPayment?userId=${userId}`, paymentData);
         console.log('Data sent successfully:', response.data);
     } catch (error) {
         console.error('Error sending data:', error);

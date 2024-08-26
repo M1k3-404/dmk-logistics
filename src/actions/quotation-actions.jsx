@@ -1,7 +1,7 @@
 const { default: axios } = require("axios");
 
 //Add Quotation
-const addQuotation = (quotation, vendors, maintenanceTypes, vehicleId, onAddQuotation, setIsNewRecord) => {
+const addQuotation = (quotation, vendors, maintenanceTypes, vehicleId, userId) => {
     const requiredFields = checkRequiredFields(quotation);
 
     const hasError = requiredFields.some(field => field.isInvalid);
@@ -9,7 +9,7 @@ const addQuotation = (quotation, vendors, maintenanceTypes, vehicleId, onAddQuot
     if (hasError) {
         return requiredFields;
     } else {
-        sendData(quotation, vendors, maintenanceTypes, vehicleId, onAddQuotation, setIsNewRecord);
+        sendData(quotation, vendors, maintenanceTypes, vehicleId, userId);
         return requiredFields;
     }
 }
@@ -41,7 +41,7 @@ const checkRequiredFields = (quotation) => {
     return errorStatus;
 }
 
-const sendData = async (quotation, vendors, maintenanceTypes, vehicleId) => {
+const sendData = async (quotation, vendors, maintenanceTypes, vehicleId, userId) => {
     const formattedDate = formatDate(quotation.date);
     const formattedVendor = getVendorId(vendors, quotation.vendor);
     const formattedMaintenanceType = getMaintenanceTypeId(maintenanceTypes, quotation.maintenanceType);
@@ -60,7 +60,7 @@ const sendData = async (quotation, vendors, maintenanceTypes, vehicleId) => {
     console.log('Quotation Data:', quotationData);
 
     try {
-        const response = await axios.post('http://localhost:7174/api/Quotation/CreateNewQuotation', quotationData);
+        const response = await axios.post(`http://localhost:7174/api/Quotation/CreateNewQuotation?userId=${userId}`, quotationData);
         console.log('Data sent successfully:', response.data);
     } catch (error) {
         console.error('Error sending data:', error);
@@ -85,7 +85,7 @@ const getMaintenanceTypeId = (maintenanceTypes, maintenanceType) => {
 }
 
 //Edit Quotation
-const editQuotation = (quotation, vendors, maintenanceTypes, vehicleId, id, setIsEditable) => {
+const editQuotation = (quotation, vendors, maintenanceTypes, vehicleId, id, setIsEditable, userId) => {
     const requiredFields = checkRequiredFields(quotation);
 
     const hasError = requiredFields.some(field => field.isInvalid);
@@ -93,12 +93,12 @@ const editQuotation = (quotation, vendors, maintenanceTypes, vehicleId, id, setI
     if (hasError) {
         return requiredFields;
     } else {
-        updateData(quotation, vendors, maintenanceTypes, vehicleId, id, setIsEditable);
+        updateData(quotation, vendors, maintenanceTypes, vehicleId, id, setIsEditable, userId);
         return requiredFields;
     }
 }
 
-const updateData = async (quotation, vendors, maintenanceTypes, vehicleId, id, setIsEditable) => {
+const updateData = async (quotation, vendors, maintenanceTypes, vehicleId, id, setIsEditable, userId) => {
     const formattedDate = formatDate(quotation.date);
     console.log('1:', quotation.vendor);
     console.log('2:', vendors);
@@ -120,7 +120,7 @@ const updateData = async (quotation, vendors, maintenanceTypes, vehicleId, id, s
     console.log('Quotation Data:', quotationData);
 
     try {
-        const response = await axios.put('http://localhost:7174/api/Quotation/UpdateQuotation', quotationData);
+        const response = await axios.put(`http://localhost:7174/api/Quotation/UpdateQuotation?userId=${userId}`, quotationData);
         console.log('Data updated successfully:', response.data);
     } catch (error) {
         console.error('Error updating data:', error);
@@ -131,9 +131,9 @@ const updateData = async (quotation, vendors, maintenanceTypes, vehicleId, id, s
 }
 
 //Delete Quotation
-const deleteQuotation = async (id) => {
+const deleteQuotation = async (id, userId) => {
     try {
-        const response = await axios.delete(`http://localhost:7174/api/Quotation/DeleteQuotation?quotationId=${id}`);
+        const response = await axios.delete(`http://localhost:7174/api/Quotation/DeleteQuotation?userId=${userId}&quotationId=${id}`);
         console.log('Data deleted successfully:', response.data);
         return response.data;
     } catch (error) {

@@ -21,7 +21,7 @@ export default function RecordDeletionModal({ recordType, id }) {
 
     const handleDeletion = () => {
         if (recordType === 'quotation') {
-            deleteQuotation(id);
+            deleteQuotation(id, userId);
         } else if (recordType === 'payment') {
             deletePayment(id, userId);
         } else if (recordType === 'salesPayment') {

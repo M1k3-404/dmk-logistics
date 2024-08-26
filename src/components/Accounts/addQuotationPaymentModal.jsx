@@ -1,6 +1,6 @@
 "use client"
 
-const { useState } = require("react")
+const { useState, useEffect } = require("react")
 import { Button, DateInput, Input, Select, SelectItem, SelectSection } from "@nextui-org/react";
 import { AlertDialog, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTrigger } from "../ui/alert-dialog";
 import { addQuotationPayment } from "@/actions/quotation-payment-actions";
@@ -12,13 +12,23 @@ const AddQuotationPaymentModal = ({ data, paymentTypes }) => {
         paymentTypeId: "",
         paymentAmount: "",
     });
+    const [userId, setUserId] = useState(null);
+
+    useEffect(() => {
+        const session = JSON.parse(localStorage.getItem("session"));
+        if (session && session.userId) {
+            setUserId(session.userId);
+        } else {
+            console.error("User is not logged in or session is missing userId.");
+        }
+    }, []);
     
     const handleInputChange = (field) => (value) => {
         setFormState((prev) => ({ ...prev, [field]: value }));
     }
 
     const handleSave = () => {
-        const requiredFields = addQuotationPayment(formState, paymentTypes);
+        const requiredFields = addQuotationPayment(formState, paymentTypes, userId);
         setFormState({
             date: "",
             quotationId: data.quotationInformation.id,

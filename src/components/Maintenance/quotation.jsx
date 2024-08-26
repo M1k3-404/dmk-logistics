@@ -11,6 +11,16 @@ import { addQuotation, editQuotation } from "@/actions/quotation-actions";
 const Quotation = ({ data, newRecord, editable, vendors, maintenanceTypes, deleteNewRecord, vehicleId, onAddQuotation }) => {
     const [isNewRecord, setIsNewRecord] = useState(newRecord);
     const [isEditable, setIsEditable] = useState(editable);
+    const [userId, setUserId] = useState(null);
+
+    useEffect(() => {
+        const session = JSON.parse(localStorage.getItem("session"));
+        if (session && session.userId) {
+            setUserId(session.userId);
+        } else {
+            console.error("User is not logged in or session is missing userId.");
+        }
+    }, []);
 
     console.log('quote:', data);
     const id = isNewRecord ? null : data.quotationInformation.id;
@@ -32,13 +42,12 @@ const Quotation = ({ data, newRecord, editable, vendors, maintenanceTypes, delet
     }, []);
 
     const handleSave = useCallback(() => {
-        console.log('1:', formState);
-        const requiredFields = addQuotation(formState, vendors, maintenanceTypes, vehicleId, onAddQuotation, setIsNewRecord);
+        const requiredFields = addQuotation(formState, vendors, maintenanceTypes, vehicleId, userId);
         setErrorStatus(requiredFields);
     }, [formState, vendors, maintenanceTypes, vehicleId]);
 
     const handleEdit = useCallback(() => {
-        const requiredFields = editQuotation(formState, vendors, maintenanceTypes, vehicleId, id, setIsEditable);
+        const requiredFields = editQuotation(formState, vendors, maintenanceTypes, vehicleId, id, setIsEditable, userId);
         setErrorStatus(requiredFields);
     }, [formState, vendors, maintenanceTypes, vehicleId, id]); 
 
