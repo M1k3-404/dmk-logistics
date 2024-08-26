@@ -1,19 +1,29 @@
 import { Button } from "@nextui-org/react";
 import { AlertDialog, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTrigger } from "../ui/alert-dialog";
 import { CiCircleMinus } from "react-icons/ci";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { deletePayment } from "@/actions/payment-actions";
 import { deleteQuotation } from "@/actions/quotation-actions";
 import { deleteSalesPayment } from "@/actions/sales-payment-actions";
 
 export default function RecordDeletionModal({ recordType, id }) {
     const [openModal, setOpenModal] = useState(false);
+    const [userId, setUserId] = useState(null);
+
+    useEffect(() => {
+        const session = JSON.parse(localStorage.getItem("session"));
+        if (session && session.userId) {
+            setUserId(session.userId);
+        } else {
+            console.error("User is not logged in or session is missing userId.");
+        }
+    }, []);
 
     const handleDeletion = () => {
         if (recordType === 'quotation') {
             deleteQuotation(id);
         } else if (recordType === 'payment') {
-            deletePayment(id);
+            deletePayment(id, userId);
         } else if (recordType === 'salesPayment') {
             deleteSalesPayment(id);
         }

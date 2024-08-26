@@ -1,7 +1,7 @@
 import axios from "axios";
 
 //Add Payment
-const addPayment = (payment, paymentTypes, vehicleId, onAddPayment, setIsNewRecord) => {
+const addPayment = (payment, paymentTypes, vehicleId, onAddPayment, setIsNewRecord, userId) => {
     const requiredFields = checkRequiredFields(payment);
 
     const hasError = requiredFields.some(field => field.isInvalid);
@@ -9,7 +9,7 @@ const addPayment = (payment, paymentTypes, vehicleId, onAddPayment, setIsNewReco
     if (hasError) {
         return requiredFields;
     } else {
-        sendData(payment, paymentTypes, vehicleId, onAddPayment, setIsNewRecord);
+        sendData(payment, paymentTypes, vehicleId, userId);
         return requiredFields;
     }
 }
@@ -41,7 +41,7 @@ const checkRequiredFields = (payment) => {
     return errorStatus;
 }
 
-const sendData = async (payment, paymentTypes, vehicleId) => {
+const sendData = async (payment, paymentTypes, vehicleId, userId) => {
     const formattedDate = formatDate(payment.date);
     const formattedAccount = getPaymentTypeId(paymentTypes, payment.account);
     const formattedAmount = parseFloat(payment.amount);
@@ -56,7 +56,7 @@ const sendData = async (payment, paymentTypes, vehicleId) => {
     console.log('Payment Data:', paymentData);
 
     try {
-        const response = await axios.post('http://localhost:7174/api/Payment/AddPayment?userId=23', paymentData);
+        const response = await axios.post(`http://localhost:7174/api/Payment/AddPayment?userId=${userId}`, paymentData);
         console.log('Data sent successfully:', response.data);
     } catch (error) {
         console.error('Error sending data:', error);
@@ -78,7 +78,7 @@ const getPaymentTypeId = (paymentTypes, paymentTitle) => {
 }
 
 //Edit Payment
-const editPayment = (payment, paymentTypes, vehicleId, id, setIsEditable) => {
+const editPayment = (payment, paymentTypes, vehicleId, id, setIsEditable, userId) => {
     const requiredFields = checkRequiredFields(payment);
 
     const hasError = requiredFields.some(field => field.isInvalid);
@@ -86,12 +86,12 @@ const editPayment = (payment, paymentTypes, vehicleId, id, setIsEditable) => {
     if (hasError) {
         return requiredFields;
     } else {
-        SendEditData(payment, paymentTypes, vehicleId, id, setIsEditable);
+        SendEditData(payment, paymentTypes, vehicleId, id, setIsEditable, userId);
         return requiredFields;
     }
 }
 
-const SendEditData = async (payment, paymentTypes, vehicleId, id, setIsEditable) => {
+const SendEditData = async (payment, paymentTypes, vehicleId, id, setIsEditable, userId) => {
     const formattedDate = formatDate(payment.date);
     const formattedAccount = getPaymentTypeId(paymentTypes, payment.account);
     const formattedAmount = parseFloat(payment.amount);
@@ -107,7 +107,7 @@ const SendEditData = async (payment, paymentTypes, vehicleId, id, setIsEditable)
     console.log('Payment Data:', paymentData);
 
     try {
-        const response = await axios.put('http://localhost:7174/api/Payment/UpdatePayment?userId=23', paymentData);
+        const response = await axios.put(`http://localhost:7174/api/Payment/UpdatePayment?userId=${userId}`, paymentData);
         console.log('Data sent successfully:', response.data);
     } catch (error) {
         console.error('Error sending data:', error);
@@ -118,9 +118,9 @@ const SendEditData = async (payment, paymentTypes, vehicleId, id, setIsEditable)
 }
 
 // Delete Payment
-const deletePayment = async (id) => {
+const deletePayment = async (id, userId) => {
     try {
-        const response = await axios.delete(`http://localhost:7174/api/Payment/DeletePayment?userId=23&paymentId=${id}`);
+        const response = await axios.delete(`http://localhost:7174/api/Payment/DeletePayment?userId=${userId}&paymentId=${id}`);
         console.log('Data deleted successfully:', response.data);
         return response.data;
     } catch (error) {

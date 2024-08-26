@@ -1,7 +1,7 @@
 import { Button, DateInput, Input, Select, SelectItem, SelectSection } from "@nextui-org/react";
 import { RiDraggable } from "react-icons/ri";
 import RecordDeletionModal from "../Maintenance/recordDeletionModal";
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { CiCircleCheck, CiEdit, CiCircleMinus } from "react-icons/ci";
 import { parseDate } from "@internationalized/date";
 import { addPayment, editPayment } from "@/actions/payment-actions";
@@ -9,6 +9,17 @@ import { addPayment, editPayment } from "@/actions/payment-actions";
 export default function PaymentRecord({record, newRecord, paymentTypes, editable, deleteNewRecord, vehicleId, onAddPayment}) {
     const [isNewRecord, setIsNewRecord] = useState(newRecord);
     const [isEditable, setIsEditable] = useState(editable);
+
+    const [userId, setUserId] = useState(null);
+
+    useEffect(() => {
+        const session = JSON.parse(localStorage.getItem("session"));
+        if (session && session.userId) {
+            setUserId(session.userId);
+        } else {
+            console.error("User is not logged in or session is missing userId.");
+        }
+    }, []);
 
     console.log('Record:', record);
     const id = isNewRecord ? null : record.id;
@@ -28,12 +39,12 @@ export default function PaymentRecord({record, newRecord, paymentTypes, editable
     }, []);
 
     const handleSave = useCallback(() => {
-        const requiredFields = addPayment(formState, paymentTypes, vehicleId, onAddPayment, setIsNewRecord);
+        const requiredFields = addPayment(formState, paymentTypes, vehicleId, onAddPayment, setIsNewRecord, userId);
         setErrorStatus(requiredFields);
     }, [formState, paymentTypes, vehicleId]);
 
     const handleEdit = useCallback(() => {
-        const requiredFields = editPayment(formState, paymentTypes, vehicleId, id, setIsEditable);
+        const requiredFields = editPayment(formState, paymentTypes, vehicleId, id, setIsEditable, userId);
         setErrorStatus(requiredFields);
     }, [formState, paymentTypes, vehicleId, id]);
 
