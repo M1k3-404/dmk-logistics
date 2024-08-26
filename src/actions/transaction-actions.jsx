@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const addGeneralTransaction = (transaction, accounts) => {
+const addGeneralTransaction = (transaction, accounts, userId) => {
     const requiredFields = checkRequiredFields(transaction);
 
     const hasError = requiredFields.some(field => field.isInvalid);
@@ -9,7 +9,7 @@ const addGeneralTransaction = (transaction, accounts) => {
         console.log('Error:', requiredFields);
         return requiredFields;
     } else {
-        sendData(transaction, accounts);
+        sendData(transaction, accounts, userId);
         return requiredFields;
     }
 }
@@ -41,7 +41,7 @@ const checkRequiredFields = (transaction) => {
     return errorStatus;
 }
 
-const sendData = async (transaction, accounts) => {
+const sendData = async (transaction, accounts, userId) => {
     const transactionData = {
         "FromAccountId": getAccountId(accounts, transaction.from),
         "ToAccountId": getAccountId(accounts, transaction.to),
@@ -52,7 +52,7 @@ const sendData = async (transaction, accounts) => {
     console.log('Transaction Data:', transactionData);
 
     try {
-        const response = await axios.post('http://localhost:7174/api/Transaction/AddGeneralTransaction?userId=23', transactionData);
+        const response = await axios.post(`http://localhost:7174/api/Transaction/AddGeneralTransaction?userId=${userId}`, transactionData);
         console.log('Transaction Data:', response.data);
     } catch (error) {
         console.error('Error sending data:', error);

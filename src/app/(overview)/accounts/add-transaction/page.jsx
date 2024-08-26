@@ -14,6 +14,16 @@ const Page = () => {
         description: "",
     });
     const [accounts, setAccounts] = useState([]);
+    const [userId, setUserId] = useState(null);
+
+    useEffect(() => {
+        const session = JSON.parse(localStorage.getItem("session"));
+        if (session && session.userId) {
+            setUserId(session.userId);
+        } else {
+            console.error("User is not logged in or session is missing userId.");
+        }
+    }, []);
 
     const fetchAccounts = async () => {
         try {
@@ -35,7 +45,7 @@ const Page = () => {
     }, []);
 
     const handleSave = useCallback(() => {
-        const requiredFields = addGeneralTransaction(formState, accounts);
+        const requiredFields = addGeneralTransaction(formState, accounts, userId);
     }, [formState]);
 
     return(
