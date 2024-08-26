@@ -10,6 +10,16 @@ const getAllMaintenanceTypes = async () => {
     }
 }
 
+const getEveryMaintenanceType = async () => {
+    try {
+        const response = await axios.get('http://localhost:7174/api/MaintenanceType/GetActiveAndInactiveMaintenanceTypes');
+        console.log('Data recieved successfully:', response.data);
+        return response.data;
+    } catch (error) {
+        console.error('Error recieving data:', error);
+    }
+}
+
 const addMaintenanceType = (maintenanceType, setOpenModal) => {
     const requiredFields = checkRequiredFields(maintenanceType);
 
@@ -77,4 +87,4 @@ const deleteMaintenanceType = async (id) => {
     }
 }
 
-export { getAllMaintenanceTypes, addMaintenanceType, deleteMaintenanceType };
+export { getAllMaintenanceTypes, getEveryMaintenanceType, addMaintenanceType, deleteMaintenanceType };

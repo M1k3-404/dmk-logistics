@@ -1,6 +1,6 @@
 import axios from "axios";
 import { getAllPaymentTypes, getEveryPaymentType } from "../payment-types-actions";
-import { getAllMaintenanceTypes } from "../maintenance-types-actions";
+import { getAllMaintenanceTypes, getEveryMaintenanceType } from "../maintenance-types-actions";
 import { getAllVendors } from "../vendors-actions";
 
 // Get All Vehicles for the Dashboard 
@@ -62,6 +62,7 @@ const processDashboardData = async (data) => {
                 vehicleId: analytics.vehicleId,
                 cocAmount: analytics.cocAmount,
                 totalCost: analytics.totalCost,
+                pnL: analytics.pnL,
             },
             salesDetails: {
                 id: salesDetails?.id,
@@ -140,7 +141,7 @@ const getPaymentTypeMap = async () => {
 let MaintenanceTypeMapPromise = null;
 const getMaintenanceTypeMap = async () => {
     if (!MaintenanceTypeMapPromise) {
-        MaintenanceTypeMapPromise = getAllMaintenanceTypes().then(maintenanceTypes => {
+        MaintenanceTypeMapPromise = getEveryMaintenanceType().then(maintenanceTypes => {
             const maintenanceTypeMap = {};
             maintenanceTypes.forEach(maintenanceType => {
                 maintenanceTypeMap[maintenanceType.id] = maintenanceType.maintenanceTypeName;
@@ -176,7 +177,7 @@ const calculateRemainingCost = (pCost, payments) => {
 
 const calculateMonths = (availabilityStatus, startDate, endDate) => {
     const start = new Date(startDate);
-    const end = availabilityStatus === 1 ? new Date() : new Date(endDate);
+    const end = availabilityStatus === 1 || availabilityStatus === 0 ? new Date() : new Date(endDate);
     const diffTime = Math.abs(end - start);
     const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
     return Math.floor(diffDays / 30);

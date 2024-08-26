@@ -1,7 +1,7 @@
 "use client"
 
 import { HandleSaveChanges } from "@/actions/maintenance-actions";
-import { getAllMaintenanceTypes } from "@/actions/maintenance-types-actions";
+import { getAllMaintenanceTypes, getEveryMaintenanceType } from "@/actions/maintenance-types-actions";
 import { getAllPaymentTypes } from "@/actions/payment-types-actions";
 import { getVehicleBYId } from "@/actions/vehicle-actions";
 import { getAllVendors } from "@/actions/vendors-actions";
@@ -26,7 +26,7 @@ export default function Maintenace({ params }) {
         try {
             const vehicle = await getVehicleBYId(id);
             const paymentTypes = await getAllPaymentTypes();
-            const maintenanceTypes = await getAllMaintenanceTypes();
+            const maintenanceTypes = await getEveryMaintenanceType();
             const vendors = await getAllVendors();
 
             console.log('data:', vehicle);

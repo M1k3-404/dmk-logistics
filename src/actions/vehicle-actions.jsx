@@ -2,7 +2,7 @@ import { formatYom, isEmpty } from "@/lib/utils";
 import axios from "axios";
 import toast from "react-hot-toast";
 import { getAllPaymentTypes, getEveryPaymentType } from "./payment-types-actions";
-import { getAllMaintenanceTypes } from "./maintenance-types-actions";
+import { getAllMaintenanceTypes, getEveryMaintenanceType } from "./maintenance-types-actions";
 import { getAllVendors } from "./vendors-actions";
 
 //Delete vehicle
@@ -147,6 +147,7 @@ const processedSingleData = async (data) => {
             vehicleId: analytics.vehicleId,
             cocAmount: analytics.cocAmount,
             totalCost: analytics.totalCost,
+            pnL: analytics.pnL,
         },
         salesDetails: {
             id: salesDetails?.id,
@@ -224,7 +225,7 @@ const getPaymentTypeMap = async () => {
 let MaintenanceTypeMapPromise = null;
 const getMaintenanceTypeMap = async () => {
     if (!MaintenanceTypeMapPromise) {
-        MaintenanceTypeMapPromise = getAllMaintenanceTypes().then(maintenanceTypes => {
+        MaintenanceTypeMapPromise = getEveryMaintenanceType().then(maintenanceTypes => {
             const maintenanceTypeMap = {};
             maintenanceTypes.forEach(maintenanceType => {
                 maintenanceTypeMap[maintenanceType.id] = maintenanceType.maintenanceTypeName;

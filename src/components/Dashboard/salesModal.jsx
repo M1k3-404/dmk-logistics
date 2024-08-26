@@ -4,7 +4,6 @@ import { useState } from "react";
 import { AddSale } from "@/actions/sales-actions";
 
 export default function SalesModal({ btnText, vehicle, reload }) {
-    console.log('Vehicle Sales:', vehicle);
     const [openModal, setOpenModal] = useState(false);
     const [formData, setFormData] = useState({
         date: "",

@@ -154,7 +154,7 @@ const CollapsedRow = ({ vehicle, isSold, reload }) => {
                                 classNames={{
                                     base: "bg-transparent",
                                     label: "mr-2",
-                                    inputWrapper: "w-[25%] rounded-lg bg-gray-200",
+                                    inputWrapper: "w-[100%] rounded-lg bg-gray-200",
                                     input: "text-center text-sm text-[#0c0c0c]",
                                 }}
                                 defaultValue={vehicle.additionalData.months}
@@ -176,6 +176,21 @@ const CollapsedRow = ({ vehicle, isSold, reload }) => {
                                 size="sm"
                                 variant="flat"
                                 label="Purchased From"
+                                labelPlacement="outside-left"
+                            />
+
+                            <Input
+                                isReadOnly
+                                classNames={{
+                                    base: "bg-transparent",
+                                    label: "mr-8",
+                                    inputWrapper: "w-[100%] rounded-lg bg-gray-200",
+                                    input: "text-center text-sm text-[#0c0c0c]",
+                                }}
+                                defaultValue={vehicle.analytics.pnL}
+                                size="sm"
+                                variant="flat"
+                                label="PnL"
                                 labelPlacement="outside-left"
                             />
                         </>

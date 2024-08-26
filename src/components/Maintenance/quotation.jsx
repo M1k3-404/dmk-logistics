@@ -123,9 +123,24 @@ const Quotation = ({ data, newRecord, editable, vendors, maintenanceTypes, delet
             >
                 <SelectSection
                     showDivider
+                    title={"Active"}
+                    classNames={{
+                        heading: "text-xs text-default-500 ml-1",
+                    }}
                 >
-                    {maintenanceTypes.map((type) => (
-                        <SelectItem key={type.maintenanceTypeName}>{type.maintenanceTypeName}</SelectItem>
+                    {maintenanceTypes.filter((type) => type.entityStatus).map((type) => (
+                        <SelectItem key={type.maintenanceTypeName} className="hover:bg-black/5 rounded-md">{type.maintenanceTypeName}</SelectItem>
+                    ))}
+                </SelectSection>
+                <SelectSection
+                    showDivider
+                    title={"Inactive"}
+                    classNames={{
+                        heading: "text-xs text-default-500 ml-1",
+                    }}
+                >
+                    {maintenanceTypes.filter((type) => !type.entityStatus).map((type) => (
+                        <SelectItem key={type.maintenanceTypeName} className="hover:bg-black/5 rounded-md" isDisabled>{type.maintenanceTypeName}</SelectItem>
                     ))}
                 </SelectSection>
             </Select>
