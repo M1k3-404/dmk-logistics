@@ -20,7 +20,7 @@ const getEveryMaintenanceType = async () => {
     }
 }
 
-const addMaintenanceType = (maintenanceType, setOpenModal) => {
+const addMaintenanceType = (maintenanceType, setOpenModal, userId) => {
     const requiredFields = checkRequiredFields(maintenanceType);
 
     const hasError = requiredFields.some(field => field.isInvalid);
@@ -28,7 +28,7 @@ const addMaintenanceType = (maintenanceType, setOpenModal) => {
     if (hasError) {
         return requiredFields;
     } else {
-        sendData(maintenanceType);
+        sendData(maintenanceType, userId);
         window.location.reload();
         setOpenModal(false);
         return requiredFields;
@@ -62,7 +62,7 @@ const checkRequiredFields = (maintenanceType) => {
     return errorStatus;
 }
 
-const sendData = async (maintenanceType) => {
+const sendData = async (maintenanceType, userId) => {
     const maintenanceTypeData = {
         "MaintenanceTitle": maintenanceType.maintenanceTitle,
     };
@@ -70,20 +70,22 @@ const sendData = async (maintenanceType) => {
     console.log('Data to be sent:', maintenanceTypeData);
 
     try {
-        const response = await axios.post('http://localhost:7174/api/MaintenanceType/AddMaintenanceTypes?userId=23', maintenanceTypeData);
+        const response = await axios.post(`http://localhost:7174/api/MaintenanceType/AddMaintenanceTypes?userId=${userId}`, maintenanceTypeData);
         console.log('Data sent successfully:', response.data);
     } catch (error) {
         console.error('Error sending data:', error);
     }
 }
 
-const deleteMaintenanceType = async (id) => {
+const deleteMaintenanceType = async (id, userId) => {
     try {
-        const response = await axios.delete(`http://localhost:7174/api/MaintenanceType/DeleteMaintenanceTypes?userId=23&maintenanceTypeId=${id}`);
+        const response = await axios.delete(`http://localhost:7174/api/MaintenanceType/DeleteMaintenanceTypes?userId=${userId}&maintenanceTypeId=${id}`);
         console.log('Data deleted successfully:', response.data);
         return response.data;
     } catch (error) {
         console.error('Error deleting data:', error);
+    } finally {
+        window.location.reload();
     }
 }
 

@@ -1,11 +1,21 @@
 import { Button } from "@nextui-org/react";
 import { AlertDialog, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTrigger } from "../ui/alert-dialog";
 import { MdCancel } from "react-icons/md";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { deleteMaintenanceType } from "@/actions/maintenance-types-actions";
 
 export default function MaintenanceDeletionModal({ id }) {
     const [openModal, setOpenModal] = useState(false);
+    const [userId, setUserId] = useState(null);
+
+    useEffect(() => {
+        const session = JSON.parse(localStorage.getItem("session"));
+        if (session && session.userId) {
+            setUserId(session.userId);
+        } else {
+            console.error("User is not logged in or session is missing userId.");
+        }
+    }, []);
 
     return(
         <AlertDialog open={openModal} onOpenChange={setOpenModal}>
@@ -29,7 +39,7 @@ export default function MaintenanceDeletionModal({ id }) {
                     <Button
                         size="sm"
                         className="bg-white px-8 text-[#0c0c0c] font-extralight rounded-md border hover:shadow-sm hover:bg-white"
-                        onClick={() => deleteMaintenanceType(id)}
+                        onClick={() => deleteMaintenanceType(id, userId)}
                     >
                         Yes
                     </Button>
