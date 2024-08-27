@@ -1,11 +1,16 @@
+import { users } from "@/data/static-data";
 import { Chip } from "@nextui-org/react";
 
 export default function AuditLog({description, timeDate, user}) {
+    const userData = users.find((u) => u.id === user);
+
+    const userName = userData ? userData.name : user;
+
     return(
         <div className="w-full p-2 my-1 bg-transparent rounded-lg border border-black">
             <p>
                 <span>
-                    <Chip size="sm" className="bg-violet-200 mr-2">{user}</Chip>
+                    <Chip size="sm" className="bg-violet-200 mr-2">{userName}</Chip>
                 </span>
                 {description}
             </p>
