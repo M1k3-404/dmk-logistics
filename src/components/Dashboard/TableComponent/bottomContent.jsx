@@ -3,7 +3,7 @@ import { Button } from "@nextui-org/react";
 import { HiChevronLeft, HiChevronRight } from "react-icons/hi";
 import { useMemo } from "react";
 
-const bottomContent = ({page, pages, setPage}) => useMemo(() => {
+const BottomContent = ({page, pages, setPage}) => useMemo(() => {
     const clampedPages = Math.max(1, pages);
 
     return(
@@ -41,4 +41,4 @@ const bottomContent = ({page, pages, setPage}) => useMemo(() => {
     )
 });
 
-export default bottomContent;
+export default BottomContent;

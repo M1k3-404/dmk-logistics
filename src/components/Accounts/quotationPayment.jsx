@@ -12,7 +12,7 @@ const QuotationPayment = ({ data }) => {
         getPaymentType(data.paymentTypeId).then((paymentType) => {
             setPaymentType(paymentType);
         });
-    }, []);
+    }, [data]);
 
     const getPaymentType = async (id) => {
         const paymentTypes = await getAllPaymentTypes();

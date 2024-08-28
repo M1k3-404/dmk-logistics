@@ -38,7 +38,7 @@ export default function Page() {
         }
 
         return filteredLogs;
-    }, [auditLogs, filterValue]);
+    }, [auditLogs, filterValue, hasSearchFilter]);
 
     return (
         <div className="w-[95%] max-h-[95%] p-6 bg-white rounded-lg overflow-y-auto">

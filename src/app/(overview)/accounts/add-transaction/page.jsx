@@ -46,7 +46,7 @@ const Page = () => {
 
     const handleSave = useCallback(() => {
         const requiredFields = addGeneralTransaction(formState, accounts, userId);
-    }, [formState]);
+    }, [formState, accounts, userId]);
 
     return(
         <div className="w-[97%] p-6 bg-white rounded-lg">

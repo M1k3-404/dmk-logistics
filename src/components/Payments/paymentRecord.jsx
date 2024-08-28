@@ -41,12 +41,12 @@ export default function PaymentRecord({record, newRecord, paymentTypes, editable
     const handleSave = useCallback(() => {
         const requiredFields = addPayment(formState, paymentTypes, vehicleId, onAddPayment, setIsNewRecord, userId);
         setErrorStatus(requiredFields);
-    }, [formState, paymentTypes, vehicleId]);
+    }, [formState, paymentTypes, vehicleId, onAddPayment, userId]);
 
     const handleEdit = useCallback(() => {
         const requiredFields = editPayment(formState, paymentTypes, vehicleId, id, setIsEditable, userId);
         setErrorStatus(requiredFields);
-    }, [formState, paymentTypes, vehicleId, id]);
+    }, [formState, paymentTypes, vehicleId, id, userId]);
 
     const renderSaveButton = useMemo(() => (
         <Button isIconOnly onClick={isNewRecord ? handleSave : handleEdit}>

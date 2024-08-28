@@ -1,7 +1,6 @@
 "use client"
 
-import { HandleSaveChanges } from "@/actions/maintenance-actions";
-import { getAllMaintenanceTypes, getEveryMaintenanceType } from "@/actions/maintenance-types-actions";
+import { getEveryMaintenanceType } from "@/actions/maintenance-types-actions";
 import { getAllPaymentTypes } from "@/actions/payment-types-actions";
 import { getVehicleBYId } from "@/actions/vehicle-actions";
 import { getAllVendors } from "@/actions/vendors-actions";
@@ -22,30 +21,30 @@ export default function Maintenace({ params }) {
         loading: true
     });
 
-    const initializePage = async () => {
-        try {
-            const vehicle = await getVehicleBYId(id);
-            const paymentTypes = await getAllPaymentTypes();
-            const maintenanceTypes = await getEveryMaintenanceType();
-            const vendors = await getAllVendors();
-
-            console.log('data:', vehicle);
-            setState({
-                vehicle: vehicle,
-                paymentTypes: paymentTypes,
-                maintenanceTypes: maintenanceTypes,
-                vendors: vendors,
-                editableRecords: [],
-                loading: false,
-            })
-        } catch (error) {
-            console.error('Error initializing page:', error);
-        }
-    };
-
     useEffect(() => {
+        const initializePage = async () => {
+            try {
+                const vehicle = await getVehicleBYId(id);
+                const paymentTypes = await getAllPaymentTypes();
+                const maintenanceTypes = await getEveryMaintenanceType();
+                const vendors = await getAllVendors();
+    
+                console.log('data:', vehicle);
+                setState({
+                    vehicle: vehicle,
+                    paymentTypes: paymentTypes,
+                    maintenanceTypes: maintenanceTypes,
+                    vendors: vendors,
+                    editableRecords: [],
+                    loading: false,
+                })
+            } catch (error) {
+                console.error('Error initializing page:', error);
+            }
+        };
+
         initializePage();
-    }, [id]);
+    }, [id, initializePage]);
 
     const handleAddNewRecord = () => {
         setState((prevState) => ({

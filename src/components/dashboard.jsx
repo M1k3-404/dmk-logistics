@@ -1,8 +1,8 @@
-import bottomContent from "./Dashboard/TableComponent/bottomContent";
 import TopContent from "./Dashboard/TableComponent/topContent";
 import VehicleRow from "./Dashboard/TableComponent/VehicleRow";
 import { useState, useCallback, useMemo } from "react";
 import { Table, TableHeader, TableRow, TableHead, TableBody } from "@/components/ui/table";
+import BottomContent from "./Dashboard/TableComponent/bottomContent";
 
 const DashboardTable = ({ tableHeaders, data, tab, reload }) => {
     const [filterValue, setFilterValue] = useState("");
@@ -45,7 +45,7 @@ const DashboardTable = ({ tableHeaders, data, tab, reload }) => {
         }
 
         return filteredItems;
-    }, [data, filterValue]);
+    }, [data, filterValue, hasSearchFilter]);
 
     const pages = Math.ceil(filteredItems.length / rowsPerPage);
 
@@ -97,7 +97,7 @@ const DashboardTable = ({ tableHeaders, data, tab, reload }) => {
                 </TableBody>
             </Table>
 
-            {bottomContent({ page, pages, setPage })}
+            {BottomContent({ page, pages, setPage })}
         </>
     )
 }

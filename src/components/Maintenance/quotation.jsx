@@ -44,12 +44,12 @@ const Quotation = ({ data, newRecord, editable, vendors, maintenanceTypes, delet
     const handleSave = useCallback(() => {
         const requiredFields = addQuotation(formState, vendors, maintenanceTypes, vehicleId, userId);
         setErrorStatus(requiredFields);
-    }, [formState, vendors, maintenanceTypes, vehicleId]);
+    }, [formState, vendors, maintenanceTypes, vehicleId, userId]);
 
     const handleEdit = useCallback(() => {
         const requiredFields = editQuotation(formState, vendors, maintenanceTypes, vehicleId, id, setIsEditable, userId);
         setErrorStatus(requiredFields);
-    }, [formState, vendors, maintenanceTypes, vehicleId, id]); 
+    }, [formState, vendors, maintenanceTypes, vehicleId, id, userId]); 
 
     const renderSaveButton = useMemo(() => (
         <Button isIconOnly 

@@ -38,12 +38,12 @@ const SalesRecord = ({ record, editable, newRecord, paymentTypes, deleteNewRecor
     const handleSave = useCallback(() => {
         const requiredFields = addSalesPayment(formState, paymentTypes, salesDetailsId, userId);
         // setErrorStatus(requiredFields);
-    }, [formState, paymentTypes, salesDetailsId]);
+    }, [formState, paymentTypes, salesDetailsId, userId]);
 
     const handleEdit = useCallback(() => {
         const requiredFields = editSalesPayment(formState, paymentTypes, salesDetailsId, id, userId);
         // setErrorStatus(requiredFields);
-    }, [formState, paymentTypes, salesDetailsId, id]);
+    }, [formState, paymentTypes, salesDetailsId, id, userId]);
 
     const renderSaveButton = useMemo(() => (
         <Button isIconOnly onClick={isNewRecord ? handleSave : handleEdit}>

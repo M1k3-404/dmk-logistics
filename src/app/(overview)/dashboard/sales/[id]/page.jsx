@@ -157,4 +157,11 @@ const Sales = ({ params }) => {
     )
 }
 
+// export async function generateStaticParams() {
+//     const vehicles = await getAllVehicles();
+//     return vehicles.map(vehicle => ({
+//         id: vehicle.vehicle.id.toString(),
+//     }));
+// }
+
 export default memo(Sales);

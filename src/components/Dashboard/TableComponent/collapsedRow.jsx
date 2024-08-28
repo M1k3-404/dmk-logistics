@@ -74,7 +74,7 @@ const CollapsedRow = ({ vehicle, isSold, reload }) => {
         } else {
             console.error("User is not logged in or session is missing userId.");
         }
-    })
+    }, []);
 
     return (
         <div className="w-full grid grid-cols-4 gap-x-2">

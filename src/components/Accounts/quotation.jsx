@@ -27,7 +27,7 @@ const Quotation = ({ data }) => {
         });
 
         getPaymentTypes();
-    }, []);
+    }, [data]);
 
     const getMaintenanceType = async (id) => {
         const maintenanceTypes = await getAllMaintenanceTypes();
