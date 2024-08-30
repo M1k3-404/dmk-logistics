@@ -8,7 +8,7 @@ import { getAllVendors } from "./vendors-actions";
 //Delete vehicle
 const deleteVehicle = async (id, reload, userId) => {
     try {
-        const response = await axios.delete(`http://localhost:7174/api/Vehicle/DeleteVehicle?userId=${userId}&vehicleId=${id}`);
+        const response = await axios.delete(`http://backend.dmk-logistics.lk/api/Vehicle/DeleteVehicle?userId=${userId}&vehicleId=${id}`);
         console.log('Data deleted successfully:', response.data);
         return response.data;
     } catch (error) {
@@ -76,7 +76,7 @@ const sendData = async (vehicle, id, userId) => {
     console.log('Formatted vehicle data:', formattedVehicleData);
 
     try {
-        const response = await axios.put(`http://localhost:7174/api/Vehicle/UpdateVehicle?userId=${userId}`, formattedVehicleData);
+        const response = await axios.put(`http://backend.dmk-logistics.lk/api/Vehicle/UpdateVehicle?userId=${userId}`, formattedVehicleData);
         console.log('Data sent successfully:', response.data);
     } catch (error) {
         console.error('Error sending data:', error);
@@ -109,7 +109,7 @@ const getVehicleBYId = async (id) => {
 
 const fetchVehicle = async (id) => {
     try {
-        const response = await axios.get(`http://localhost:7174/api/Vehicle/GetAllDataForVehicleId?vehicleId=${id}`);
+        const response = await axios.get(`http://backend.dmk-logistics.lk/api/Vehicle/GetAllDataForVehicleId?vehicleId=${id}`);
         console.log('Data received successfully:', response.data);
         return response.data;
     } catch (error) {
