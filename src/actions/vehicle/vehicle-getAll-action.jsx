@@ -22,7 +22,7 @@ const getAllVehicles = async () => {
 // Fetch dashboard data
 const getDashboardData = async () => {
     try {
-        const response = await axios.get('http://backend.dmk-logistics.lk/api/Vehicle/PopulateDashboard');
+        const response = await axios.get('https://backend.dmk-logistics.lk/api/Vehicle/PopulateDashboard');
         console.log('Data received successfully:', response.data);
         return response.data;
     } catch (error) {

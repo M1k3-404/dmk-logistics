@@ -57,7 +57,7 @@ const sendData = async (vehicle, userId) => {
     console.log('Formatted vehicle data:', formattedVehicleData);
 
     try {
-        const response = await axios.post(`http://localhost:7174/api/Vehicle/AddVehicle?userId=${userId}`, formattedVehicleData);
+        const response = await axios.post(`https://backend.dmk-logistics.lk/api/Vehicle/AddVehicle?userId=${userId}`, formattedVehicleData);
         console.log('Data sent successfully:', response.data);
     } catch (error) {
         console.error('Error sending data:', error);
