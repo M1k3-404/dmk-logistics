@@ -1,3 +1,5 @@
+import Cookies from "js-cookie";
+
 const { users } = require("@/data/static-data")
 
 const LogIn = (credentials) => {
@@ -5,13 +7,25 @@ const LogIn = (credentials) => {
 
     if (MatchedUser) {
         if (MatchedUser.password === credentials.password) {
-            const session = {
+            const userSession = {
                 userId: MatchedUser.id,
                 userName: MatchedUser.name,
                 userRole: MatchedUser.role
             }
 
-            localStorage.setItem("session", JSON.stringify(session));
+            localStorage.setItem("session", JSON.stringify(userSession));
+
+            if (credentials.rememberMe) {
+                const session = {
+                    userId: MatchedUser.id,
+                    userName: MatchedUser.name,
+                    password: MatchedUser.password,
+                    userRole: MatchedUser.role
+                }
+
+                Cookies.set("session", JSON.stringify(session), { expires: 14 });
+            }
+
             console.log("Logged in successfully");
 
             window.location.href = "/dashboard";

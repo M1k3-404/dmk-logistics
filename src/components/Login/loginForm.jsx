@@ -2,8 +2,8 @@
 
 import { LogIn } from "@/actions/user-actions";
 import { Button, Checkbox, Input } from "@nextui-org/react";
-import Link from "next/link";
-import { useState } from "react";
+import Cookies from "js-cookie";
+import { useEffect, useState } from "react";
 
 export default function LoginForm() {
     const [username, setUsername] = useState("");
@@ -11,6 +11,16 @@ export default function LoginForm() {
     const [rememberMe, setRememberMe] = useState(false);
 
     const [status, setStatus] = useState(null);
+
+    useEffect(() => {
+        const session = Cookies.get("session");
+        if (session) {
+            const pasrsedSession = JSON.parse(session);
+            setUsername(pasrsedSession.userName);
+            setPassword(pasrsedSession.password);
+            setRememberMe(true);
+        }
+    }, []);
 
     const handleSubmit = () => {
         const credentials = {
@@ -51,6 +61,7 @@ export default function LoginForm() {
                     classNames={{
                         label: "text-[#5d5d5d] text-sm"
                     }}
+                    isSelected={rememberMe}
                     onValueChange={setRememberMe}
                 >
                     Remember me
