@@ -29,7 +29,7 @@ const sendData = async (vehicle, id) => {
     const formattedVehicleData = formatVehicleData(vehicle, id);
 
     try {
-        const response = await axios.put(`http://localhost:7174/api/Vehicle/UpdateVehicle?userId=23`, formattedVehicleData);
+        const response = await axios.put(`https://backend.dmk-logistics.lk/api/Vehicle/UpdateVehicle?userId=23`, formattedVehicleData);
         console.log('Data sent successfully:', response.data);
         notifySuccess(vehicle.vehicleNo);
         window.location.href = "/dashboard";

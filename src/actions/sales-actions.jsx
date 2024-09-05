@@ -51,7 +51,7 @@ const sendData = async (saleRecord, reload, setOpenModal, userId) => {
     console.log('Sale Data:', saleData);
 
     try {
-        const response = await axios.post(`http://localhost:7174/api/SalesDetails/AddSalesDetails?userId=${userId}`, saleData);
+        const response = await axios.post(`https://backend.dmk-logistics.lk/api/SalesDetails/AddSalesDetails?userId=${userId}`, saleData);
         console.log('Data sent successfully:', response.data);
     } catch (error) {
         console.error('Error sending data:', error);
@@ -87,7 +87,7 @@ const sendEditData = async (saleRecord, reload, setOpenModal, userId) => {
     console.log('Sale Data:', saleData);
 
     try {
-        const response = await axios.put(`http://localhost:7174/api/SalesDetails/UpdateSalesDetails?userId=${userId}`, saleData);
+        const response = await axios.put(`https://backend.dmk-logistics.lk/api/SalesDetails/UpdateSalesDetails?userId=${userId}`, saleData);
         console.log('Data sent successfully:', response.data);
     } catch (error) {
         console.error('Error sending data:', error);
@@ -101,7 +101,7 @@ const sendEditData = async (saleRecord, reload, setOpenModal, userId) => {
 // Delete Sale
 const DeleteSale = async (saleId, reload, userId) => {
     try {
-        const response = await axios.delete(`http://localhost:7174/api/SalesDetails/DeleteSalesDetails?userId=${userId}&salesDetailsId=${saleId}`);
+        const response = await axios.delete(`https://backend.dmk-logistics.lk/api/SalesDetails/DeleteSalesDetails?userId=${userId}&salesDetailsId=${saleId}`);
         console.log('Data deleted successfully:', response.data);
     } catch (error) {
         console.error('Error deleting data:', error);

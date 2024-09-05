@@ -13,7 +13,7 @@ const getAllAccounts = async () => {
 // fetch accounts
 const fetchAccounts = async () => {
     try {
-        const response = await axios.get('http://localhost:7174/api/Account/GetAllAccounts');
+        const response = await axios.get('https://backend.dmk-logistics.lk/api/Account/GetAllAccounts');
         console.log('Data received successfully:', response.data);
         return response.data;
     } catch (error) {

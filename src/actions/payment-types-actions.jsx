@@ -7,7 +7,7 @@ const getAllPaymentTypes = () => {
 
 const getPaymentTypes = async () => {
     try {
-        const response = await axios.get('http://localhost:7174/api/PaymentType/GetAllPaymentTypes');
+        const response = await axios.get('https://backend.dmk-logistics.lk/api/PaymentType/GetAllPaymentTypes');
         console.log('Data recieved successfully:', response.data);
         return response.data;
     } catch (error) {
@@ -18,7 +18,7 @@ const getPaymentTypes = async () => {
 // Get Every Payment Type
 const getEveryPaymentType = async () => {
     try {
-        const response = await axios.get('http://localhost:7174/api/PaymentType/GetActiveAndInActivePaymentTypes');
+        const response = await axios.get('https://backend.dmk-logistics.lk/api/PaymentType/GetActiveAndInActivePaymentTypes');
         console.log('Data recieved successfully:', response.data);
         return response.data;
     } catch (error) {
@@ -79,7 +79,7 @@ const sendData = async (paymentType, userId) => {
     console.log('Payment Type Data:', paymentTypeData);
 
     try {
-        const response =  await axios.post(`http://localhost:7174/api/PaymentType/AddPaymentType?userId=${userId}`, paymentTypeData);
+        const response =  await axios.post(`https://backend.dmk-logistics.lk/api/PaymentType/AddPaymentType?userId=${userId}`, paymentTypeData);
         console.log('Data sent successfully:', response.data);
     } catch (error) {
         console.error('Error sending data:', error);
@@ -89,7 +89,7 @@ const sendData = async (paymentType, userId) => {
 // Delete Payment Type
 const deletePaymentType = async (id, userId) => {
     try {
-        const response = await axios.delete(`http://localhost:7174/api/PaymentType/DeletePaymentType?userId=${userId}&paymentTypeId=${id}`);
+        const response = await axios.delete(`https://backend.dmk-logistics.lk/api/PaymentType/DeletePaymentType?userId=${userId}&paymentTypeId=${id}`);
         console.log('Data deleted successfully:', response.data);
         return response.data;
     } catch (error) {

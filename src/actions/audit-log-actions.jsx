@@ -6,7 +6,7 @@ const getAllAuditLogs = () => {
 
 const fetchAuditLogs = async () => {
     try {
-        const response = await axios.get('http://localhost:7174/api/AuditLog/GetAllAuditLogs');
+        const response = await axios.get('https://backend.dmk-logistics.lk/api/AuditLog/GetAllAuditLogs');
         console.log('Data recieved successfully:', response.data);
         return response.data;
     } catch (error) {

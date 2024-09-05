@@ -52,7 +52,7 @@ const sendData = async (transaction, accounts, userId) => {
     console.log('Transaction Data:', transactionData);
 
     try {
-        const response = await axios.post(`http://localhost:7174/api/Transaction/AddGeneralTransaction?userId=${userId}`, transactionData);
+        const response = await axios.post(`https://backend.dmk-logistics.lk/api/Transaction/AddGeneralTransaction?userId=${userId}`, transactionData);
         console.log('Transaction Data:', response.data);
     } catch (error) {
         console.error('Error sending data:', error);
