@@ -23,7 +23,7 @@ const Page = () => {
 
     useEffect(() => {
         const session = JSON.parse(localStorage.getItem("session"));
-        if (session && session.userId) {
+        if (session) {
             setUserId(session.userId);
         } else {
             console.error("User is not logged in or session is missing userId.");
@@ -48,6 +48,7 @@ const Page = () => {
                                 label="Date of Purchase"
                                 labelPlacement="outside-left"
                                 variant="flat"
+                                format="dd/MM/yyyy"
                                 errorMessage={errorStatus.date}
                                 isInvalid={!!errorStatus.date}
                                 onChange={(date) => handleDateChange('date', date)} 

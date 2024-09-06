@@ -31,7 +31,7 @@ export default function Page() {
                         <div className="mt-4 w-1/4">
                             {paymentTypes.map((type, index) => (
                                 <PaymentMethod key={index} data={type} />
-                            ))}
+                            ))}                            
                         </div>
 
                         <PaymentTypeCreationModal />

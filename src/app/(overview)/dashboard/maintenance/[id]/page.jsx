@@ -44,7 +44,7 @@ export default function Maintenace({ params }) {
         };
 
         initializePage();
-    }, [id, initializePage]);
+    }, [id]);
 
     const handleAddNewRecord = () => {
         setState((prevState) => ({

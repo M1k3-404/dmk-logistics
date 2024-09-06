@@ -12,7 +12,7 @@ export default function RestorationModal({ vehicle, reload }) {
 
     useEffect(() => {
         const session = JSON.parse(localStorage.getItem("session"));
-        if (session && session.userId) {
+        if (session) {
             setUserId(session.userId);
         } else {
             console.error("User is not logged in or session is missing userId.");
