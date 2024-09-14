@@ -3,7 +3,7 @@
 import { editVehicle } from "@/actions/vehicle-actions";
 import { useFormState } from "@/lib/hooks/useFormState";
 import { parseDate } from "@internationalized/date";
-import { Button, DateInput, Input, Select, SelectItem } from "@nextui-org/react";
+import { Button, DateInput, DatePicker, Input, Select, SelectItem } from "@nextui-org/react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -74,7 +74,26 @@ export default function Page({ params }) {
                 <div className="mt-8 flex w-full">
                     <div className="w-3/4 pr-6 pl-12">
                         <div className="w-full grid grid-cols-2 gap-x-12 gap-y-6 pb-5">
-                            <DateInput
+                        <div className="w-full flex">
+                                <label className="mr-10">Date of Purchase</label>
+                                <DatePicker
+                                    name="date"
+                                    // label="Date of Purchase"
+                                    // labelPlacement="outside-left"
+                                    variant="flat"
+                                    defaultValue={formState.date}
+                                    errorMessage={errorStatus.date}
+                                    isInvalid={!!errorStatus.date}
+                                    onChange={(date) => handleDateChange('date', date)}
+                                    classNames={{  
+                                        // label: "mr-2",
+                                        base: "rounded-lg bg-[#f5f5f5]",
+                                        popoverContent: "bg-white shadow-lg rounded-lg",
+                                        // innerWrapper: "w-full rounded-lg bg-[#f5f5f5]",
+                                    }}
+                                />
+                            </div>
+                            {/* <DateInput
                                 name="date"
                                 label="Date of Purchase"
                                 labelPlacement="outside-left"
@@ -88,7 +107,7 @@ export default function Page({ params }) {
                                     errorMessage: "text-red-600 text-xs"
                                 }}
                                 defaultValue={formState.date}
-                            />
+                            /> */}
 
                             <Input
                                 name="vehicleNo"

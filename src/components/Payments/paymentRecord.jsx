@@ -1,4 +1,4 @@
-import { Button, DateInput, Input, Select, SelectItem, SelectSection } from "@nextui-org/react";
+import { Button, DateInput, DatePicker, Input, Select, SelectItem, SelectSection } from "@nextui-org/react";
 import { RiDraggable } from "react-icons/ri";
 import RecordDeletionModal from "../Maintenance/recordDeletionModal";
 import { useCallback, useEffect, useMemo, useState } from "react";
@@ -78,14 +78,26 @@ export default function PaymentRecord({record, newRecord, paymentTypes, editable
                 <RiDraggable />
             </Button>
 
-            <DateInput 
+            <DatePicker
+                isReadOnly={!isEditable}
+                value={formState.date}
+                onChange={(value) => handleChange("date", value)}
+                isRequired
+                classNames={{
+                    base: "w-[60%]",
+                    popoverContent: "bg-white shadow-lg rounded-lg",
+                }}
+                variant="underlined"
+                className="col-span-2"
+            />
+            {/* <DateInput 
                 isReadOnly={!isEditable}
                 value={formState.date}
                 onChange={(value) => handleChange("date", value)}
                 isRequired
                 variant="underlined"
                 className="col-span-2"
-            />
+            /> */}
 
             <Select
                 isDisabled={!isEditable}

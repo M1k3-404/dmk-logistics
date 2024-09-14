@@ -1,5 +1,5 @@
 import { getVehicleBYId } from "@/actions/vehicle-actions";
-import { Button, Chip, DateInput, Input, Select, SelectItem, SelectSection } from "@nextui-org/react";
+import { Button, Chip, DateInput, DatePicker, Input, Select, SelectItem, SelectSection } from "@nextui-org/react";
 import { memo, useCallback, useEffect, useMemo, useState } from "react";
 import { CiCircleCheck, CiCircleMinus, CiEdit } from "react-icons/ci";
 import { FaCircleCheck } from "react-icons/fa6";
@@ -83,14 +83,27 @@ const Quotation = ({ data, newRecord, editable, vendors, maintenanceTypes, delet
             
             <div className="col-span-2 text-left flex justify-start items-center gap-x-6">
                 <FaCircleCheck className={!formState.isCompleted && "invisible"} />
-                <DateInput
+                <DatePicker
+                    isReadOnly={!isEditable}
+                    value={formState.date}
+                    format="yyyy-MM-dd"
+                    onChange={(value) => handleChange("date", value)}
+                    classNames={{
+                        base: "w-[60%]",
+                        popoverContent: "bg-white shadow-lg rounded-lg",
+                    }}
+                    isRequired
+                    variant="underlined"
+                />
+
+                {/* <DateInput
                     isReadOnly={!isEditable}
                     value={formState.date}
                     format="yyyy-MM-dd"
                     onChange={(value) => handleChange("date", value)}
                     isRequired
                     variant="underlined"
-                />
+                /> */}
             </div>
 
             <Select

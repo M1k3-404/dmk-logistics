@@ -1,5 +1,5 @@
 import { parseDate } from "@internationalized/date";
-import { Button, DateInput, Input, Select, SelectItem, SelectSection } from "@nextui-org/react";
+import { Button, DateInput, DatePicker, Input, Select, SelectItem, SelectSection } from "@nextui-org/react";
 import { memo, useCallback, useEffect, useMemo, useState } from "react";
 import { CiCircleCheck, CiCircleMinus, CiEdit } from "react-icons/ci";
 import { RiDraggable } from "react-icons/ri";
@@ -73,14 +73,27 @@ const SalesRecord = ({ record, editable, newRecord, paymentTypes, deleteNewRecor
                 <RiDraggable />
             </Button>
 
-            <DateInput
+            <DatePicker
                 isReadOnly={!isEditable}
                 value={formState.date}
                 onChange={(value) => handleChange("date", value)}
                 isRequired
                 variant="underlined"
                 className="col-span-2"
+                classNames={{
+                    base: "w-[60%]",
+                    popoverContent: "bg-white shadow-lg rounded-lg",
+                }}
             />
+
+            {/* <DateInput
+                isReadOnly={!isEditable}
+                value={formState.date}
+                onChange={(value) => handleChange("date", value)}
+                isRequired
+                variant="underlined"
+                className="col-span-2"
+            /> */}
 
             <Select
                 isDisabled={!isEditable}

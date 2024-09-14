@@ -2,7 +2,7 @@
 
 import { getAllAccounts } from "@/actions/accounts-actions";
 import { addGeneralTransaction } from "@/actions/transaction-actions";
-import { Button, DateInput, Input, Select, SelectItem } from "@nextui-org/react";
+import { Button, DateInput, DatePicker, Input, Select, SelectItem } from "@nextui-org/react";
 import { memo, useCallback, useEffect, useState } from "react";
 
 const Page = () => {
@@ -91,7 +91,7 @@ const Page = () => {
                     ))}
                 </Select>
 
-                <DateInput
+                <DatePicker
                     name="date"
                     label="Date"
                     labelPlacement="inside"
@@ -99,8 +99,8 @@ const Page = () => {
                     className="mb-6"
                     onChange={(value) => handleChange("date", value)}
                     classNames={{
-                        mainWrapper: "rounded-lg p-2",
-                        label: "font-medium",
+                        base: "w-full",
+                        popoverContent: "bg-white shadow-lg rounded-lg",
                     }}
                 />
 
