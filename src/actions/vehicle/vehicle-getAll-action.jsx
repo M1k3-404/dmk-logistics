@@ -36,7 +36,7 @@ const processDashboardData = async (data) => {
     const maintenanceTypeMap = await getMaintenanceTypeMap();
     const vendorMap = await getVendorMap();
 
-    return data.map(item => {
+    const processedData = data.map(item => {
         const { vehicle, purchaseDetails, analytics, salesDetails, listOfPayments, listOfQuotations, listOfSalesPayments } = item;
 
         return {
@@ -120,6 +120,8 @@ const processDashboardData = async (data) => {
             }
         }
     });
+
+    return processedData.sort((a, b) => new Date(b.purchaseDetails.boughtDate) - new Date(a.purchaseDetails.boughtDate));
 };
 
 // Fetch payment types once and cache the result
