@@ -64,11 +64,11 @@ const Quotation = ({ data }) => {
                         </div>
 
                         <div className="col-span-2 text-left">
-                            <p>LKR {data.quotationInformation.quotedAmount}.00</p>
+                            <p>LKR {data.quotationInformation.quotedAmount.toLocaleString()}.00</p>
                         </div>
 
                         <div className="col-span-2 text-left text-red-500">
-                            <p>LKR {data.quotationInformation.dueAmount}.00</p>
+                            <p>LKR {data.quotationInformation.dueAmount.toLocaleString()}.00</p>
                         </div>
                     </div>
                 </AccordionTrigger>

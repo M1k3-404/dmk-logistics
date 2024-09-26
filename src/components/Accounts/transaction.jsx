@@ -16,7 +16,7 @@ const Transaction = ({ data }) => {
             </div>
 
             <div className="col-span-3 text-right">
-                <p>LKR {data.amount}.00</p>
+                <p>LKR {data.amount.toLocaleString()}.00</p>
             </div>
         </div>
     )

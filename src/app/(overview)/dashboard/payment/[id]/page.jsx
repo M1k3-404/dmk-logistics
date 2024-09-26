@@ -85,8 +85,8 @@ const Payment = ({ params }) => {
                                 { label: "Vehicle No", value: state.vehicle.vehicle.vehicleNumber },
                                 { label: "CR", value: state.vehicle.vehicle.isCR },
                                 { label: "Purchased From", value: state.vehicle.purchaseDetails.purchasedFrom },
-                                { label: "P/Cost", value: state.vehicle.purchaseDetails.agreedAmount },
-                                { label: "P/Remaining", value: state.vehicle.additionalData.remainingCost },
+                                { label: "P/Cost", value: state.vehicle.purchaseDetails.agreedAmount.toLocaleString() },
+                                { label: "P/Remaining", value: state.vehicle.additionalData.remainingCost.toLocaleString() },
                             ].map((field,index) => (
                                 <Input 
                                     key={index}

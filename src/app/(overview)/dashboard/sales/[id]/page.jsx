@@ -83,8 +83,8 @@ const Sales = ({ params }) => {
                                 { label: 'Date of Sale', value: state.vehicle.salesDetails.dateOfSale.slice(0, 10) },
                                 { label: 'Vehicle No', value: state.vehicle.vehicle.vehicleNumber },
                                 { label: 'Buyer', value: state.vehicle.salesDetails.buyerName },
-                                { label: 'S/Amount', value: state.vehicle.salesDetails.saleAmount },
-                                { label: 'S/Remaining', value: state.vehicle.additionalData.remainingSAmount },
+                                { label: 'S/Amount', value: state.vehicle.salesDetails.saleAmount.toLocaleString() },
+                                { label: 'S/Remaining', value: state.vehicle.additionalData.remainingSAmount.toLocaleString() },
                             ].map((field, index) => (
                                 <Input
                                     key={index}

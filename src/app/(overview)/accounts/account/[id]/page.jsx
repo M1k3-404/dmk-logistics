@@ -28,7 +28,7 @@ const Account = ({ params }) => {
 
                     <div className="bg-[#f4f4f4] rounded-lg px-10 py-2 text-center">
                         <p className="text-sm">Balance</p>
-                        <p className="text-lg font-semibold">LKR {balance}.00</p>
+                        <p className="text-lg font-semibold">LKR {balance.replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</p>
                     </div>
                 </div>
 

@@ -27,15 +27,15 @@ const VehicleRow = ({ vehicle, isSelected, onToggle, isSold, reload }) => {
                 <TableCell>{vehicle.vehicle.make}</TableCell>
                 <TableCell>{vehicle.vehicle.YearOfManufacture.slice(0, 4)}</TableCell>
                 <TableCell>{vehicle.purchaseDetails.legalOwnerName}</TableCell>
-                <TableCell>{vehicle.purchaseDetails.agreedAmount}</TableCell>
+                <TableCell>{vehicle.purchaseDetails.agreedAmount.toLocaleString()}</TableCell>
                 { !isSold && (
                     <TableCell>
-                        {vehicle.additionalData.remainingCost > 0 ? <span className="text-red-400">{vehicle.additionalData.remainingCost}</span> : <Chip className="bg-green-200">Complete</Chip>}
+                        {vehicle.additionalData.remainingCost > 0 ? <span className="text-red-400">{vehicle.additionalData.remainingCost.toLocaleString()}</span> : <Chip className="bg-green-200">Complete</Chip>}
                     </TableCell>
                 )}
-                <TableCell>{vehicle.analytics.totalCost}</TableCell>
-                {isSold && <TableCell>{vehicle.salesDetails.saleAmount}</TableCell>}
-                {!isSold && <TableCell>{vehicle.vehicle.ExpectedSellingPrice}</TableCell>}
+                <TableCell>{vehicle.analytics.totalCost.toLocaleString()}</TableCell>
+                {isSold && <TableCell>{vehicle.salesDetails.saleAmount.toLocaleString()}</TableCell>}
+                {!isSold && <TableCell>{vehicle.vehicle.ExpectedSellingPrice.toLocaleString()}</TableCell>}
                 {isSold && <TableCell>{vehicle.salesDetails.buyerName}</TableCell>}
                 {!isSold && (
                     <TableCell>

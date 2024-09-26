@@ -17,7 +17,7 @@ const Account = ({ id, name, balance, data, type }) => {
                 query: { name: name, balance: balance, quotations: encodedData }
             }}
         >
-            <p className="text-3xl mt-20 font-bold">{balance}.00</p>
+            <p className="text-3xl mt-20 font-bold">{balance.toLocaleString()}</p>
             <p className="mt-8 mb-4 text-lg font-medium">{name}</p>
         </Button>
     );

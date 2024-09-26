@@ -54,7 +54,7 @@ const Vendor = ({ params }) => {
 
                     <div className="bg-[#f4f4f4] rounded-lg px-10 py-2 text-center">
                         <p className="text-sm">Total Due</p>
-                        <p className="text-lg font-semibold">LKR {state.vendor.vendorInfo.totalDue}.00</p>
+                        <p className="text-lg font-semibold">LKR {state.vendor.vendorInfo.totalDue.toLocaleString()}.00</p>
                     </div>
                 </div>
 

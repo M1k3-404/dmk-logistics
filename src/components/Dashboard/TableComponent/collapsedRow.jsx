@@ -137,7 +137,7 @@ const CollapsedRow = ({ vehicle, isSold, reload }) => {
                                     inputWrapper: "w-[75%] rounded-lg bg-gray-200",
                                     input: "text-center text-sm text-[#0c0c0c]",
                                 }}
-                                defaultValue={vehicle.analytics.cocAmount}
+                                defaultValue={vehicle.analytics.cocAmount.toLocaleString()}
                                 size="sm"
                                 variant="flat"
                                 label="COC"
@@ -199,7 +199,7 @@ const CollapsedRow = ({ vehicle, isSold, reload }) => {
                                     inputWrapper: "w-[100%] rounded-lg bg-gray-200",
                                     input: "text-center text-sm text-[#0c0c0c]",
                                 }}
-                                defaultValue={vehicle.analytics.pnL}
+                                defaultValue={vehicle.analytics.pnL.toLocaleString()}
                                 size="sm"
                                 variant="flat"
                                 label="PnL"
@@ -226,7 +226,7 @@ const CollapsedRow = ({ vehicle, isSold, reload }) => {
                                     <TableRow key={index}>
                                         <TableCell>{payment.date}</TableCell>
                                         <TableCell>{payment.paymentTypeId}</TableCell>
-                                        <TableCell>{payment.paymentAmount}</TableCell>
+                                        <TableCell>{payment.paymentAmount.toLocaleString()}</TableCell>
                                     </TableRow>
                                 )
                             })}
@@ -253,7 +253,7 @@ const CollapsedRow = ({ vehicle, isSold, reload }) => {
                                         <TableCell>{quotation.quotationInformation.quotationDate}</TableCell>
                                         <TableCell>{quotation.quotationInformation.maintenanceTypeId}</TableCell>
                                         <TableCell>{quotation.quotationInformation.vendorId}</TableCell>
-                                        <TableCell>{quotation.quotationInformation.quotedAmount}</TableCell>
+                                        <TableCell>{quotation.quotationInformation.quotedAmount.toLocaleString()}</TableCell>
                                     </TableRow>
                                 )
                             })}
@@ -279,7 +279,7 @@ const CollapsedRow = ({ vehicle, isSold, reload }) => {
                                         <TableRow key={index}>
                                             <TableCell>{payment.date}</TableCell>
                                             <TableCell>{payment.salesPaymentTypeId}</TableCell>
-                                            <TableCell>{payment.salesAmount}</TableCell>
+                                            <TableCell>{payment.salesAmount.toLocaleString()}</TableCell>
                                         </TableRow>
                                     )
                                 })}
