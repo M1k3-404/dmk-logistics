@@ -1,5 +1,7 @@
 const { default: axios } = require("axios");
 
+const apiUrl = process.env.NEXT_PUBLIC_API_URL;
+
 //Add Quotation
 const addQuotation = (quotation, vendors, maintenanceTypes, vehicleId, userId) => {
     const requiredFields = checkRequiredFields(quotation);
@@ -60,7 +62,7 @@ const sendData = async (quotation, vendors, maintenanceTypes, vehicleId, userId)
     console.log('Quotation Data:', quotationData);
 
     try {
-        const response = await axios.post(`https://backend.dmk-logistics.lk/api/Quotation/CreateNewQuotation?userId=${userId}`, quotationData);
+        const response = await axios.post(`${apiUrl}/Quotation/CreateNewQuotation?userId=${userId}`, quotationData);
         console.log('Data sent successfully:', response.data);
     } catch (error) {
         console.error('Error sending data:', error);
@@ -120,7 +122,7 @@ const updateData = async (quotation, vendors, maintenanceTypes, vehicleId, id, s
     console.log('Quotation Data:', quotationData);
 
     try {
-        const response = await axios.put(`https://backend.dmk-logistics.lk/api/Quotation/UpdateQuotation?userId=${userId}`, quotationData);
+        const response = await axios.put(`${apiUrl}/Quotation/UpdateQuotation?userId=${userId}`, quotationData);
         console.log('Data updated successfully:', response.data);
     } catch (error) {
         console.error('Error updating data:', error);
@@ -133,7 +135,7 @@ const updateData = async (quotation, vendors, maintenanceTypes, vehicleId, id, s
 //Delete Quotation
 const deleteQuotation = async (id, userId) => {
     try {
-        const response = await axios.delete(`https://backend.dmk-logistics.lk/api/Quotation/DeleteQuotation?userId=${userId}&quotationId=${id}`);
+        const response = await axios.delete(`${apiUrl}/Quotation/DeleteQuotation?userId=${userId}&quotationId=${id}`);
         console.log('Data deleted successfully:', response.data);
         return response.data;
     } catch (error) {

@@ -1,6 +1,8 @@
 import axios from "axios";
 import toast from "react-hot-toast";
 
+const apiUrl = process.env.NEXT_PUBLIC_API_URL;
+
 //Edit vehicle
 // Main function to handle vehicle editing
 const editVehicle = async (vehicle, id) => {
@@ -29,7 +31,7 @@ const sendData = async (vehicle, id) => {
     const formattedVehicleData = formatVehicleData(vehicle, id);
 
     try {
-        const response = await axios.put(`https://backend.dmk-logistics.lk/api/Vehicle/UpdateVehicle?userId=23`, formattedVehicleData);
+        const response = await axios.put(`${apiUrl}/Vehicle/UpdateVehicle?userId=23`, formattedVehicleData);
         console.log('Data sent successfully:', response.data);
         notifySuccess(vehicle.vehicleNo);
         window.location.href = "/dashboard";

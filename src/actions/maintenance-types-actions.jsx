@@ -1,8 +1,10 @@
 const { default: axios } = require("axios")
 
+const apiUrl = process.env.NEXT_PUBLIC_API_URL;
+
 const getAllMaintenanceTypes = async () => {
     try {
-        const response = await axios.get('https://backend.dmk-logistics.lk/api/MaintenanceType/GetAllMaintenanceTypes');
+        const response = await axios.get(`${apiUrl}/MaintenanceType/GetAllMaintenanceTypes`);
         console.log('Data received successfully:', response.data);
         return response.data;
     } catch (error) {
@@ -12,7 +14,7 @@ const getAllMaintenanceTypes = async () => {
 
 const getEveryMaintenanceType = async () => {
     try {
-        const response = await axios.get('https://backend.dmk-logistics.lk/api/MaintenanceType/GetActiveAndInactiveMaintenanceTypes');
+        const response = await axios.get(`${apiUrl}/MaintenanceType/GetActiveAndInactiveMaintenanceTypes`);
         console.log('Data recieved successfully:', response.data);
         return response.data;
     } catch (error) {
@@ -70,7 +72,7 @@ const sendData = async (maintenanceType, userId) => {
     console.log('Data to be sent:', maintenanceTypeData);
 
     try {
-        const response = await axios.post(`https://backend.dmk-logistics.lk/api/MaintenanceType/AddMaintenanceTypes?userId=${userId}`, maintenanceTypeData);
+        const response = await axios.post(`${apiUrl}/MaintenanceType/AddMaintenanceTypes?userId=${userId}`, maintenanceTypeData);
         console.log('Data sent successfully:', response.data);
     } catch (error) {
         console.error('Error sending data:', error);
@@ -79,7 +81,7 @@ const sendData = async (maintenanceType, userId) => {
 
 const deleteMaintenanceType = async (id, userId) => {
     try {
-        const response = await axios.delete(`https://backend.dmk-logistics.lk/api/MaintenanceType/DeleteMaintenanceTypes?userId=${userId}&maintenanceTypeId=${id}`);
+        const response = await axios.delete(`${apiUrl}/MaintenanceType/DeleteMaintenanceTypes?userId=${userId}&maintenanceTypeId=${id}`);
         console.log('Data deleted successfully:', response.data);
         return response.data;
     } catch (error) {

@@ -1,5 +1,7 @@
 const { default: axios } = require("axios")
 
+const apiUrl = process.env.NEXT_PUBLIC_API_URL;
+
 // Get All Payment Types
 const getAllPaymentTypes = () => {
     return getPaymentTypes()
@@ -7,7 +9,7 @@ const getAllPaymentTypes = () => {
 
 const getPaymentTypes = async () => {
     try {
-        const response = await axios.get('https://backend.dmk-logistics.lk/api/PaymentType/GetAllPaymentTypes');
+        const response = await axios.get(`${apiUrl}/PaymentType/GetAllPaymentTypes`);
         console.log('Data recieved successfully:', response.data);
         return response.data;
     } catch (error) {
@@ -18,7 +20,7 @@ const getPaymentTypes = async () => {
 // Get Every Payment Type
 const getEveryPaymentType = async () => {
     try {
-        const response = await axios.get('https://backend.dmk-logistics.lk/api/PaymentType/GetActiveAndInActivePaymentTypes');
+        const response = await axios.get(`${apiUrl}/PaymentType/GetActiveAndInActivePaymentTypes`);
         console.log('Data recieved successfully:', response.data);
         return response.data;
     } catch (error) {
@@ -79,7 +81,7 @@ const sendData = async (paymentType, userId) => {
     console.log('Payment Type Data:', paymentTypeData);
 
     try {
-        const response =  await axios.post(`https://backend.dmk-logistics.lk/api/PaymentType/AddPaymentType?userId=${userId}`, paymentTypeData);
+        const response =  await axios.post(`${apiUrl}/PaymentType/AddPaymentType?userId=${userId}`, paymentTypeData);
         console.log('Data sent successfully:', response.data);
     } catch (error) {
         console.error('Error sending data:', error);
@@ -89,7 +91,7 @@ const sendData = async (paymentType, userId) => {
 // Delete Payment Type
 const deletePaymentType = async (id, userId) => {
     try {
-        const response = await axios.delete(`https://backend.dmk-logistics.lk/api/PaymentType/DeletePaymentType?userId=${userId}&paymentTypeId=${id}`);
+        const response = await axios.delete(`${apiUrl}/PaymentType/DeletePaymentType?userId=${userId}&paymentTypeId=${id}`);
         console.log('Data deleted successfully:', response.data);
         return response.data;
     } catch (error) {

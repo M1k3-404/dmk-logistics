@@ -3,6 +3,8 @@ import { getAllPaymentTypes, getEveryPaymentType } from "../payment-types-action
 import { getAllMaintenanceTypes, getEveryMaintenanceType } from "../maintenance-types-actions";
 import { getAllVendors } from "../vendors-actions";
 
+const apiUrl = process.env.NEXT_PUBLIC_API_URL;
+
 // Get All Vehicles for the Dashboard 
 const getAllVehicles = async () => {
     try {
@@ -22,7 +24,7 @@ const getAllVehicles = async () => {
 // Fetch dashboard data
 const getDashboardData = async () => {
     try {
-        const response = await axios.get('https://backend.dmk-logistics.lk/api/Vehicle/PopulateDashboard');
+        const response = await axios.get(`${apiUrl}/Vehicle/PopulateDashboard`);
         console.log('Data received successfully:', response.data);
         return response.data;
     } catch (error) {

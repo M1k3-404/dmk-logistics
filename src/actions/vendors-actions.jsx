@@ -1,5 +1,7 @@
 import axios from "axios";
 
+const apiUrl = process.env.NEXT_PUBLIC_API_URL;
+
 // Get All Vendors
 const getAllVendors = async () => {
     try {
@@ -15,7 +17,7 @@ const getAllVendors = async () => {
 // fetch vendors
 const fetchVendors = async () => {
     try {
-        const response = await axios.get('https://backend.dmk-logistics.lk/api/Vendor/GetAllDataForAllVendor');
+        const response = await axios.get(`${apiUrl}/Vendor/GetAllDataForAllVendor`);
         console.log('Data received successfully:', response.data);
         return response.data;
     } catch (error) {
@@ -67,7 +69,7 @@ const processData = async (data) => {
 // Add Vendor
 const AddVendor = async (vendorName, reload, setOpenModal, userId) => {
     try {
-        const response = await axios.post(`https://backend.dmk-logistics.lk/api/Vendor/CreateVendor?userId=${userId}&vendorName=${vendorName}`);
+        const response = await axios.post(`${apiUrl}/Vendor/CreateVendor?userId=${userId}&vendorName=${vendorName}`);
         console.log('Vendor added successfully:', response.data);
         return response.data;
     } catch (error) {
@@ -131,7 +133,7 @@ const processSingleData = async (data) => {
 
 const fetchVendorById = async (id) => {
     try {
-        const response = await axios.get(`https://backend.dmk-logistics.lk/api/Vendor/GetAllDataByVendorId?vendorId=${id}`);
+        const response = await axios.get(`${apiUrl}/Vendor/GetAllDataByVendorId?vendorId=${id}`);
         console.log('Data received successfully:', response.data);
         return response.data;
     } catch (error) {

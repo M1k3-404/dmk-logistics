@@ -1,6 +1,8 @@
 import axios from "axios";
 import toast from "react-hot-toast";
 
+const apiUrl = process.env.NEXT_PUBLIC_API_URL;
+
 const HandleSaveChanges = (record) => {
     console.log('Record:', record);
     const status = HandleRequiredFields(record);
@@ -32,7 +34,7 @@ const sendData = async (record) => {
     }
 
     try {
-        const response = await axios.post('https://backend.dmk-logistics.lk/api/MaintenanceDetails/AddMaintenanceDetails?userId=23', recordData);
+        const response = await axios.post(`${apiUrl}/MaintenanceDetails/AddMaintenanceDetails?userId=23', recordData`);
         console.log('Data sent successfully:', response.data);
     } catch (error) {
         console.error('Error sending data:', error);

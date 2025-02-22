@@ -1,6 +1,8 @@
 import { formatDate, isEmpty } from "@/lib/utils";
 import axios from "axios";
 
+const apiUrl = process.env.NEXT_PUBLIC_API_URL;
+
 const AddSale = async (vehicle, saleRecord, setOpenModal, reload, userId) => {
     const errors = ValidateFields(vehicle, saleRecord);
 
@@ -51,7 +53,7 @@ const sendData = async (saleRecord, reload, setOpenModal, userId) => {
     console.log('Sale Data:', saleData);
 
     try {
-        const response = await axios.post(`https://backend.dmk-logistics.lk/api/SalesDetails/AddSalesDetails?userId=${userId}`, saleData);
+        const response = await axios.post(`${apiUrl}/SalesDetails/AddSalesDetails?userId=${userId}`, saleData);
         console.log('Data sent successfully:', response.data);
     } catch (error) {
         console.error('Error sending data:', error);
@@ -87,7 +89,7 @@ const sendEditData = async (saleRecord, reload, setOpenModal, userId) => {
     console.log('Sale Data:', saleData);
 
     try {
-        const response = await axios.put(`https://backend.dmk-logistics.lk/api/SalesDetails/UpdateSalesDetails?userId=${userId}`, saleData);
+        const response = await axios.put(`${apiUrl}/SalesDetails/UpdateSalesDetails?userId=${userId}`, saleData);
         console.log('Data sent successfully:', response.data);
     } catch (error) {
         console.error('Error sending data:', error);
@@ -101,7 +103,7 @@ const sendEditData = async (saleRecord, reload, setOpenModal, userId) => {
 // Delete Sale
 const DeleteSale = async (saleId, reload, userId) => {
     try {
-        const response = await axios.delete(`https://backend.dmk-logistics.lk/api/SalesDetails/DeleteSalesDetails?userId=${userId}&salesDetailsId=${saleId}`);
+        const response = await axios.delete(`${apiUrl}/SalesDetails/DeleteSalesDetails?userId=${userId}&salesDetailsId=${saleId}`);
         console.log('Data deleted successfully:', response.data);
     } catch (error) {
         console.error('Error deleting data:', error);

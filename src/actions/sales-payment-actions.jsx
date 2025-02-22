@@ -1,5 +1,7 @@
 import axios from "axios";
 
+const apiUrl = process.env.NEXT_PUBLIC_API_URL;
+
 // Add Sales Payment
 const addSalesPayment = (payment, paymentTypes, salesDetailId, userId) => {
     const requiredFields = checkRequiredFields(payment);
@@ -55,7 +57,7 @@ const sendData = async (payment, paymentTypes, salesDetailId, userId) => {
     console.log('Sales Payment Data:', paymentData);
 
     try {
-        const response = await axios.post(`https://backend.dmk-logistics.lk/api/SalesPayment/AddSalesPayment?userId=${userId}`, paymentData);
+        const response = await axios.post(`${apiUrl}/SalesPayment/AddSalesPayment?userId=${userId}`, paymentData);
         console.log('Data sent successfully:', response.data);
     } catch (error) {
         console.log('Error:', error);
@@ -105,7 +107,7 @@ const updateData = async (payment, paymentTypes, salesDetailId, id, userId) => {
     console.log('Sales Payment Data:', paymentData);
 
     try {
-        const response = await axios.put(`https://backend.dmk-logistics.lk/api/SalesPayment/UpdateSalesPayment?userId=${userId}`, paymentData);
+        const response = await axios.put(`${apiUrl}/SalesPayment/UpdateSalesPayment?userId=${userId}`, paymentData);
         console.log('Data sent successfully:', response.data);
     } catch (error) {
         console.log('Error:', error);
@@ -117,7 +119,7 @@ const updateData = async (payment, paymentTypes, salesDetailId, id, userId) => {
 // Delete Sales Payment
 const deleteSalesPayment = async (id, userId) => {
     try {
-        const response = await axios.delete(`https://backend.dmk-logistics.lk/api/SalesPayment/DeleteSalesPayment?userId=${userId}&paymentId=${id}`);
+        const response = await axios.delete(`${apiUrl}/SalesPayment/DeleteSalesPayment?userId=${userId}&paymentId=${id}`);
         console.log('Data sent successfully:', response.data);
     } catch (error) {
         console.log('Error:', error);

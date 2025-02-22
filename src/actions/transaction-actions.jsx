@@ -1,5 +1,7 @@
 import axios from "axios";
 
+const apiUrl = process.env.NEXT_PUBLIC_API_URL;
+
 const addGeneralTransaction = (transaction, accounts, userId) => {
     const requiredFields = checkRequiredFields(transaction);
 
@@ -52,7 +54,7 @@ const sendData = async (transaction, accounts, userId) => {
     console.log('Transaction Data:', transactionData);
 
     try {
-        const response = await axios.post(`https://backend.dmk-logistics.lk/api/Transaction/AddGeneralTransaction?userId=${userId}`, transactionData);
+        const response = await axios.post(`${apiUrl}/Transaction/AddGeneralTransaction?userId=${userId}`, transactionData);
         console.log('Transaction Data:', response.data);
     } catch (error) {
         console.error('Error sending data:', error);

@@ -1,5 +1,7 @@
 const { default: axios } = require("axios");
 
+const apiUrl = process.env.NEXT_PUBLIC_API_URL;
+
 const addQuotationPayment = (payment, paymentTypes, userId) => {
     const requiredFields = checkRequiredFields(payment);
 
@@ -50,7 +52,7 @@ const sendData = async (payment, paymentTypes, userId) => {
     console.log('Payment Data:', paymentData);
 
     try {
-        const response = await axios.post(`https://backend.dmk-logistics.lk/api/Quotation/CreateQuotationPayment?userId=${userId}`, paymentData);
+        const response = await axios.post(`${apiUrl}/Quotation/CreateQuotationPayment?userId=${userId}`, paymentData);
         console.log('Data sent successfully:', response.data);
     } catch (error) {
         console.error('Error sending data:', error);
@@ -74,7 +76,7 @@ const getPaymentTypeId = (paymentTypes, paymentTitle) => {
 // Delete Quotation Payment
 const deleteQuotationPayment = async (id) => {
     try {
-        const response = await axios.delete(`https://backend.dmk-logistics.lk/api/Quotation/DeleteQuotationPayment?quotationPaymentId=${id}`);
+        const response = await axios.delete(`${apiUrl}/Quotation/DeleteQuotationPayment?quotationPaymentId=${id}`);
         console.log('Data deleted successfully:', response.data);
     } catch (error) {
         console.error('Error deleting data:', error);
