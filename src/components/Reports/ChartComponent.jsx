@@ -4,8 +4,10 @@ import { ChartContainer, ChartLegend, ChartLegendContent, ChartTooltip, ChartToo
 import { useState } from "react";
 import { Bar, BarChart, XAxis, YAxis } from "recharts";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../ui/select";
+import { useMonthStore } from "@/stores/useMonthStore";
 
 export default function ChartComponent({ existingData }) {
+    const { setSelectedMonth } = useMonthStore();
     const [selectedyear, setSelectedYear] = useState(new Date().getFullYear());
     const [selectedMetric, setSelectedMetric] = useState("revenue");
     const [expandedMonth, setExpandedMonth] = useState(null);
@@ -25,6 +27,7 @@ export default function ChartComponent({ existingData }) {
         const monthlyProfit = monthdata?.daily.reduce((acc, day) => acc + day.profit, 0) || 0;
         return {
             month,
+            year: selectedyear,
             revenue: monthlyRevenue,
             profit: monthlyProfit,
         }
@@ -34,9 +37,14 @@ export default function ChartComponent({ existingData }) {
         calculateMonthlyData(month)
     );
 
+    const getDaysInMonth = (month, year) => {
+        const monthIndex = allMonths.indexOf(month);
+        return new Date(year, monthIndex + 1, 0).getDate();
+    }
+
     const getDailyData = (month) => {
         const monthData = filteredData.find(data => data.month === month);
-        const daysInMonth = monthData > monthData?.daily.length ? monthData.daily.length : 30;
+        const daysInMonth = getDaysInMonth(month, selectedyear);
 
         return Array.from({ length: daysInMonth }, (_, i) => {
             const existingDay = monthData?.daily.find(day => day.date === i + 1);
@@ -56,6 +64,8 @@ export default function ChartComponent({ existingData }) {
     };
 
     const handleBarClick = (data) => {
+        console.log(data);
+        setSelectedMonth(data.month, data.year);
         if (expandedMonth === data.month) {
             setExpandedMonth(null);
         } else {

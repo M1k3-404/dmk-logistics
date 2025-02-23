@@ -1,10 +1,16 @@
-import { CiDeliveryTruck, CiDollar, CiSettings } from "react-icons/ci";
+import { CiDeliveryTruck, CiDollar, CiSettings, CiWavePulse1 } from "react-icons/ci";
 
 const sidebarItems = [
     {
         name: "Warehouse",
         icon: <CiDeliveryTruck size={20} />,
         path: "/dashboard",
+    },
+
+    {
+        name: "Reports",
+        icon: <CiWavePulse1 size={20} />,
+        path: "/reports",
     },
 
     {
