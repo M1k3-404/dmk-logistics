@@ -147,7 +147,7 @@ const processedSingleData = async (data) => {
         analytics: {
             id: analytics.id,
             vehicleId: analytics.vehicleId,
-            cocAmount: analytics.cocAmount,
+            cocAmount: (purchaseDetails.agreedAmount * (calculateMonths(vehicle.availabilityStatus, purchaseDetails.boughtDate, salesDetails?.dateOfSale)) * 0.01),
             totalCost: analytics.totalCost,
             pnL: analytics.pnL,
         },

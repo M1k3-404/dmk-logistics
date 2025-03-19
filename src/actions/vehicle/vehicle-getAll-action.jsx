@@ -41,6 +41,10 @@ const processDashboardData = async (data) => {
     const processedData = data.map(item => {
         const { vehicle, purchaseDetails, analytics, salesDetails, listOfPayments, listOfQuotations, listOfSalesPayments } = item;
 
+        const months = calculateMonths(vehicle.availabilityStatus, purchaseDetails.boughtDate, salesDetails?.dateOfSale);
+        const cocAmount = calculateCOC(purchaseDetails.agreedAmount, months);
+        const totalCost = calculateTotalCost(purchaseDetails.agreedAmount, cocAmount, listOfQuotations);
+
         return {
             vehicle: {
                 id: vehicle.id,
@@ -48,7 +52,7 @@ const processDashboardData = async (data) => {
                 make: vehicle.make,
                 isCR: vehicle.isCR ? "Ok" : "Pending",
                 YearOfManufacture: vehicle.yearOfManufacture.slice(0, 10),
-                ExpectedSellingPrice: vehicle.expectedSellingPrice,
+                ExpectedSellingPrice: vehicle.expectedSellingPrice == 0 ? totalCost : vehicle.expectedSellingPrice,
                 AvailabilityStatus: vehicle.availabilityStatus,
             },
             purchaseDetails: {
@@ -62,8 +66,8 @@ const processDashboardData = async (data) => {
             analytics: {
                 id: analytics.id,
                 vehicleId: analytics.vehicleId,
-                cocAmount: analytics.cocAmount,
-                totalCost: analytics.totalCost,
+                cocAmount: cocAmount,
+                totalCost: totalCost,
                 pnL: analytics.pnL,
             },
             salesDetails: {
@@ -173,6 +177,18 @@ const getVendorMap = async () => {
 
 // Utility functions
 const formatDate = (date, charCount) => date.slice(0, charCount);
+
+const calculateCOC = (agreedAmount, months) => {
+    return agreedAmount * months * 0.01;
+}
+
+const calculateTotalCost = (agreedAmount, cocAmount, listOfQuotations) => {
+    const totalQuotationAmount = listOfQuotations.reduce((total, quotation) => {
+        return total + (quotation.quotationInformation.quotedAmount || 0);
+    }, 0)
+
+    return agreedAmount + cocAmount + totalQuotationAmount;
+}
 
 const calculateRemainingCost = (pCost, payments) => {
     const totalPayments = payments.reduce((total, payment) => total + payment.paymentAmount, 0);
